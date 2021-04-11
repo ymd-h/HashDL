@@ -44,8 +44,6 @@ namespace HashDL {
 
 
   class Hash {
-  private:
-
   public:
     Hash() = default;
     Hash(const Hash&) = default;
