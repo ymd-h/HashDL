@@ -65,7 +65,7 @@ namespace HashDL {
     std::size_t sample_bits;
     std::vector<std::vector<std::size_t>> theta; // [bin_size, sample_size]
   public:
-    WTA(): WTA{8, 16, 4} {};
+    WTA(): WTA{8, 16, 4} {}
     WTA(std::size_t bin_size, std::size_t data_size, std::size_t sample_size)
       : bin_size{bin_size},
 	data_size{data_size},
