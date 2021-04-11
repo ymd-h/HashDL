@@ -3,6 +3,7 @@
 
 #include <cstdint>
 #include <algorithm>
+#include <functional>
 #include <iterator>
 #include <limits>
 #include <memory>
@@ -123,6 +124,11 @@ namespace HashDL {
 
       return hash;
     }
+    static std::function<WTA*()> make_factory(std::size_t bin_size,
+					      std::size_t data_size,
+					      std::size_t sample_size){
+      return [=](){ return new WTA{bin_size, data_size, sample_size}; };
+    }
   };
 
 
@@ -133,7 +139,6 @@ namespace HashDL {
     const std::size_t data_size;
     const std::size_t sample_size;
     std::size_t sample_bits;
-    std::size_t sample_mask;
     const std::max_attempt;
     std::size_t attempt_bits;
     std::vector<std::vector<std::size_t>> theta; // [bin_size, sample_size]
@@ -146,7 +151,6 @@ namespace HashDL {
 	data_size{data_size},
 	sample_size{sample_size},
 	sample_bits{1},
-	sample_mask{},
 	max_attempt{max_attempt},
 	attempt_bits{1},
 	theta{},
@@ -161,7 +165,6 @@ namespace HashDL {
 	++sample_bits;
 	power *= 2;
       }
-      sample_mask = (1 << sample_bits) -1;
 
       power = 2;
       while(max_attempt > power){
@@ -188,7 +191,7 @@ namespace HashDL {
 
       std::uniform_int_distribution<std::size_t> dist(0, std::numeric_limits<std::size_t>::max());
       coprime = dist(generator);
-      if(coprime % 2 == 0){ ++coprime; }
+      while(std::gcd(sample_size, coprime) != 1){ coprime = dist(gen); }
     }
     DWTA(const DWTA&) = default;
     DWTA(DWTA&&) = default;
@@ -238,7 +241,13 @@ namespace HashDL {
 
     std::size_t universal_hash(std::size_t i, std::size_t attempt){
       auto x = (i << attempt_bits) + attempt;
-      return (x * coprime) | mask;
+      return (x * coprime) % sample_size;
+    }
+    static std::function<DWTA*()> make_factory(std::size_t bin_size,
+					       std::size_t data_size,
+					       std::size_t sample_size,
+					       std::size_t max_attempt=100){
+      return [=](){ return new DWTA{bin_size,data_size,sample_size,max_attempt}; };
     }
   };
 
