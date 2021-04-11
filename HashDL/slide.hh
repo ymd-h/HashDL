@@ -38,10 +38,12 @@ public:
     backet.resize(L);
   }
 
-  void add(std::size_t n, const Data& w){
+  void add(const std::vector<Data>& W){
     std::for_each(std::execution::par, idx.begin(), idx.end(),
-		  [&w,n,this](auto i){
-		    this->backet[i].insert(this->hash[i]->operator(w), n);
+		  [&W,this](auto i){
+		    for(std::size_t n=0, size=W.size(); n<size; ++n){
+		      this->backet[i].insert(this->hash[i]->operator(W[n]), n);
+		    }
 		  });
   }
 };
