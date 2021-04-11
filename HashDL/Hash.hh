@@ -129,10 +129,47 @@ namespace HashDL {
 
   class DWTA : public Hash {
   private:
-
-
+    const std::size_t bin_size;
+    const std::size_t data_size;
+    const std::size_t sample_size;
+    std::size_t sample_bits;
+    std::vector<std::vector<std::size_t>> theta; // [bin_size, sample_size]
   public:
-    DWTA() = default;
+    DWTA() : DWTA{8, 16, 4} {}
+    DWTA(std::size_t bin_size, std::size_t data_size, std::size_t sample_size)
+      : bin_size{bin_size},
+	data_size{data_size},
+	sample_size{sample_size},
+	sample_bits{1},
+	theta{}
+    {
+      if(data_size < sample_size){
+	throw std::runtime_error("sample_size must be smaller than data_size");
+      }
+
+      std::size_t power = 2;
+      while(sample_size > power){
+	++sample_bits;
+	power *= 2;
+      }
+
+      if(bin_size*sample_bits > 64){
+	throw std::runtime_error("sample_size and bin_size is too large "
+				 "for 64bit hash code");
+      }
+
+      std::vector<std::size_t> index{};
+      index.reserve(data_size);
+      std::generate_n(std::back_inserter(index), data_size,
+		      [i=0]() mutable { return i++; });
+
+      std::mt19937 generator{std::random_device{}()};
+      theta.reserve(bin_size);
+      for(std::size_t i=0; i<bin_size; ++i){
+	std::shuffle(index.begin(), index.end(), generator);
+	theta.emplace_back(index.begin(), index.begin()+sample_size);
+      }
+    }
     DWTA(const DWTA&) = default;
     DWTA(DWTA&&) = default;
     DWTA& operator=(const DWTA&) = default;
