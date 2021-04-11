@@ -75,6 +75,32 @@ public:
 };
 
 
+class Neuron {
+private:
+  std::vector<std::size_t> is_active;
+  std::vector<data_t> activation;
+  std::vector<data_t> gradient;
+  std::vector<data_t> weights;
+public:
+  Neuron() = default;
+  Neuron(const Neuron&) = default;
+  Neuron(Neuron&&) = default;
+  Neuron& operator=(const Neuron&) = default;
+  Neuron& operator=(Neuron&&) = default;
+  ~Neuron() = default;
+
+  void reset_batch(std::size_t batch_size){
+    is_active.clear();
+    is_active.resize(batch_size, 0);
+
+    activation.clear();
+    activation.resize(batch_size, 0);
+
+    gradient.clear();
+    gradient.resize(batch_size, 0);
+  }
+};
+
 
 class LSH {
 public:
