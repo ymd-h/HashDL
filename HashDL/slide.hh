@@ -48,6 +48,29 @@ public:
 		      this->backet[i].insert(this->hash[i]->operator(W[n]), n);
 		    }
 		  });
+    neuron_size = W.size();
+  }
+
+  auto retrieve(const std::vector<Data>& X) const {
+    std::vector<std::vector<std::size_t>> nids{}
+    nids.reserve(X.size());
+
+    for(auto& x : X){
+      std::vector<std::size_t> neuron_id{};
+      neuron_id.reserve(neuron_size);
+      std::generate_n(std::back_inserter(neuron_id), neuron_size,
+		      [i=0]() mutable { return i++; });
+
+      for(auto i=0; i<L; ++i){
+	auto [begin, end] = backet[i].equal_range(hash[i]->operator(x));
+	std::remove_if(neuron_id.begin(), neuron_id.end(),
+		       [=](auto n){ return std::find(begin, end, n) == end; });
+      }
+
+      nids.push_back(std::move(neuron_id));
+    }
+
+    return nids;
   }
 };
 
