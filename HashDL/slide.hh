@@ -13,10 +13,11 @@ private:
   std::vector<std::unique_ptr<Hash>> hash;
   std::vector<std::unordered_multimap<hashcode_t, std::size_t>> backet;
   std::vector<std::size_t> idx;
+  std::size_t neuron_size;
 public:
   HashTable(): HashTable(50, DWTA::make_factory(8, 16, 8)){}
   HashTable(std::size_t L, std::function<Hash*()> hash_factory)
-    : L{L}, hash_factory{hash_factory}, hash{}, backet(L), idx{}
+    : L{L}, hash_factory{hash_factory}, hash{}, backet(L), idx{}, neuron_size{}
   {
     hash.reserve(L);
     std::generate_n(std::back_inserter(hash), L,
@@ -36,6 +37,8 @@ public:
 
     backet.clear();
     backet.resize(L);
+
+    neuron_size = 0;
   }
 
   void add(const std::vector<Data>& W){
