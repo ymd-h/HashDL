@@ -258,7 +258,7 @@ namespace HashDL {
       std::for_each(std::execution::par, batch_idx.begin(), batch_idx.end(),
 		    [&, this](auto i){
 		      auto b = X.begin(i), e = X.end(i);
-		      for(auto& L: this->layer){ std::tie(b, e) = L.forward(i, b, e); }
+		      for(auto& L: this->layer){ std::tie(b, e) = L(i, b, e); }
 
 		      std::copy(b, e, Y.begin(i));
 		    });
