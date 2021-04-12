@@ -8,6 +8,12 @@ namespace HashDL {
     virtual T backprop(T x,T dn_dy) = 0;
   };
 
+  template<typename T> class Linear : public Activation<T> {
+  public:
+    virtual T call(T x) override noexcept { return x; }
+    virtual T backprop(T x, T dn_dy) override noexcept { return dn_dy; }
+  };
+
   template<typename T> class ReLU : public Activation<T> {
   public:
     virtual T call(T x) override noexcept { return (x>0)? x: 0; }
