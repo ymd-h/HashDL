@@ -2,7 +2,7 @@
 #define ACTIVATION_HH
 
 namespace HashDL {
-  template<typename T> class Activation{
+  template<typename T> class Activation {
   public:
     virtual T call(T x) = 0;
     virtual T backprop(T x,T dn_dy) = 0;
