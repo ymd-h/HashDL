@@ -122,6 +122,7 @@ namespace HashDL {
 	for(std::size_t j=0, data_size=x.size(); j<data_size; ++j){
 	  activation[i] += weights[j]*data[j];
 	}
+	activation[i] += bias;
       }
 
       return activation;
