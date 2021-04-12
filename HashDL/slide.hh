@@ -118,26 +118,19 @@ namespace HashDL {
       neuron_size = W.size();
     }
 
-    auto retrieve(const std::vector<Data>& X) const {
-      std::vector<std::vector<std::size_t>> nids{}
-      nids.reserve(X.size());
+    auto retrieve(const Data<data_t>& X) const {
+      std::vector<std::size_t> neuron_id{};
+      neuron_id.reserve(neuron_size);
+      std::generate_n(std::back_inserter(neuron_id), neuron_size,
+		      [i=0]() mutable { return i++; });
 
-      for(auto& x : X){
-	std::vector<std::size_t> neuron_id{};
-	neuron_id.reserve(neuron_size);
-	std::generate_n(std::back_inserter(neuron_id), neuron_size,
-			[i=0]() mutable { return i++; });
-
-	for(auto i=0; i<L; ++i){
-	  auto [begin, end] = backet[i].equal_range(hash[i]->operator(x));
-	  std::remove_if(neuron_id.begin(), neuron_id.end(),
-			 [=](auto n){ return std::find(begin, end, n) == end; });
-	}
-
-	nids.push_back(std::move(neuron_id));
+      for(auto i=0; i<L; ++i){
+	auto [begin, end] = backet[i].equal_range(hash[i]->operator(X));
+	std::remove_if(neuron_id.begin(), neuron_id.end(),
+		       [=](auto n){ return std::find(begin, end, n) == end; });
       }
 
-      return nids;
+      return neuron_id;
     }
   };
 
@@ -179,18 +172,16 @@ namespace HashDL {
       is_active[i_batch] = 1;
     }
 
-    const auto& forward(const std::vector<Data>& X){
-      for(std::size_t i=0, size=X.size(); i<size; ++i){
-	if(!is_active[i]){ continue; }
+    const auto& forward(std::size_t batch_i, const Data<data_t>& X){
+      if(is_active[batch_i]){
 
-	const auto& x = X[i];
-	for(std::size_t j=0, data_size=x.size(); j<data_size; ++j){
-	  activation[i] += weights[j]*data[j];
+	for(std::size_t j=0, data_size=X.size(); j<data_size; ++j){
+	  activation[batch_i] += weights[j]*data[j];
 	}
-	activation[i] += bias;
+	activation[batch_i] += bias;
       }
 
-      return activation;
+      return activation[batch_i];
     }
 
     const auto& get_weight() const noexcept { return weight; }
@@ -205,27 +196,18 @@ namespace HashDL {
   public:
     Layer(): Layer{30}{}
     Layer(std::size_t prev_units, std::size_t units)
-      : neuron_size{units}, neuron(units,Neuron{prev_units})
-    {}
+      : neuron_size{units}, neuron(units,Neuron{prev_units}), data_idx{} {}
     Layer(const Layer&) = default;
     Layer(Layer&&) = default;
     Layer& operator=(const Layer&) = default;
     Layer& operator=(Layer&&) = default;
     ~Layer() = default;
 
-    auto operator()(const std::vector<Data>& X){
-      auto active_id = hash.retrieve(X);
-      const auto batch_size = X.size();
+    auto operator()(std::size_t batch_i, const Data<data_t>& X){
+      for(const auto& nid: hash.retrieve(X)){ neuron[nid].activate(batch_i); }
 
-      for(std::size_t i=0; i<batch_size; ++i){
-	for(const auto& nid: active_id[i]){ neuron[nid].activate(i); }
-      }
-
-      std::vector<Data> Y(batch_size, Data{neuron_size});
-      for(std::size n=0; n<neuron_size; ++n){
-	const auto& a = neuron[n].forward(X);
-	for(std::size_t i=0; i<batch_size; ++i){ Y[i][n] = a[i]; }
-      }
+      Data<data_t> Y{neuron_size};
+      for(std::size n=0; n<neuron_size; ++n){ Y[n] = neuron[n].forward(batch_i, X); }
 
       return Y;
     }
@@ -247,20 +229,23 @@ namespace HashDL {
 
     auto operator()(const DataView<data_t>& X){
       const auto batch_size = X.get_batch_size();
-      BatchData Y{output_dim, std::vector<data_t>(output_dim * batch_size, 0)};
+
+      for(auto& L: layer){ L.reset(batch_size); }
 
       std::vector<std::size_t> batch_idx{}
       batch_idx.reserve(batch_size);
       std::generate_n(std::back_inserter(batch_idx), batch_size,
 		      [i=0]() mutable { return i++; });
 
+
       // Parallel Feed-Forward over Batch
+      BatchData Y{output_dim, std::vector<data_t>(output_dim * batch_size, 0)};
       std::for_each(std::execution::par, batch_idx.begin(), batch_idx.end(),
 		    [&, this](auto i){
-		      auto b = X.begin(i), e = X.end(i);
-		      for(auto& L: this->layer){ std::tie(b, e) = L(i, b, e); }
+		      auto d = Data<data_t>{X.begin(i), X.end(i)};
+		      for(auto& L: this->layer){ d = L(i, d); }
 
-		      std::copy(b, e, Y.begin(i));
+		      std::copy(d.begin(), d.end(), Y.begin(i));
 		    });
 
       return Y;
