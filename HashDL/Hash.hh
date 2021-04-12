@@ -251,5 +251,5 @@ namespace HashDL {
     }
   };
 
-};
+}
 #endif
