@@ -4,6 +4,7 @@
 #include <execution>
 #include <unordered_map>
 
+#include "Activation.hh"
 #include "Hash.hh"
 
 namespace HashDL {
