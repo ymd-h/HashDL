@@ -27,6 +27,10 @@ namespace HashDL {
   public:
     Data<T>(): Data<T>{1};
     Data<T>(std::size_t size): size{size}, data(size) {}
+    Data<T>(const std::vector<T>& data): size{data.size()}, data{data} {}
+    Data<T>(std::vector<T>&& data): size{data.size()}, data{data} {}
+    Data<T>(const T* begin, const T* end)
+      : size{std::distance(begin, end)}, data{begin, end} {}
     Data<T>(const Data<T>&) = default;
     Data<T>(Data<T>&&) = default;
     Data<T>& operator=(const Data<T>&) = default;
