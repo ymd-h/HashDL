@@ -33,8 +33,19 @@ namespace HashDL {
     auto get_batch_size() const noexcept { return data.size() / data_size; }
 
     void push_back(const std::vector<T>& d){
+      if(d.size() % data_size){
+	throw std::runtime_error("Input data size is not compatible with data_size");
+      }
       data.reserve(data.size() + d.size());
       std::copy(d.begin(), d.end(), std::back_inserter(data));
+    }
+
+    void push_back(std::vector<T>&& d){
+      if(d.size() % data_size){
+	throw std::runtime_error("Input data size is not compatible with data_size");
+      }
+      data.reserve(data.size() + d.size());
+      std::move(d.begin(), d.end(), std::back_inserter(data));
     }
   };
 
