@@ -7,6 +7,60 @@
 #include "Hash.hh"
 
 namespace HashDL {
+  template<typename T> class BatchData {
+  private:
+    std::size_t data_size;
+    std::vector<T> data;
+  public:
+    BatchData() = default;
+    BatchData(std::size_t data_size): data_size{data_size}, data{} {}
+    BatchData(std::size_t data_size, const std::vector<T>& data)
+      : data_size{data_size}, data{data} {}
+    BatchData(std::size_t data_size, std::vector<T>&& data)
+      : data_size{data_size}, data{data} {}
+    BatchData(const BatchData&) = default;
+    BatchData(BatchData&&) = default;
+    BatchData& operator=(const BatchData&) = default;
+    BatchData& operator=(BatchData&&) = default;
+    ~BatchData() = default;
+
+    auto begin(){ return data.begin(); }
+    auto end(){ return data.end(); }
+    auto begin(std::size_t i){ return data.begin() + data_size * i; }
+    auto end(std::size_t i){ return data.begin() + data_size * (i+1); }
+
+    auto get_data_size() const noexcept { return data_size; }
+    auto get_batch_size() const noexcept { return data.size() / data_size; }
+
+    void push_back(const std::vector<T>& d){
+      data.reserve(data.size() + d.size());
+      std::copy(d.begin(), d.end(), std::back_inserter(data));
+    }
+  };
+
+  template<typename T> class BatchView {
+  private:
+    std::size_t data_size;
+    std::size_t batch_size;
+    T* data_ptr;
+  public:
+    BatchView() = default;
+    BatchView(std::size_t data_size, std::size_t batch_size, T* data_ptr)
+      : data_size{data_size}, batch_size{batch_size}, data_ptr{data_ptr} {}
+    BatchView(const BatchView&) = default;
+    BatchView(BatchView&&) = default;
+    BatchView& operator=(const BatchView&) = default;
+    BatchView& operator=(BatchView&&) = default;
+    ~BatchView() = default;
+
+    T* begin(){ return data_ptr; }
+    T* end(){ return data_ptr + data_size * batch_size; }
+    T* begin(std::size_t i){ return data_ptr + data_size * i; }
+    T* end(std::size_t i){ return data_ptr + data_size * (i+1); }
+
+    auto get_data_size() const noexcept { return data_size; }
+    auto get_batch_size() const noexcept { return batch_size; }
+  };
 
   class LSH {
   private:
