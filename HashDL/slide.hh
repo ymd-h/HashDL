@@ -231,5 +231,41 @@ namespace HashDL {
     }
   };
 
+
+  class Network {
+  private:
+    std::size_t input_dim;
+    std::size_t output_dim;
+    std::vector<Layer> layer;
+  public:
+    Network() = default;
+    Network(const Network&) = default;
+    Network(Network&&) = default;
+    Network& operator=(const Network&) = default;
+    Network& operator=(Network&&) = default;
+    ~Network() = default;
+
+    auto operator()(const DataView<data_t>& X){
+      const auto batch_size = X.get_batch_size();
+      BatchData Y{output_dim, std::vector<data_t>(output_dim * batch_size, 0)};
+
+      std::vector<std::size_t> batch_idx{}
+      batch_idx.reserve(batch_size);
+      std::generate_n(std::back_inserter(batch_idx), batch_size,
+		      [i=0]() mutable { return i++; });
+
+      // Parallel Feed-Forward over Batch
+      std::for_each(std::execution::par, batch_idx.begin(), batch_idx.end(),
+		    [&, this](auto i){
+		      auto b = X.begin(i), e = X.end(i);
+		      for(auto& L: this->layer){ std::tie(b, e) = L.forward(i, b, e); }
+
+		      std::copy(b, e, Y.begin(i));
+		    });
+
+      return Y;
+    }
+  };
+
 }
 #endif
