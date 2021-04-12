@@ -112,7 +112,7 @@ namespace HashDL {
       std::for_each(std::execution::par, idx.begin(), idx.end(),
 		    [&W,this](auto i){
 		      for(std::size_t n=0, size=W.size(); n<size; ++n){
-			this->backet[i].insert(this->hash[i]->operator(W[n]), n);
+			this->backet[i].insert(this->hash[i]->encode(W[n]), n);
 		      }
 		    });
       neuron_size = W.size();
@@ -125,7 +125,7 @@ namespace HashDL {
 		      [i=0]() mutable { return i++; });
 
       for(auto i=0; i<L; ++i){
-	auto [begin, end] = backet[i].equal_range(hash[i]->operator(X));
+	auto [begin, end] = backet[i].equal_range(hash[i]->encode(X));
 	std::remove_if(neuron_id.begin(), neuron_id.end(),
 		       [=](auto n){ return std::find(begin, end, n) == end; });
       }
