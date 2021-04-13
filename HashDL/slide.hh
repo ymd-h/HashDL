@@ -174,7 +174,7 @@ namespace HashDL {
     }
 
     const auto forward(std::size_t batch_i, const Data<data_t>& X,
-			const std::unique_ptr<Activation<data_t>>& f){
+		       const std::unique_ptr<Activation<data_t>>& f){
       if(!is_active[batch_i]){
 	data[batch_i] = 0;
 	return data[batch_i];
