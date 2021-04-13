@@ -212,7 +212,9 @@ namespace HashDL {
       for(const auto& nid: hash.retrieve(X)){ neuron[nid].activate(batch_i); }
 
       Data<data_t> Y{neuron_size};
-      for(std::size n=0; n<neuron_size; ++n){ Y[n] = neuron[n].forward(batch_i, X); }
+      for(std::size n=0; n<neuron_size; ++n){
+	Y[n] = neuron[n].forward(batch_i, X, activation);
+      }
 
       return Y;
     }
