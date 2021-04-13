@@ -173,16 +173,19 @@ namespace HashDL {
       is_active[i_batch] = 1;
     }
 
-    const auto& forward(std::size_t batch_i, const Data<data_t>& X){
-      if(is_active[batch_i]){
-
-	for(std::size_t j=0, data_size=X.size(); j<data_size; ++j){
-	  data[batch_i] += weights[j]*data[j];
-	}
-	data[batch_i] += bias;
+    const auto forward(std::size_t batch_i, const Data<data_t>& X,
+			const std::unique_ptr<Activation<data_t>>& f){
+      if(!is_active[batch_i]){
+	data[batch_i] = 0;
+	return data[batch_i];
       }
 
-      return data[batch_i];
+      for(std::size_t j=0, data_size=X.size(); j<data_size; ++j){
+	data[batch_i] += weights[j]*data[j];
+      }
+      data[batch_i] += bias;
+
+      return f->call(data[batch_i]);
     }
 
     const auto& get_weight() const noexcept { return weight; }
@@ -194,10 +197,11 @@ namespace HashDL {
     const std::size_t neuron_size;
     std::vector<Neuron> neuron;
     LSH hash;
+    std::unique_ptr<Activation<data_t>> activation;
   public:
     Layer(): Layer{30}{}
-    Layer(std::size_t prev_units, std::size_t units)
-      : neuron_size{units}, neuron(units,Neuron{prev_units}), data_idx{} {}
+    Layer(std::size_t prev_units, std::size_t units, Activation<data_t>* f)
+      : neuron_size{units}, neuron(units,Neuron{prev_units}), activation{f()} {}
     Layer(const Layer&) = default;
     Layer(Layer&&) = default;
     Layer& operator=(const Layer&) = default;
