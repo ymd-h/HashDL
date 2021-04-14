@@ -198,7 +198,8 @@ namespace HashDL {
       return f->call(data[batch_i]);
     }
 
-    const auto backward(std::size_t batch_t, const Data<data_t>& dn_dy,
+    const auto backward(std::size_t batch_i,
+			const Data<data_t>& dn_dy,
 			const std::unique_ptr<Activation<data_t>>& f){
       f->back(data[batch_i], dn_dy);
     }
