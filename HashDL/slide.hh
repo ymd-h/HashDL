@@ -186,11 +186,6 @@ namespace HashDL {
     const auto forward(std::size_t batch_i,
 		       const Data<data_t>& X,
 		       const std::unique_ptr<Activation<data_t>>& f){
-      if(!is_active[batch_i]){
-	data[batch_i] = 0;
-	return data[batch_i];
-      }
-
       for(std::size_t j=0, data_size=X.size(); j<data_size; ++j){
 	data[batch_i] += weights[j]*data[j];
       }
