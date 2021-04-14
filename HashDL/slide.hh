@@ -272,7 +272,7 @@ namespace HashDL {
     DenseLayer(): DenseLayer{30}{}
     DenseLayer(std::size_t prev_units, std::size_t units, Activation<data_t>* f)
       : neuron_size{units}, neuron(units, Neuron{prev_units}), active_list{},
-	hash{}, activation{f()} {}
+	hash{}, activation{f} {}
     DenseLayer(const DenseLayer&) = default;
     DenseLayer(DenseLayer&&) = default;
     DenseLayer& operator=(const DenseLayer&) = default;
