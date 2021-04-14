@@ -208,7 +208,7 @@ namespace HashDL {
     virtual Data<data_t> forward(std::size_t,
 				 const Data<data_t>&,
 				 const std::vector<std::size_t>&) = 0;
-    virtual Data<data_t> backward(std::size_t batch_i, const Data<data_t>& dn_dy) = 0;
+    virtual void backward(std::size_t batch_i, const Data<data_t>& dn_dy) = 0;
     virtual void reset(std::size_t batch_size) = 0;
   };
 
@@ -221,7 +221,7 @@ namespace HashDL {
 				 std::vector<std::size_t>& prev_active) override {
       return next()->forward(batch_i, X, idx);
     }
-    virtual Data<data_t> backward(std::size_t batch_i, const Data<data_t>& dn_dy){}
+    virtual backward(std::size_t batch_i, const Data<data_t>& dn_dy){}
     virtual void reset(std::size_t batch_size){}
   };
 
@@ -232,9 +232,9 @@ namespace HashDL {
 				 std::vector<std::size_t>& prev_active) override {
       return X;
     }
-    virtual Data<data_t> backward(std::size_t batch_i,
+    virtual void backward(std::size_t batch_i,
 				  const Data<data_t>& dn_dy) override {
-      return prev()->backward(batch_i, dn_dy);
+      prev()->backward(batch_i, dn_dy);
     }
   };
 
