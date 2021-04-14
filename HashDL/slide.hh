@@ -188,28 +188,35 @@ namespace HashDL {
       return f->call(data[batch_i]);
     }
 
+    const auto backward(std::size_t batch_t, const Data<data_t>& dn_dy,
+			const std::unique_ptr<Activation<data_t>>& f){
+      f->back(data[batch_i], dn_dy);
+    }
+
     const auto& get_weight() const noexcept { return weight; }
   };
 
 
-  class Layer {
+  class HiddenLayer {
   private:
     const std::size_t neuron_size;
     std::vector<Neuron> neuron;
+    std::vector<std::vector<std::size_t>> active_list;
     LSH hash;
     std::unique_ptr<Activation<data_t>> activation;
   public:
-    Layer(): Layer{30}{}
-    Layer(std::size_t prev_units, std::size_t units, Activation<data_t>* f)
-      : neuron_size{units}, neuron(units,Neuron{prev_units}), activation{f()} {}
-    Layer(const Layer&) = default;
-    Layer(Layer&&) = default;
-    Layer& operator=(const Layer&) = default;
-    Layer& operator=(Layer&&) = default;
-    ~Layer() = default;
+    HiddenLayer(): HiddenLayer{30}{}
+    HiddenLayer(std::size_t prev_units, std::size_t units, Activation<data_t>* f)
+      : neuron_size{units}, neuron(units, Neuron{prev_units}), active_list{},
+	hash{}, activation{f()} {}
+    HiddenLayer(const HiddenLayer&) = default;
+    HiddenLayer(HiddenLayer&&) = default;
+    HiddenLayer& operator=(const HiddenLayer&) = default;
+    HiddenLayer& operator=(HiddenLayer&&) = default;
+    ~HiddenLayer() = default;
 
     auto operator()(std::size_t batch_i, const Data<data_t>& X){
-      for(const auto& nid: hash.retrieve(X)){ neuron[nid].activate(batch_i); }
+      active_list[batch_i] = hash.retrieve(X)
 
       Data<data_t> Y{neuron_size};
       for(std::size n=0; n<neuron_size; ++n){
