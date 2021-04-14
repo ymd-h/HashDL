@@ -259,7 +259,8 @@ namespace HashDL {
     OutputLayer& operator=(OutputLayer&&) = default;
     ~OutputLayer() = default;
 
-    virtual Data<data_t> forward(std::size_t batch_i, const Data<data_t>& X,
+    virtual Data<data_t> forward(std::size_t batch_i,
+				 const Data<data_t>& X,
 				 std::vector<std::size_t>& prev_active) override {
       return X;
     }
