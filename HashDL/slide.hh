@@ -196,8 +196,21 @@ namespace HashDL {
     const auto& get_weight() const noexcept { return weight; }
   };
 
+  class Layer {
+  private:
+    Layer* _next;
+    Layer* _prev;
+  public:
+    auto next() const noexcept { return _next; }
+    auto prev() const noexcept { return _prev; }
+    void set_next(Layer* L){ _next = L; }
+    void set_prev(Layer* L){ _prev = L; }
+    virtual Data<data_t> operator(std::size_t batch_i, const Data<data_t>& X) = 0;
+    virtual void reset(std::size_t batch_size) = 0;
+  };
 
-  class HiddenLayer {
+
+  class HiddenLayer : public Layer {
   private:
     const std::size_t neuron_size;
     std::vector<Neuron> neuron;
