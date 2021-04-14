@@ -189,7 +189,7 @@ namespace HashDL {
     const auto backward(std::size_t batch_i,
 			const Data<data_t>& dn_dy,
 			const std::unique_ptr<Activation<data_t>>& f){
-      f->back(data[batch_i], dn_dy);
+      return f->back(data[batch_i], dn_dy);
     }
 
     const auto& get_weight() const noexcept { return weight; }
