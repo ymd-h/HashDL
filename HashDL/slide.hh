@@ -205,7 +205,7 @@ namespace HashDL {
     auto prev() const noexcept { return _prev; }
     void set_next(Layer* L){ _next = L; }
     void set_prev(Layer* L){ _prev = L; }
-    virtual Data<data_t> operator(std::size_t batch_i, const Data<data_t>& X) = 0;
+    virtual Data<data_t> forward(std::size_t batch_i, const Data<data_t>& X) = 0;
     virtual void reset(std::size_t batch_size) = 0;
   };
 
@@ -228,7 +228,7 @@ namespace HashDL {
     HiddenLayer& operator=(HiddenLayer&&) = default;
     ~HiddenLayer() = default;
 
-    virtual Data<data_t> operator()(std::size_t batch_i,
+    virtual Data<data_t> forward(std::size_t batch_i,
 				    const Data<data_t>& X) override {
       active_list[batch_i] = hash.retrieve(X)
 
@@ -253,7 +253,7 @@ namespace HashDL {
   private:
     std::size_t input_dim;
     std::size_t output_dim;
-    std::vector<Layer> layer;
+    std::vector<std::unique_ptr<Layer>> layer;
   public:
     Network() = default;
     Network(const Network&) = default;
@@ -265,7 +265,7 @@ namespace HashDL {
     auto operator()(const DataView<data_t>& X){
       const auto batch_size = X.get_batch_size();
 
-      for(auto& L: layer){ L.reset(batch_size); }
+      for(auto& L: layer){ L->reset(batch_size); }
 
       std::vector<std::size_t> batch_idx{}
       batch_idx.reserve(batch_size);
@@ -278,7 +278,7 @@ namespace HashDL {
       std::for_each(std::execution::par, batch_idx.begin(), batch_idx.end(),
 		    [&, this](auto i){
 		      auto d = Data<data_t>{X.begin(i), X.end(i)};
-		      for(auto& L: this->layer){ d = L(i, d); }
+		      for(auto& L: this->layer){ d = L->forward(i, d); }
 
 		      std::copy(d.begin(), d.end(), Y.begin(i));
 		    });
