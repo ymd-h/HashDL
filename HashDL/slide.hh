@@ -228,7 +228,8 @@ namespace HashDL {
     HiddenLayer& operator=(HiddenLayer&&) = default;
     ~HiddenLayer() = default;
 
-    auto operator()(std::size_t batch_i, const Data<data_t>& X){
+    virtual Data<data_t> operator()(std::size_t batch_i,
+				    const Data<data_t>& X) override {
       active_list[batch_i] = hash.retrieve(X)
 
       Data<data_t> Y{neuron_size};
@@ -239,7 +240,7 @@ namespace HashDL {
       return Y;
     }
 
-    void reset(std::size_t batch_size){
+    virtual void reset(std::size_t batch_size) override {
       active_list.clear();
       active_list.resize(batch_size);
 
