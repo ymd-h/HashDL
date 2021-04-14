@@ -8,6 +8,16 @@
 #include "Hash.hh"
 
 namespace HashDL {
+  inline auto index_vec(std::size_t N){
+    std::vector<std::size_t> idx{};
+
+    idx.reserve(N);
+    std::generate_n(std::back_inserter(idx), N, [i=0]() mutable { return i++; });
+
+    return idx;
+  }
+
+
   template<typename T> class BatchData {
   private:
     std::size_t data_size;
