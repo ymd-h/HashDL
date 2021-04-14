@@ -225,6 +225,13 @@ namespace HashDL {
 
       return Y;
     }
+
+    void reset(std::size_t batch_size){
+      active_list.clear();
+      active_list.resize(batch_size);
+
+      for(auto& n : neuron){ neuron.reset(batch_size); }
+    }
   };
 
 
