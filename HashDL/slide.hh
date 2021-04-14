@@ -119,11 +119,12 @@ namespace HashDL {
       neuron_size = 0;
     }
 
-    void add(const std::vector<Data<data_t>>& W){
+    void add(const std::vector<Neuron>& N){
       std::for_each(std::execution::par, idx.begin(), idx.end(),
 		    [&W,this](auto i){
-		      for(std::size_t n=0, size=W.size(); n<size; ++n){
-			this->backet[i].insert(this->hash[i]->encode(W[n]), n);
+		      for(std::size_t n=0, size=N.size(); n<size; ++n){
+			const auto& W = N[n].get_weight();
+			this->backet[i].insert(this->hash[i]->encode(W), n);
 		      }
 		    });
       neuron_size = W.size();
