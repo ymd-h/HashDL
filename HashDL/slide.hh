@@ -226,6 +226,19 @@ namespace HashDL {
   };
 
 
+  class OutputLayer : public Layer {
+  public:
+    virtual Data<data_t> forward(std::size_t batch_i, const Data<data_t>& X,
+				 std::vector<std::size_t>& prev_active) override {
+      return X;
+    }
+    virtual Data<data_t> backward(std::size_t batch_i,
+				  const Data<data_t>& dn_dy) override {
+      return prev()->backward(batch_i, dn_dy);
+    }
+  };
+
+
   class DenseLayer : public Layer {
   private:
     const std::size_t neuron_size;
