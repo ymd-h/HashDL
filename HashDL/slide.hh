@@ -292,6 +292,19 @@ namespace HashDL {
       return next()->forward(batch_i, Y, active_list[batch_i]);
     }
 
+    virtual void backward(std::size_t batch_i,
+			  const Data<data_t>& dn_dy,
+			  const std::vector<std::size_t>& next_active) override {
+      Data<data_t> dn_dx{neuron_size};
+      std::for_each(std::execution::par,
+		    active_list[batch_i].begin(), active_list[batch_i].end(),
+		    [&, this](auto n){
+		      dn_dx[n] = this->neuron[n].backward(batch_i, dn_dy, next_active);
+		    });
+
+      prev()->backward(batch_i, dn_dx, active_list[batch_i]);
+    }
+
     virtual void reset(std::size_t batch_size) override {
       active_list.clear();
       active_list.resize(batch_size);
