@@ -205,9 +205,24 @@ namespace HashDL {
     auto prev() const noexcept { return _prev; }
     void set_next(Layer* L){ _next = L; }
     void set_prev(Layer* L){ _prev = L; }
-    virtual Data<data_t> forward(std::size_t batch_i, const Data<data_t>& X) = 0;
+    virtual Data<data_t> forward(std::size_t,
+				 const Data<data_t>&,
+				 const std::vector<std::size_t>&) = 0;
     virtual Data<data_t> backward(std::size_t batch_i, const Data<data_t>& dn_dy) = 0;
     virtual void reset(std::size_t batch_size) = 0;
+  };
+
+
+  class InputLayer : public Layer {
+  private:
+    std::vector<std::size_t> idx;
+  public:
+    virtual Data<data_t> forward(std::size_t batch_i, const Data<data_t>& X,
+				 std::vector<std::size_t>& prev_active) override {
+      return next()->forward(batch_i, X, idx);
+    }
+    virtual Data<data_t> backward(std::size_t batch_i, const Data<data_t>& dn_dy){}
+    virtual void reset(std::size_t batch_size){}
   };
 
 
