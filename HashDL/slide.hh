@@ -148,7 +148,6 @@ namespace HashDL {
 
   class Neuron {
   private:
-    std::vector<int> is_active;
     std::vector<data_t> data;
     std::vector<data_t> gradient;
     std::vector<data_t> weight;
@@ -157,7 +156,7 @@ namespace HashDL {
     Neuron(): Neuron{16};
     Neuron(std::size_t prev_units,
 	   std::function<data_t()> weight_initializer = [](){ return 0; })
-      : is_active{}, data{}, gradient{}, weight{}, bias{}
+      : data{}, gradient{}, weight{}, bias{}
     {
       weight.reserve(prev_units);
       std::generate_n(std::back_inserter(weight), prev_units, weight_initializer);
@@ -169,18 +168,11 @@ namespace HashDL {
     ~Neuron() = default;
 
     void reset_batch(std::size_t batch_size){
-      is_active.clear();
-      is_active.resize(batch_size, 0);
-
       data.clear();
       data.resize(batch_size, 0);
 
       gradient.clear();
       gradient.resize(batch_size, 0);
-    }
-
-    void activate(std::size_t i_batch){
-      is_active[i_batch] = 1;
     }
 
     const auto forward(std::size_t batch_i,
