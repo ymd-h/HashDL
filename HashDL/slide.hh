@@ -231,11 +231,11 @@ namespace HashDL {
 
     virtual Data<data_t> forward(std::size_t batch_i,
 				 const Data<data_t>& X,
-				 const std::vector<std::size_t>& active) override {
+				 const std::vector<std::size_t>& prev_active) override {
       active_list[batch_i] = hash.retrieve(X);
 
       Data<data_t> Y{neuron_size};
-      for(std::size n=0; n<neuron_size; ++n){
+      for(auto n : active_list[batch_i]){
 	Y[n] = neuron[n].forward(batch_i, X, activation);
       }
 
