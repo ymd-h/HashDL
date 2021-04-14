@@ -230,15 +230,16 @@ namespace HashDL {
     ~HiddenLayer() = default;
 
     virtual Data<data_t> forward(std::size_t batch_i,
-				    const Data<data_t>& X) override {
-      active_list[batch_i] = hash.retrieve(X)
+				 const Data<data_t>& X,
+				 const std::vector<std::size_t>& active) override {
+      active_list[batch_i] = hash.retrieve(X);
 
       Data<data_t> Y{neuron_size};
       for(std::size n=0; n<neuron_size; ++n){
 	Y[n] = neuron[n].forward(batch_i, X, activation);
       }
 
-      return Y;
+      return next()->forward(batch_i, Y, active_list[batch_i]);
     }
 
     virtual void reset(std::size_t batch_size) override {
