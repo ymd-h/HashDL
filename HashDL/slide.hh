@@ -111,7 +111,7 @@ namespace HashDL {
     ~LSH() = default;
 
     void reset(){
-      for(auto& h : hash){ h.reset(hash_factory); }
+      for(auto& h : hash){ h.reset(hash_factory()); }
 
       backet.clear();
       backet.resize(L);
