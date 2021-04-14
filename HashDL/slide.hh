@@ -341,9 +341,9 @@ namespace HashDL {
       std::for_each(std::execution::par, batch_idx.begin(), batch_idx.end(),
 		    [&, this](auto i){
 		      auto d = Data<data_t>{X.begin(i), X.end(i)};
-		      for(auto& L: this->layer){ d = L->forward(i, d); }
+		      d = layer.data()->forward(i, d, std::vector<std::size_t>{});
 
-		      std::copy(d.begin(), d.end(), Y.begin(i));
+		      std::move(d.begin(), d.end(), Y.begin(i));
 		    });
 
       return Y;
