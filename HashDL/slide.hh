@@ -183,7 +183,8 @@ namespace HashDL {
       is_active[i_batch] = 1;
     }
 
-    const auto forward(std::size_t batch_i, const Data<data_t>& X,
+    const auto forward(std::size_t batch_i,
+		       const Data<data_t>& X,
 		       const std::unique_ptr<Activation<data_t>>& f){
       if(!is_active[batch_i]){
 	data[batch_i] = 0;
