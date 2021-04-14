@@ -119,7 +119,7 @@ namespace HashDL {
       neuron_size = 0;
     }
 
-    void add(const Data<data_t>& W){
+    void add(const std::vector<Data<data_t>>& W){
       std::for_each(std::execution::par, idx.begin(), idx.end(),
 		    [&W,this](auto i){
 		      for(std::size_t n=0, size=W.size(); n<size; ++n){
