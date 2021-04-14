@@ -218,7 +218,9 @@ namespace HashDL {
     virtual Data<data_t> forward(std::size_t,
 				 const Data<data_t>&,
 				 const std::vector<std::size_t>&) = 0;
-    virtual void backward(std::size_t batch_i, const Data<data_t>& dn_dy) = 0;
+    virtual void backward(std::size_t,
+			  const Data<data_t>&,
+			  const std::vector<std::size_t>&) = 0;
     virtual void reset(std::size_t batch_size){}
   };
 
@@ -231,19 +233,24 @@ namespace HashDL {
 				 std::vector<std::size_t>& prev_active) override {
       return next()->forward(batch_i, X, idx);
     }
-    virtual backward(std::size_t batch_i, const Data<data_t>& dn_dy) override {}
+    virtual void backward(std::size_t batch_i,
+			  const Data<data_t>& dn_dy,
+			  const std::vector<std::size_t>& next_active) override {}
   };
 
 
   class OutputLayer : public Layer {
+  private:
+    std::vector<std::size_t> idx;
   public:
     virtual Data<data_t> forward(std::size_t batch_i, const Data<data_t>& X,
 				 std::vector<std::size_t>& prev_active) override {
       return X;
     }
     virtual void backward(std::size_t batch_i,
-				  const Data<data_t>& dn_dy) override {
-      prev()->backward(batch_i, dn_dy);
+			  const Data<data_t>& dn_dy,
+			  const std::vector<std::size_t>& next_active) override {
+      prev()->backward(batch_i, dn_dy, idx);
     }
   };
 
