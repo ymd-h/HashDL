@@ -226,7 +226,7 @@ namespace HashDL {
   };
 
 
-  class HiddenLayer : public Layer {
+  class DenseLayer : public Layer {
   private:
     const std::size_t neuron_size;
     std::vector<Neuron> neuron;
@@ -234,15 +234,15 @@ namespace HashDL {
     LSH hash;
     std::unique_ptr<Activation<data_t>> activation;
   public:
-    HiddenLayer(): HiddenLayer{30}{}
-    HiddenLayer(std::size_t prev_units, std::size_t units, Activation<data_t>* f)
+    DenseLayer(): DenseLayer{30}{}
+    DenseLayer(std::size_t prev_units, std::size_t units, Activation<data_t>* f)
       : neuron_size{units}, neuron(units, Neuron{prev_units}), active_list{},
 	hash{}, activation{f()} {}
-    HiddenLayer(const HiddenLayer&) = default;
-    HiddenLayer(HiddenLayer&&) = default;
-    HiddenLayer& operator=(const HiddenLayer&) = default;
-    HiddenLayer& operator=(HiddenLayer&&) = default;
-    ~HiddenLayer() = default;
+    DenseLayer(const DenseLayer&) = default;
+    DenseLayer(DenseLayer&&) = default;
+    DenseLayer& operator=(const DenseLayer&) = default;
+    DenseLayer& operator=(DenseLayer&&) = default;
+    ~DenseLayer() = default;
 
     virtual Data<data_t> forward(std::size_t batch_i,
 				 const Data<data_t>& X,
