@@ -199,6 +199,7 @@ namespace HashDL {
   class Layer {
   public:
     virtual Data<data_t> forward(std::size_t batch_i, const Data<data_t>& X) = 0;
+    virtual Data<data_t> backward(std::size_t batch_i, const Data<data_t>& dn_dy) = 0;
     virtual void reset(std::size_t batch_size) = 0;
   };
 
