@@ -239,12 +239,8 @@ namespace HashDL {
     auto prev() const noexcept { return _prev; }
     void set_next(Layer* L){ _next = L; }
     void set_prev(Layer* L){ _prev = L; }
-    virtual Data<data_t> forward(std::size_t,
-				 const Data<data_t>&,
-				 const std::vector<std::size_t>&) = 0;
-    virtual void backward(std::size_t,
-			  const Data<data_t>&,
-			  const std::vector<std::size_t>&) = 0;
+    virtual Data<data_t> forward(std::size_t, const Data<data_t>&) = 0;
+    virtual void backward(std::size_t, const Data<data_t>&) = 0;
     virtual void reset(std::size_t batch_size){}
   };
 
@@ -261,13 +257,11 @@ namespace HashDL {
     InputLayer& operator=(InputLayer&&) = default;
     ~InputLayer() = default;
 
-    virtual Data<data_t> forward(std::size_t batch_i, const Data<data_t>& X,
-				 std::vector<std::size_t>& prev_active) override {
-      return next()->forward(batch_i, X, idx);
+    virtual Data<data_t> forward(std::size_t batch_i, const Data<data_t>& X) override {
+      return next()->forward(batch_i, X);
     }
-    virtual void backward(std::size_t batch_i,
-			  const Data<data_t>& dn_dy,
-			  const std::vector<std::size_t>& next_active) override {}
+
+    virtual void backward(std::size_t batch_i, const Data<data_t>& dn_dy) override {}
   };
 
 
@@ -283,15 +277,12 @@ namespace HashDL {
     OutputLayer& operator=(OutputLayer&&) = default;
     ~OutputLayer() = default;
 
-    virtual Data<data_t> forward(std::size_t batch_i,
-				 const Data<data_t>& X,
-				 std::vector<std::size_t>& prev_active) override {
+    virtual Data<data_t> forward(std::size_t batch_i, const Data<data_t>& X) override {
       return X;
     }
-    virtual void backward(std::size_t batch_i,
-			  const Data<data_t>& dn_dy,
-			  const std::vector<std::size_t>& next_active) override {
-      prev()->backward(batch_i, dn_dy, idx);
+
+    virtual void backward(std::size_t batch_i, const Data<data_t>& dn_dy) override {
+      prev()->backward(batch_i, dn_dy);
     }
   };
 
@@ -322,21 +313,19 @@ namespace HashDL {
     }
 
     virtual Data<data_t> forward(std::size_t batch_i,
-				 const Data<data_t>& X,
-				 const std::vector<std::size_t>& prev_active) override {
+				 const Data<data_t>& X) override {
       active_list[batch_i] = hash.retrieve(X);
 
       Data<data_t> Y{neuron_size};
-      for(auto n : active_list[batch_i]){
+      for(auto n : prev()->is_active[batch_i]){
 	Y[n] = neuron[n].forward(batch_i, X, activation);
       }
 
-      return next()->forward(batch_i, Y, active_list[batch_i]);
+      return next()->forward(batch_i, Y);
     }
 
     virtual void backward(std::size_t batch_i,
-			  const Data<data_t>& dn_dy,
-			  const std::vector<std::size_t>& next_active) override {
+			  const Data<data_t>& dn_dy) override {
       Data<data_t> dn_dx{neuron_size};
       std::for_each(std::execution::par,
 		    active_list[batch_i].begin(), active_list[batch_i].end(),
@@ -344,7 +333,7 @@ namespace HashDL {
 		      dn_dx[n] = this->neuron[n].backward(batch_i, dn_dy, next_active);
 		    });
 
-      prev()->backward(batch_i, dn_dx, active_list[batch_i]);
+      prev()->backward(batch_i, dn_dx);
     }
 
     virtual void reset(std::size_t batch_size) override {
