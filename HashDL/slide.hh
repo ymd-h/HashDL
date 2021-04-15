@@ -84,6 +84,35 @@ namespace HashDL {
     auto get_batch_size() const noexcept { return batch_size; }
   };
 
+
+  template<typename T> class Weight {
+  private:
+    std::vector<T> w;
+    T b;
+    std::vector<std::atomic<T>> w_diff;
+    std::atomic<T> b_diff;
+  public:
+    Weight() = default;
+    Weight(std::size_t N): w(N), b{}, w_diff(N), b_diff{} {}
+    Weight(const Weight&) = default;
+    Weight(Weight&&) = default;
+    Weight& operator=(const Weight&) = default;
+    Weight& operator=(Weight&&) = default;
+    ~Weight() = default;
+
+    const auto& weight() const noexcept { return w; }
+    auto weight(std::size_t i) const { return w[i]; }
+    auto bias() const noexcept { return b; }
+
+    void update(){
+      for(std::size_t i=0, size=w.size(); i<size; ++i){
+	w[i] += w_diff[i].exchange(0);
+      }
+      b += b_diff.exchange(0);
+    }
+  };
+
+
   class LSH {
   private:
     const std::size_t L;
