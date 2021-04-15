@@ -110,6 +110,9 @@ namespace HashDL {
       }
       b += b_diff.exchange(0);
     }
+
+    void add_weight_diff(std::size_t i, T d){ w_diff.fetch_add(d); }
+    void add_bias_diff(T d){ b_diff.fetch_add(d); }
   };
 
 
