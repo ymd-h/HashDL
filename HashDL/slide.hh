@@ -328,7 +328,7 @@ namespace HashDL {
       active_list[batch_i] = hash.retrieve(X);
 
       Data<data_t> Y{neuron_size};
-      for(auto n : prev()->is_active[batch_i]){
+      for(auto n : prev()->is_active(batch_i)){
 	Y[n] = neuron[n].forward(batch_i, X, activation);
       }
 
