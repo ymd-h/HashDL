@@ -353,6 +353,10 @@ namespace HashDL {
 
       for(auto& n : neuron){ neuron.reset(batch_size); }
     }
+
+    const auto& is_active(const std::size_t batch_i) noexcept const {
+      return active_list[batch_i];
+    }
   };
 
 
