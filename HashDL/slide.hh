@@ -224,9 +224,20 @@ namespace HashDL {
     }
 
     const auto backward(std::size_t batch_i,
-			const Data<data_t>& dn_dy,
+			data_t dL_dy,
+			const idx_t& prev_active,
 			const std::unique_ptr<Activation<data_t>>& f){
-      return f->back(data[batch_i], dn_dy);
+      auto x = data[batch_i];
+      dL_dy = f->back(x, dL_dy);
+
+      Data<data_t> dL_dx(weight.size());
+      for(auto i : prev_active){
+	dL_dx[i] = dL_dy * weight.weight(i);
+	weight.add_weight_diff(i, dL_dy * x);
+      }
+      weight.add_bias_diff(dL_dy);
+
+      return dL_dx;
     }
 
     const auto& get_weight() const noexcept { return weight; }
