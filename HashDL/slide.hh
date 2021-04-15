@@ -243,7 +243,7 @@ namespace HashDL {
     void set_prev(Layer* L){ _prev = L; }
     virtual Data<data_t> forward(std::size_t, const Data<data_t>&) = 0;
     virtual void backward(std::size_t, const Data<data_t>&) = 0;
-    virtual const idx_t& is_active(std::size_t) const = 0;
+    virtual const idx_t& active_id(std::size_t) const = 0;
     virtual void reset(std::size_t batch_size){}
   };
 
@@ -266,7 +266,7 @@ namespace HashDL {
 
     virtual void backward(std::size_t batch_i, const Data<data_t>& dn_dy) override {}
 
-    virtual const idx_t& is_active(std::size_t batch_i) override const {
+    virtual const idx_t& active_id(std::size_t batch_i) override const {
       return idx;
     }
   };
@@ -292,7 +292,7 @@ namespace HashDL {
       prev()->backward(batch_i, dn_dy);
     }
 
-    virtual const idx_t& is_active(std::size_t batch_i) override const {
+    virtual const idx_t& active_id(std::size_t batch_i) override const {
       return idx;
     }
   };
@@ -328,7 +328,7 @@ namespace HashDL {
       active_list[batch_i] = hash.retrieve(X);
 
       Data<data_t> Y{neuron_size};
-      for(auto n : prev()->is_active(batch_i)){
+      for(auto n : prev()->active_id(batch_i)){
 	Y[n] = neuron[n].forward(batch_i, X, activation);
       }
 
@@ -342,7 +342,7 @@ namespace HashDL {
 		    active_list[batch_i].begin(), active_list[batch_i].end(),
 		    [&, this](auto n){
 		      dn_dx[n] = this->neuron[n].backward(batch_i, dn_dy[n],
-							  prev()->is_active(batch_i));
+							  prev()->active_id(batch_i));
 		    });
 
       prev()->backward(batch_i, dn_dx);
@@ -355,7 +355,7 @@ namespace HashDL {
       for(auto& n : neuron){ neuron.reset(batch_size); }
     }
 
-    virtual const idx_t& is_active(std::size_t batch_i) override const {
+    virtual const idx_t& active_id(std::size_t batch_i) override const {
       return active_list[batch_i];
     }
   };
