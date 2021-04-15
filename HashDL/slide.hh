@@ -113,6 +113,14 @@ namespace HashDL {
 
     void add_weight_diff(std::size_t i, T d){ w_diff.fetch_add(d); }
     void add_bias_diff(T d){ b_diff.fetch_add(d); }
+
+    auto affine(const Data<T>& X, const std::vector<std::size_t>& prev_active) const {
+      auto result = b;
+      for(auto i : prev_active){
+	result += w[i]*X[i];
+      }
+      return result;
+    }
   };
 
 
@@ -210,11 +218,9 @@ namespace HashDL {
 
     const auto forward(std::size_t batch_i,
 		       const Data<data_t>& X,
+		       const std::vector<std::size_t>& prev_active,
 		       const std::unique_ptr<Activation<data_t>>& f){
-      for(std::size_t j=0, data_size=X.size(); j<data_size; ++j){
-	data[batch_i] += weights[j]*data[j];
-      }
-      data[batch_i] += bias;
+      data[batch_i] = weight.affine(X, prev_active);
 
       return f->call(data[batch_i]);
     }
