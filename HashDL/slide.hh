@@ -341,7 +341,8 @@ namespace HashDL {
       std::for_each(std::execution::par,
 		    active_list[batch_i].begin(), active_list[batch_i].end(),
 		    [&, this](auto n){
-		      dn_dx[n] = this->neuron[n].backward(batch_i, dn_dy, next_active);
+		      dn_dx[n] = this->neuron[n].backward(batch_i, dn_dy[n],
+							  prev()->is_active(batch_i));
 		    });
 
       prev()->backward(batch_i, dn_dx);
