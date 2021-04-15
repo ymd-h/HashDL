@@ -11,7 +11,7 @@ namespace HashDL {
   using idx_t = std::vector<std::size_t>;
 
   inline auto index_vec(std::size_t N){
-    std::vector<std::size_t> idx{};
+    idx_t idx{};
 
     idx.reserve(N);
     std::generate_n(std::back_inserter(idx), N, [i=0]() mutable { return i++; });
@@ -116,7 +116,7 @@ namespace HashDL {
     void add_weight_diff(std::size_t i, T d){ w_diff.fetch_add(d); }
     void add_bias_diff(T d){ b_diff.fetch_add(d); }
 
-    auto affine(const Data<T>& X, const std::vector<std::size_t>& prev_active) const {
+    auto affine(const Data<T>& X, const idx_t& prev_active) const {
       auto result = b;
       for(auto i : prev_active){
 	result += w[i]*X[i];
@@ -132,7 +132,7 @@ namespace HashDL {
     std::function<Hash*()> hash_factory;
     std::vector<std::unique_ptr<Hash>> hash;
     std::vector<std::unordered_multimap<hashcode_t, std::size_t>> backet;
-    std::vector<std::size_t> idx;
+    idx_t idx;
     std::size_t neuron_size;
   public:
     LSH(): LSH(50, DWTA::make_factory(8, 16, 8)){}
@@ -173,7 +173,7 @@ namespace HashDL {
     }
 
     auto retrieve(const Data<data_t>& X) const {
-      std::vector<std::size_t> neuron_id{};
+      idx_t neuron_id{};
       neuron_id.reserve(neuron_size);
       std::generate_n(std::back_inserter(neuron_id), neuron_size,
 		      [i=0]() mutable { return i++; });
@@ -216,7 +216,7 @@ namespace HashDL {
 
     const auto forward(std::size_t batch_i,
 		       const Data<data_t>& X,
-		       const std::vector<std::size_t>& prev_active,
+		       const idx_t& prev_active,
 		       const std::unique_ptr<Activation<data_t>>& f){
       data[batch_i] = weight.affine(X, prev_active);
 
@@ -243,14 +243,14 @@ namespace HashDL {
     void set_prev(Layer* L){ _prev = L; }
     virtual Data<data_t> forward(std::size_t, const Data<data_t>&) = 0;
     virtual void backward(std::size_t, const Data<data_t>&) = 0;
-    virtual const std::vector<std::size_t>& is_active(std::size_t) const = 0;
+    virtual const idx_t& is_active(std::size_t) const = 0;
     virtual void reset(std::size_t batch_size){}
   };
 
 
   class InputLayer : public Layer {
   private:
-    std::vector<std::size_t> idx;
+    idx_t idx;
   public:
     InputLayer() = default;
     InputLayer(std::size_t unit): idx{index_vec(unit)} {}
@@ -266,7 +266,7 @@ namespace HashDL {
 
     virtual void backward(std::size_t batch_i, const Data<data_t>& dn_dy) override {}
 
-    virtual const std::vector<std::size_t>& is_active(std::size_t batch_i) override const {
+    virtual const idx_t& is_active(std::size_t batch_i) override const {
       return idx;
     }
   };
@@ -274,7 +274,7 @@ namespace HashDL {
 
   class OutputLayer : public Layer {
   private:
-    std::vector<std::size_t> idx;
+    idx_t idx;
   public:
     OutputLayer() = default;
     OutputLayer(std::size_t unit): idx{index_vec(unit)} {}
@@ -292,7 +292,7 @@ namespace HashDL {
       prev()->backward(batch_i, dn_dy);
     }
 
-    virtual const std::vector<std::size_t>& is_active(std::size_t batch_i) override const {
+    virtual const idx_t& is_active(std::size_t batch_i) override const {
       return idx;
     }
   };
@@ -302,7 +302,7 @@ namespace HashDL {
   private:
     const std::size_t neuron_size;
     std::vector<Neuron> neuron;
-    std::vector<std::vector<std::size_t>> active_list;
+    std::vector<idx_t> active_list;
     LSH hash;
     std::unique_ptr<Activation<data_t>> activation;
   public:
@@ -354,7 +354,7 @@ namespace HashDL {
       for(auto& n : neuron){ neuron.reset(batch_size); }
     }
 
-    virtual const std::vector<std::size_t>& is_active(std::size_t batch_i) override const {
+    virtual const idx_t& is_active(std::size_t batch_i) override const {
       return active_list[batch_i];
     }
   };
@@ -378,7 +378,7 @@ namespace HashDL {
 
       for(auto& L: layer){ L->reset(batch_size); }
 
-      std::vector<std::size_t> batch_idx{}
+      idx_t batch_idx{}
       batch_idx.reserve(batch_size);
       std::generate_n(std::back_inserter(batch_idx), batch_size,
 		      [i=0]() mutable { return i++; });
