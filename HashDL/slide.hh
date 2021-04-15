@@ -8,6 +8,8 @@
 #include "Hash.hh"
 
 namespace HashDL {
+  using idx_t = std::vector<std::size_t>;
+
   inline auto index_vec(std::size_t N){
     std::vector<std::size_t> idx{};
 
