@@ -389,7 +389,7 @@ namespace HashDL {
       std::for_each(std::execution::par, batch_idx.begin(), batch_idx.end(),
 		    [&, this](auto i){
 		      auto d = Data<data_t>{X.begin(i), X.end(i)};
-		      d = layer.data()->forward(i, d, std::vector<std::size_t>{});
+		      d = layer.data()->forward(i, d);
 
 		      std::move(d.begin(), d.end(), Y.begin(i));
 		    });
@@ -404,7 +404,7 @@ namespace HashDL {
       std::for_each(batch_idx.begin(), batch_idx.end(),
 		    [&, this](auto i){
 		      auto d = Data<data_t>{dLoss_dy.begin(i), dLoss_dy.end(i)};
-		      layer.back()->backward(i, d, std::vector<std::size_t>{});
+		      layer.back()->backward(i, d);
 		    });
 
       std::for_each();
