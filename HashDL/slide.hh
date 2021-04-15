@@ -241,6 +241,7 @@ namespace HashDL {
     void set_prev(Layer* L){ _prev = L; }
     virtual Data<data_t> forward(std::size_t, const Data<data_t>&) = 0;
     virtual void backward(std::size_t, const Data<data_t>&) = 0;
+    virtual const std::vector<std::size_t>& is_active(std::size_t) const = 0;
     virtual void reset(std::size_t batch_size){}
   };
 
@@ -262,6 +263,10 @@ namespace HashDL {
     }
 
     virtual void backward(std::size_t batch_i, const Data<data_t>& dn_dy) override {}
+
+    virtual const std::vector<std::size_t>& is_active(std::size_t batch_i) override const {
+      return idx;
+    }
   };
 
 
@@ -283,6 +288,10 @@ namespace HashDL {
 
     virtual void backward(std::size_t batch_i, const Data<data_t>& dn_dy) override {
       prev()->backward(batch_i, dn_dy);
+    }
+
+    virtual const std::vector<std::size_t>& is_active(std::size_t batch_i) override const {
+      return idx;
     }
   };
 
@@ -343,7 +352,7 @@ namespace HashDL {
       for(auto& n : neuron){ neuron.reset(batch_size); }
     }
 
-    const auto& is_active(const std::size_t batch_i) noexcept const {
+    virtual const std::vector<std::size_t>& is_active(std::size_t batch_i) override const {
       return active_list[batch_i];
     }
   };
