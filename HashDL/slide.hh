@@ -449,7 +449,8 @@ namespace HashDL {
 		      layer.back()->backward(i, d);
 		    });
 
-      for(auto& L : layer){ L->update(); }
+      std::for_each(std::execution::par, layer.begin(), layer.end(),
+		    [](auto& L){ L->update(); });
     }
   };
 
