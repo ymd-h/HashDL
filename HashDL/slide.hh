@@ -282,7 +282,7 @@ namespace HashDL {
       return next()->forward(batch_i, X);
     }
 
-    virtual void backward(std::size_t batch_i, const Data<data_t>& dn_dy) override {}
+    virtual void backward(std::size_t batch_i, const Data<data_t>& dL_dy) override {}
 
     virtual const idx_t& active_id(std::size_t batch_i) override const {
       return idx;
@@ -307,8 +307,8 @@ namespace HashDL {
       return X;
     }
 
-    virtual void backward(std::size_t batch_i, const Data<data_t>& dn_dy) override {
-      prev()->backward(batch_i, dn_dy);
+    virtual void backward(std::size_t batch_i, const Data<data_t>& dL_dy) override {
+      prev()->backward(batch_i, dL_dy);
     }
 
     virtual const idx_t& active_id(std::size_t batch_i) override const {
@@ -354,11 +354,11 @@ namespace HashDL {
     }
 
     virtual void backward(std::size_t batch_i,
-			  const Data<data_t>& dn_dy) override {
+			  const Data<data_t>& dL_dy) override {
       Data<data_t> dn_dx{neuron_size};
       std::for_each(active_list[batch_i].begin(), active_list[batch_i].end(),
 		    [&, this](auto n){
-		      dn_dx[n] = this->neuron[n].backward(batch_i, dn_dy[n],
+		      dn_dx[n] = this->neuron[n].backward(batch_i, dL_dy[n],
 							  prev()->fx(batch_i),
 							  prev()->active_id(batch_i));
 		    });
