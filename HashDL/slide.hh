@@ -346,7 +346,7 @@ namespace HashDL {
 				 const Data<data_t>& X) override {
       active_list[batch_i] = hash.retrieve(X);
 
-      for(auto n : prev()->active_id(batch_i)){
+      for(auto n : active_list[batch_i]){
 	Y[batch_i][n] = neuron[n].forward(batch_i, X, activation);
       }
 
