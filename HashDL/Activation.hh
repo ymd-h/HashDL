@@ -17,7 +17,7 @@ namespace HashDL {
   template<typename T> class ReLU : public Activation<T> {
   public:
     virtual T call(T x) override const noexcept { return (x>0)? x: 0; }
-    virtual T back(T x, T dn_dy) override const noexcept {  return (x>0)? dn_dy: 0; }
+    virtual T back(T x, T dn_dy) override const noexcept {  return (x>0)? 1: 0; }
   };
 }
 
