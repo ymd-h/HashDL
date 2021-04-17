@@ -339,6 +339,7 @@ namespace HashDL {
     std::vector<idx_t> active_list;
     LSH hash;
     std::unique_ptr<Activation<data_t>> activation;
+    std::vector<Data<data_t>> output;
   public:
     DenseLayer(): DenseLayer{30}{}
     DenseLayer(std::size_t prev_units, std::size_t units, Activation<data_t>* f)
@@ -361,12 +362,11 @@ namespace HashDL {
 				 const Data<data_t>& X) override {
       active_list[batch_i] = hash.retrieve(X);
 
-      Data<data_t> Y{neuron_size};
       for(auto n : prev()->active_id(batch_i)){
-	Y[n] = neuron[n].forward(batch_i, X, activation);
+	output[n] = neuron[n].forward(batch_i, X, activation);
       }
 
-      return next()->forward(batch_i, Y);
+      return next()->forward(batch_i, output);
     }
 
     virtual void backward(std::size_t batch_i,
@@ -386,11 +386,18 @@ namespace HashDL {
       active_list.clear();
       active_list.resize(batch_size);
 
+      output.clear();
+      output.resize(batch_size);
+
       for(auto& n : neuron){ neuron.reset(batch_size); }
     }
 
     virtual const idx_t& active_id(std::size_t batch_i) override const {
       return active_list[batch_i];
+    }
+
+    virtual const Data<data_t>& fx(std::size_t batch_i) const override {
+      return output[batch_i];
     }
   };
 
