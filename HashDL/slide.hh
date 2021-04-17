@@ -372,10 +372,10 @@ namespace HashDL {
     virtual void backward(std::size_t batch_i,
 			  const Data<data_t>& dn_dy) override {
       Data<data_t> dn_dx{neuron_size};
-      std::for_each(std::execution::par,
-		    active_list[batch_i].begin(), active_list[batch_i].end(),
+      std::for_each(active_list[batch_i].begin(), active_list[batch_i].end(),
 		    [&, this](auto n){
 		      dn_dx[n] = this->neuron[n].backward(batch_i, dn_dy[n],
+							  prev()->fx(batch_i),
 							  prev()->active_id(batch_i));
 		    });
 
@@ -443,7 +443,7 @@ namespace HashDL {
       const auto batch_size = dLoss_dy.get_batch_size();
 
       auto batch_idx = index_vec(batch_size);
-      std::for_each(batch_idx.begin(), batch_idx.end(),
+      std::for_each(std::execution::par, batch_idx.begin(), batch_idx.end(),
 		    [&, this](auto i){
 		      auto d = Data<data_t>{dLoss_dy.begin(i), dLoss_dy.end(i)};
 		      layer.back()->backward(i, d);
