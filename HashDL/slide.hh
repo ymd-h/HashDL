@@ -247,23 +247,27 @@ namespace HashDL {
   private:
     Layer* _next;
     Layer* _prev;
+  protected:
+    std::vector<Data<data_t>> Y;
   public:
     auto next() const noexcept { return _next; }
     auto prev() const noexcept { return _prev; }
     void set_next(Layer* L){ _next = L; }
     void set_prev(Layer* L){ _prev = L; }
+    const Data<data_t>& fx(std::size_t batch_i) const { return Y[batch_i]; }
     virtual Data<data_t> forward(std::size_t, const Data<data_t>&) = 0;
     virtual void backward(std::size_t, const Data<data_t>&) = 0;
     virtual const idx_t& active_id(std::size_t) const = 0;
-    virtual void reset(std::size_t batch_size){}
-    virtual const Data<data_t>& fx(std::size_t) const = 0;
+    virtual void reset(std::size_t batch_size){
+      Y.clear();
+      Y.resize(batch_size);
+    }
   };
 
 
   class InputLayer : public Layer {
   private:
     idx_t idx;
-    std::vector<Data<data_t>> Y;
   public:
     InputLayer() = default;
     InputLayer(std::size_t unit): idx{index_vec(unit)}, Y{} {}
@@ -283,22 +287,12 @@ namespace HashDL {
     virtual const idx_t& active_id(std::size_t batch_i) override const {
       return idx;
     }
-
-    virtual void reset(std::size_t batch_size) override {
-      Y.clear();
-      Y.resize(batch_size);
-    }
-
-    virtual const Data<data_t>& fx(std::size_t batch_i) const override {
-      return Y[batch_i];
-    }
   };
 
 
   class OutputLayer : public Layer {
   private:
     idx_t idx;
-    std::vector<Data<data_t>> Y;
   public:
     OutputLayer() = default;
     OutputLayer(std::size_t unit): idx{index_vec(unit)} {}
@@ -320,15 +314,6 @@ namespace HashDL {
     virtual const idx_t& active_id(std::size_t batch_i) override const {
       return idx;
     }
-
-    virtual void reset(std::size_t batch_size) override {
-      Y.clear();
-      Y.resize(batch_size);
-    }
-
-    virtual const Data<data_t>& fx(std::size_t batch_i) const override {
-      return Y[batch_i];
-    }
   };
 
 
@@ -339,7 +324,6 @@ namespace HashDL {
     std::vector<idx_t> active_list;
     LSH hash;
     std::unique_ptr<Activation<data_t>> activation;
-    std::vector<Data<data_t>> Y;
   public:
     DenseLayer(): DenseLayer{30}{}
     DenseLayer(std::size_t prev_units, std::size_t units, Activation<data_t>* f)
@@ -383,21 +367,16 @@ namespace HashDL {
     }
 
     virtual void reset(std::size_t batch_size) override {
+      Layer::reset(batch_i);
+
       active_list.clear();
       active_list.resize(batch_size);
-
-      Y.clear();
-      Y.resize(batch_size);
 
       for(auto& n : neuron){ neuron.reset(batch_size); }
     }
 
     virtual const idx_t& active_id(std::size_t batch_i) override const {
       return active_list[batch_i];
-    }
-
-    virtual const Data<data_t>& fx(std::size_t batch_i) const override {
-      return Y[batch_i];
     }
   };
 
