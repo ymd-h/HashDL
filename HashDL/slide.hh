@@ -363,10 +363,10 @@ namespace HashDL {
       active_list[batch_i] = hash.retrieve(X);
 
       for(auto n : prev()->active_id(batch_i)){
-	Y[n] = neuron[n].forward(batch_i, X, activation);
+	Y[batch_i][n] = neuron[n].forward(batch_i, X, activation);
       }
 
-      return next()->forward(batch_i, Y);
+      return next()->forward(batch_i, Y[batch_i]);
     }
 
     virtual void backward(std::size_t batch_i,
