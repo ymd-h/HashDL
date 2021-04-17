@@ -439,13 +439,13 @@ namespace HashDL {
       return Y;
     }
 
-    auto backward(const DataView<data_t>& dLoss_dy){
-      const auto batch_size = dLoss_dy.get_batch_size();
+    auto backward(const DataView<data_t>& dL_dy){
+      const auto batch_size = dL_dy.get_batch_size();
 
       auto batch_idx = index_vec(batch_size);
       std::for_each(std::execution::par, batch_idx.begin(), batch_idx.end(),
 		    [&, this](auto i){
-		      auto d = Data<data_t>{dLoss_dy.begin(i), dLoss_dy.end(i)};
+		      auto d = Data<data_t>{dL_dy.begin(i), dL_dy.end(i)};
 		      layer.back()->backward(i, d);
 		    });
 
