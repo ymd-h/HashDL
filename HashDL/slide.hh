@@ -298,6 +298,7 @@ namespace HashDL {
   class OutputLayer : public Layer {
   private:
     idx_t idx;
+    std::vector<Data<data_t>> output;
   public:
     OutputLayer() = default;
     OutputLayer(std::size_t unit): idx{index_vec(unit)} {}
@@ -308,6 +309,7 @@ namespace HashDL {
     ~OutputLayer() = default;
 
     virtual Data<data_t> forward(std::size_t batch_i, const Data<data_t>& X) override {
+      output[batch_i] = X;
       return X;
     }
 
@@ -317,6 +319,15 @@ namespace HashDL {
 
     virtual const idx_t& active_id(std::size_t batch_i) override const {
       return idx;
+    }
+
+    virtual void reset(std::size_t batch_size) override {
+      output.clear();
+      output.resize(batch_size);
+    }
+
+    virtual const Data<data_t>& fx(std::size_t batch_i) const override {
+      return output[batch_i];
     }
   };
 
