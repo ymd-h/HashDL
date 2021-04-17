@@ -191,7 +191,6 @@ namespace HashDL {
 
   class Neuron {
   private:
-    std::vector<data_t> data;
     std::vector<data_t> gradient;
     Weight<data_t> weight;
   public:
@@ -218,26 +217,20 @@ namespace HashDL {
 		       const Data<data_t>& X,
 		       const idx_t& prev_active,
 		       const std::unique_ptr<Activation<data_t>>& f){
-      data[batch_i] = weight.affine(X, prev_active);
-
-      return f->call(data[batch_i]);
+      return f->call(weight.affine(X, prev_active));
     }
 
     const auto backward(std::size_t batch_i,
-			data_t dL_dy,
-			const idx_t& prev_active,
+			const Data<data_t>& X, data_t y,
+			data_t dL_dy, Data<data_t>& dL_dx,
 			const std::unique_ptr<Activation<data_t>>& f){
-      auto x = data[batch_i];
-      dL_dy = f->back(x, dL_dy);
+      dL_dy = f->back(y, dL_dy);
 
-      Data<data_t> dL_dx(weight.size());
       for(auto i : prev_active){
-	dL_dx[i] = dL_dy * weight.weight(i);
-	weight.add_weight_diff(i, dL_dy * x);
+	dL_dx[i] += dL_dy * weight.weight(i);
+	weight.add_weight_diff(i, dL_dy * X[i]);
       }
       weight.add_bias_diff(dL_dy);
-
-      return dL_dx;
     }
 
     const auto& get_weight() const noexcept { return weight; }
@@ -355,15 +348,15 @@ namespace HashDL {
 
     virtual void backward(std::size_t batch_i,
 			  const Data<data_t>& dL_dy) override {
-      Data<data_t> dn_dx{neuron_size};
-      std::for_each(active_list[batch_i].begin(), active_list[batch_i].end(),
-		    [&, this](auto n){
-		      dn_dx[n] = this->neuron[n].backward(batch_i, dL_dy[n],
-							  prev()->fx(batch_i),
-							  prev()->active_id(batch_i));
-		    });
+      const auto& prev_list = prev()->active_id(batch_i);
+      const auto& X = prev()->fx(batch_i);
 
-      prev()->backward(batch_i, dn_dx);
+      Data<data_t> dL_dx{X.get_data_size()};
+      for(auto n : active_list[batch_i]){
+	this->neuron[n].backward(batch_i, X, Y[n], dL_dy[n], dL_dx, activation);
+      }
+
+      prev()->backward(batch_i, dL_dx);
     }
 
     virtual void reset(std::size_t batch_size) override {
