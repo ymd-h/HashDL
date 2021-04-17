@@ -256,15 +256,17 @@ namespace HashDL {
     virtual void backward(std::size_t, const Data<data_t>&) = 0;
     virtual const idx_t& active_id(std::size_t) const = 0;
     virtual void reset(std::size_t batch_size){}
+    virtual const Data<data_t>& fx(std::size_t) const = 0;
   };
 
 
   class InputLayer : public Layer {
   private:
     idx_t idx;
+    std::vector<Data<data_t>> output;
   public:
     InputLayer() = default;
-    InputLayer(std::size_t unit): idx{index_vec(unit)} {}
+    InputLayer(std::size_t unit): idx{index_vec(unit)}, output{} {}
     InputLayer(const InputLayer&) = default;
     InputLayer(InputLayer&&) = default;
     InputLayer& operator=(const InputLayer&) = default;
@@ -272,6 +274,7 @@ namespace HashDL {
     ~InputLayer() = default;
 
     virtual Data<data_t> forward(std::size_t batch_i, const Data<data_t>& X) override {
+      output[batch_i] = X;
       return next()->forward(batch_i, X);
     }
 
@@ -279,6 +282,15 @@ namespace HashDL {
 
     virtual const idx_t& active_id(std::size_t batch_i) override const {
       return idx;
+    }
+
+    virtual void reset(std::size_t batch_size) override {
+      output.clear();
+      output.resize(batch_size);
+    }
+
+    virtual const Data<data_t>& fx(std::size_t batch_i) const override {
+      return output[batch_i];
     }
   };
 
