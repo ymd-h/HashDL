@@ -1,6 +1,8 @@
 #ifndef ACTIVATION_HH
 #define ACTIVATION_HH
 
+#include <cmath>
+
 namespace HashDL {
   template<typename T> class Activation {
   public:
@@ -19,6 +21,12 @@ namespace HashDL {
     virtual T call(T x) override const noexcept { return (x>0)? x: 0; }
     virtual T back(T y, T dn_dy) override const noexcept {  return (y>0)? 1: 0; }
   };
+
+  template<typename T> class Sigmoid : public Activation<T> {
+  public:
+    virtual T call(T x) override const noexcept { return 1.0/(1.0 + std::exp(-x)); }
+    virtual T back(T y, T dn_dy) override const noexcept { return y*(1-y); }
+  }
 }
 
 #endif
