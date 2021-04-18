@@ -18,19 +18,19 @@ namespace HashDL {
 
   template<typename T> class Data {
   private:
-    std::size_t size;
+    std::size_t _size;
     std::vector<T> data;
 
   public:
     Data(): Data<T>{1};
-    Data(std::size_t size): size{size}, data(size) {}
-    Data(const std::vector<T>& data): size{data.size()}, data{data} {}
-    Data(std::vector<T>&& data): size{data.size()}, data{data} {}
+    Data(std::size_t size): _size{size}, data(size) {}
+    Data(const std::vector<T>& data): _size{data.size()}, data{data} {}
+    Data(std::vector<T>&& data): _size{data.size()}, data{data} {}
     Data(T* begin, T* end)
-      : size{std::distance(begin, end)}, data{begin, end} {}
+      : _size{std::distance(begin, end)}, data{begin, end} {}
     template<typename F> Data<T>(T* begin, T* end, F&& f)
-      : size{std::distance(begin, end)}, data{} {
-      data.reserve(size);
+      : _size{std::distance(begin, end)}, data{} {
+      data.reserve(_size);
       while(begin != end){ data.emplace_back(f(*(begin++))); }
     }
     Data(const Data<T>&) = default;
@@ -39,7 +39,7 @@ namespace HashDL {
     Data& operator=(Data<T>&&) = default;
     ~Data() = default;
 
-    const auto size() const { return size; }
+    std::size_t size() const noexcept { return _size; }
     auto begin(){ data.begin(); }
     auto end(){ data.end(); }
     const auto operator[](std::size_t n) const { return data[n]; }
