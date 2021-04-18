@@ -322,6 +322,7 @@ namespace HashDL {
   private:
     std::size_t output_dim;
     std::vector<std::unique_ptr<Layer<T>>> layer;
+    std::unique_ptr<Optimizer<T>> opt;
   public:
     Network() = default;
     Network(const Network&) = default;
@@ -360,6 +361,7 @@ namespace HashDL {
 		      layer.back()->backward(i, d);
 		    });
 
+      opt->step();
       std::for_each(std::execution::par, layer.begin(), layer.end(),
 		    [](auto& L){ L->update(); });
     }
