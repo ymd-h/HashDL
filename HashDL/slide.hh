@@ -255,13 +255,13 @@ namespace HashDL {
   private:
     const std::size_t neuron_size;
     std::vector<Neuron<T>> neuron;
-    std::vector<idx_t> active_list;
+    std::vector<idx_t> active_idx;
     LSH hash;
     std::unique_ptr<Activation<T>> activation;
   public:
     DenseLayer(): DenseLayer{30}{}
     DenseLayer(std::size_t prev_units, std::size_t units, Activation<T>* f)
-      : neuron_size{units}, neuron(units, Neuron{prev_units}), active_list{},
+      : neuron_size{units}, neuron(units, Neuron{prev_units}), active_idx{},
 	hash{}, activation{f} {
       hash.add(neuron);
     }
@@ -278,9 +278,9 @@ namespace HashDL {
 
     virtual Data<T> forward(std::size_t batch_i,
 				 const Data<T>& X) override {
-      active_list[batch_i] = hash.retrieve(X);
+      active_idx[batch_i] = hash.retrieve(X);
 
-      for(auto n : active_list[batch_i]){
+      for(auto n : active_idx[batch_i]){
 	Y[batch_i][n] = neuron[n].forward(batch_i, X, activation);
       }
 
@@ -293,7 +293,7 @@ namespace HashDL {
       const auto& X = prev()->fx(batch_i);
 
       Data<T> dL_dx{X.get_data_size()};
-      for(auto n : active_list[batch_i]){
+      for(auto n : active_idx[batch_i]){
 	this->neuron[n].backward(batch_i, X, Y[n], dL_dy[n], dL_dx, activation);
       }
 
@@ -303,14 +303,14 @@ namespace HashDL {
     virtual void reset(std::size_t batch_size) override {
       Layer::reset(batch_i);
 
-      active_list.clear();
-      active_list.resize(batch_size);
+      active_idx.clear();
+      active_idx.resize(batch_size);
 
       for(auto& n : neuron){ neuron.reset(batch_size); }
     }
 
     virtual const idx_t& active_id(std::size_t batch_i) override const {
-      return active_list[batch_i];
+      return active_idx[batch_i];
     }
   };
 
