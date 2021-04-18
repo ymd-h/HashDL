@@ -278,7 +278,7 @@ namespace HashDL {
     }
 
     virtual Data<T> forward(std::size_t batch_i,
-				 const Data<T>& X) override {
+			    const Data<T>& X) override {
       active_idx[batch_i] = hash.retrieve(X);
 
       for(auto n : active_idx[batch_i]){
