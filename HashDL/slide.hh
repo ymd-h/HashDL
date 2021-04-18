@@ -307,7 +307,20 @@ namespace HashDL {
     std::vector<std::unique_ptr<Layer<T>>> layer;
     std::unique_ptr<Optimizer<T>> opt;
   public:
-    Network() = default;
+    Network() = delete;
+    Network(std::size_t input_size, std::vector<std::size_t> units,
+	    Optimizer* opt)
+      : output_dim{units.size() > 0 ? units.back(): input_size}, layer{}, opt{opt} {
+      layer.reserve(units.size() + 2);
+
+      layer.emplace_back(new InputLayer{input_size});
+      auto prev_units = input_size;
+      for(auto& u : units){
+	layer.emplace_back(new DenseLayer{prev_units, u, new ReLU{}});
+	prev_units = u;
+      }
+      layer.emplace_back(new OutputLayer{prev_units});
+    }
     Network(const Network&) = default;
     Network(Network&&) = default;
     Network& operator=(const Network&) = default;
