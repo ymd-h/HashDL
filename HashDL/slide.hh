@@ -148,7 +148,7 @@ namespace HashDL {
     Neuron& operator=(Neuron&&) = default;
     ~Neuron() = default;
 
-    void reset_batch(std::size_t batch_size){
+    void reset(std::size_t batch_size){
       data.clear();
       data.resize(batch_size, 0);
     }
