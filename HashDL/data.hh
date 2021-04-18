@@ -61,6 +61,8 @@ namespace HashDL {
       : data_size{data_size}, data{data} {}
     BatchData(std::size_t data_size, std::vector<T>&& data)
       : data_size{data_size}, data{data} {}
+    BatchData(std::size_t data_size, std::size_t batch_size, T v)
+      : data_size{data_size}, data(data_size * batch_size, v) {}
     BatchData(const BatchData&) = default;
     BatchData(BatchData&&) = default;
     BatchData& operator=(const BatchData&) = default;
