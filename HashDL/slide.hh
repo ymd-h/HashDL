@@ -311,11 +311,14 @@ namespace HashDL {
     std::size_t output_dim;
     std::vector<std::unique_ptr<Layer<T>>> layer;
     std::unique_ptr<Optimizer<T>> opt;
+    std::function<bool()> update_freq;
   public:
     Network() = delete;
     Network(std::size_t input_size, std::vector<std::size_t> units,
-	    Optimizer* opt)
-      : output_dim{units.size() > 0 ? units.back(): input_size}, layer{}, opt{opt} {
+	    Optimizer* opt, std::function<bool()> update_freq)
+      : output_dim{units.size() > 0 ? units.back(): input_size}, layer{},
+	opt{opt}, update_freq{update_freq}
+    {
       layer.reserve(units.size() + 2);
 
       layer.emplace_back(new InputLayer{input_size});
