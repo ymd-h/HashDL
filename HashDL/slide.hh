@@ -163,6 +163,7 @@ namespace HashDL {
     const auto backward(std::size_t batch_i,
 			const Data<T>& X, T y,
 			T dL_dy, Data<T>& dL_dx,
+			const idx_t& prev_active,
 			const std::unique_ptr<Activation<T>>& f){
       dL_dy = f->back(y, dL_dy);
 
@@ -282,7 +283,8 @@ namespace HashDL {
       active_idx[batch_i] = hash.retrieve(X);
 
       for(auto n : active_idx[batch_i]){
-	Y[batch_i][n] = neuron[n].forward(batch_i, X, activation);
+	Y[batch_i][n] = neuron[n].forward(batch_i, X,
+					  prev()->active_id(batch_i), activation);
       }
 
       return next()->forward(batch_i, Y[batch_i]);
@@ -290,12 +292,13 @@ namespace HashDL {
 
     virtual void backward(std::size_t batch_i,
 			  const Data<T>& dL_dy) override {
-      const auto& prev_list = prev()->active_id(batch_i);
       const auto& X = prev()->fx(batch_i);
 
       Data<T> dL_dx{X.get_data_size()};
       for(auto n : active_idx[batch_i]){
-	this->neuron[n].backward(batch_i, X, Y[n], dL_dy[n], dL_dx, activation);
+	this->neuron[n].backward(batch_i, X, Y[n],
+				 dL_dy[n], dL_dx,
+				 prev()->active_id(batch_i), activation);
       }
 
       prev()->backward(batch_i, dL_dx);
