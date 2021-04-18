@@ -107,7 +107,7 @@ namespace HashDL {
       std::for_each(std::execution::par, idx.begin(), idx.end(),
 		    [&N,this](auto i){
 		      for(std::size_t n=0, size=N.size(); n<size; ++n){
-			const auto& W = N[n].get_weight();
+			const auto W = N[n].w();
 			this->backet[i].insert(this->hash[i]->encode(W), n);
 		      }
 		    });
@@ -162,7 +162,7 @@ namespace HashDL {
       weight.add_bias_grad(dL_dy);
     }
 
-    const auto& get_weight() const noexcept { return weight; }
+    const auto w() const noexcept { return weight.weight(); }
 
     void update(){ weight->update(); }
   };
