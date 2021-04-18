@@ -246,8 +246,11 @@ namespace HashDL {
     std::unique_ptr<Activation<T>> activation;
   public:
     DenseLayer(): DenseLayer{30}{}
-    DenseLayer(std::size_t prev_units, std::size_t units, Activation<T>* f)
-      : neuron(units, Neuron{prev_units}), active_idx{}, hash{}, activation{f} {
+    DenseLayer(std::size_t prev_units, std::size_t units, Activation<T>* f,
+	       std::size_t L, std::function<Hash*()> hash_factory)
+      : neuron(units, Neuron{prev_units}), active_idx{},
+	hash{L, hash_factory}, activation{f}
+    {
       hash.add(neuron);
     }
     DenseLayer(const DenseLayer&) = default;
