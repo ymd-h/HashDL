@@ -1,8 +1,10 @@
 from libcpp.vector cimport vector
 
 cdef extern from "slide.hh" namespace "HashDL":
-    cdef cppclass BatchData[T]
-    cdef cppclass DataView[T]
+    cdef cppclass BatchData[T]:
+        BatchData() except +
+    cdef cppclass DataView[T]:
+        DataView() except +
     cdef cppclass SGD[T]:
         SGD(T, T) except +
     cdef cppclass Adam[T]:
