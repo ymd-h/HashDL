@@ -92,11 +92,11 @@ namespace HashDL {
   private:
     std::vector<T> w;
     T b;
-    std::vector<std::atomic<T>> w_diff;
-    std::atomic<T> b_diff;
+    std::vector<std::atomic<T>> w_grad;
+    std::atomic<T> b_grad;
   public:
     Weight() = default;
-    Weight(std::size_t N): w(N), b{}, w_diff(N), b_diff{} {}
+    Weight(std::size_t N): w(N), b{}, w_grad(N), b_grad{} {}
     Weight(const Weight&) = default;
     Weight(Weight&&) = default;
     Weight& operator=(const Weight&) = default;
@@ -109,13 +109,13 @@ namespace HashDL {
 
     void update(){
       for(std::size_t i=0, size=w.size(); i<size; ++i){
-	w[i] += w_diff[i].exchange(0);
+	w[i] += w_grad[i].exchange(0);
       }
-      b += b_diff.exchange(0);
+      b += b_grad.exchange(0);
     }
 
-    void add_weight_diff(std::size_t i, T d){ w_diff.fetch_add(d); }
-    void add_bias_diff(T d){ b_diff.fetch_add(d); }
+    void add_weight_grad(std::size_t i, T d){ w_grad.fetch_add(d); }
+    void add_bias_grad(T d){ b_grad.fetch_add(d); }
 
     auto affine(const Data<T>& X, const idx_t& prev_active) const {
       auto result = b;
@@ -229,9 +229,9 @@ namespace HashDL {
 
       for(auto i : prev_active){
 	dL_dx[i] += dL_dy * weight.weight(i);
-	weight.add_weight_diff(i, dL_dy * X[i]);
+	weight.add_weight_grad(i, dL_dy * X[i]);
       }
-      weight.add_bias_diff(dL_dy);
+      weight.add_bias_grad(dL_dy);
     }
 
     const auto& get_weight() const noexcept { return weight; }
