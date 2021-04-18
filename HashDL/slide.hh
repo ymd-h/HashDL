@@ -210,9 +210,7 @@ namespace HashDL {
 
     virtual void backward(std::size_t batch_i, const Data<T>& dL_dy) override {}
 
-    virtual const idx_t& active_id(std::size_t batch_i) override const {
-      return idx;
-    }
+    virtual const idx_t& active_id(std::size_t batch_i) override const { return idx; }
   };
 
 
@@ -237,9 +235,7 @@ namespace HashDL {
       prev()->backward(batch_i, dL_dy);
     }
 
-    virtual const idx_t& active_id(std::size_t batch_i) override const {
-      return idx;
-    }
+    virtual const idx_t& active_id(std::size_t batch_i) override const { return idx; }
   };
 
 
