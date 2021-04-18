@@ -174,6 +174,8 @@ namespace HashDL {
     }
 
     const auto& get_weight() const noexcept { return weight; }
+
+    void update(){ weight->update(); }
   };
 
 
