@@ -253,7 +253,6 @@ namespace HashDL {
 
   template<typename T> class DenseLayer : public Layer<T> {
   private:
-    const std::size_t neuron_size;
     std::vector<Neuron<T>> neuron;
     std::vector<idx_t> active_idx;
     LSH<T> hash;
@@ -261,7 +260,7 @@ namespace HashDL {
   public:
     DenseLayer(): DenseLayer{30}{}
     DenseLayer(std::size_t prev_units, std::size_t units, Activation<T>* f)
-      : neuron_size{units}, neuron(units, Neuron{prev_units}), active_idx{},
+      : neuron(units, Neuron{prev_units}), active_idx{},
 	hash{}, activation{f} {
       hash.add(neuron);
     }
