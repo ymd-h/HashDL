@@ -22,22 +22,22 @@ namespace HashDL {
     std::vector<T> data;
 
   public:
-    Data<T>(): Data<T>{1};
-    Data<T>(std::size_t size): size{size}, data(size) {}
-    Data<T>(const std::vector<T>& data): size{data.size()}, data{data} {}
-    Data<T>(std::vector<T>&& data): size{data.size()}, data{data} {}
-    Data<T>(T* begin, T* end)
+    Data(): Data<T>{1};
+    Data(std::size_t size): size{size}, data(size) {}
+    Data(const std::vector<T>& data): size{data.size()}, data{data} {}
+    Data(std::vector<T>&& data): size{data.size()}, data{data} {}
+    Data(T* begin, T* end)
       : size{std::distance(begin, end)}, data{begin, end} {}
     template<typename F> Data<T>(T* begin, T* end, F&& f)
       : size{std::distance(begin, end)}, data{} {
       data.reserve(size);
       while(begin != end){ data.emplace_back(f(*(begin++))); }
     }
-    Data<T>(const Data<T>&) = default;
-    Data<T>(Data<T>&&) = default;
-    Data<T>& operator=(const Data<T>&) = default;
-    Data<T>& operator=(Data<T>&&) = default;
-    ~Data<T>() = default;
+    Data(const Data<T>&) = default;
+    Data(Data<T>&&) = default;
+    Data& operator=(const Data<T>&) = default;
+    Data& operator=(Data<T>&&) = default;
+    ~Data() = default;
 
     const auto size() const { return size; }
     auto begin(){ data.begin(); }
