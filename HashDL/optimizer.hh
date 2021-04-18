@@ -12,7 +12,7 @@ namespace HashDL {
 
   template<typename T> class OptimizerClient {
   public:
-    virtual T call(T grad) = 0;
+    virtual T diff(T grad) = 0;
   };
 
   template<typename T> class SGD : public Optimizer<T> {
@@ -47,7 +47,7 @@ namespace HashDL {
     SGDClient& operator=(SGDClient&&) = default;
     ~SGDClient() = default;
 
-    virtual T call(T grad){
+    virtual T diff(T grad){
       return - sgd->eta() * grad;
     }
   };
@@ -98,7 +98,7 @@ namespace HashDL {
     AdamClient& operator=(AdamClient&&) = default;
     ~AdamClient() = default;
 
-    virtual T call(T grad) override {
+    virtual T diff(T grad) override {
       const auto beta1 = adam->beta1();
       const auto beta2 = adam->beta2();
 
