@@ -5,6 +5,8 @@ from HashDL cimport slide
 
 cdef class Optimizer:
     cdef slide.Optimizer* opt
+    cdef slide.Optimizer* ptr(self):
+        return self.opt
 
 
 cdef class SGD(Optimizer):
@@ -23,7 +25,7 @@ cdef class Network:
                   optimizer = None, *args, **kwargs):
         optimizer = optimizer or Adam()
 
-        self.net = new slide.Network()
+        self.net = new slide.Network(input_size, units, optimizer.ptr(), )
 
 
     def __call__(self, X):
