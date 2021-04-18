@@ -204,7 +204,7 @@ namespace HashDL {
     idx_t idx;
   public:
     InputLayer() = default;
-    InputLayer(std::size_t unit): idx{index_vec(unit)}, Y{} {}
+    InputLayer(std::size_t units): idx{index_vec(units)}, Y{} {}
     InputLayer(const InputLayer>&) = default;
     InputLayer(InputLayer&&) = default;
     InputLayer& operator=(const InputLayer&) = default;
@@ -229,7 +229,7 @@ namespace HashDL {
     idx_t idx;
   public:
     OutputLayer() = default;
-    OutputLayer(std::size_t unit): idx{index_vec(unit)} {}
+    OutputLayer(std::size_t units): idx{index_vec(units)} {}
     OutputLayer(const OutputLayer&) = default;
     OutputLayer(OutputLayer&&) = default;
     OutputLayer& operator=(const OutputLayer&) = default;
