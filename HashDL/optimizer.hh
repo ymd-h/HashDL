@@ -6,7 +6,7 @@
 namespace HashDL {
   template<typename T> class Optimizer {
   public:
-    virtual OptimizerClient<T>* client() = 0;
+    virtual OptimizerClient<T>* client() const = 0;
     virtual void step(){}
   };
 
@@ -28,7 +28,9 @@ namespace HashDL {
     SGD& operator=(SGD&&) = default;
     ~SGD() = default;
 
-    virtual OptimizerClient<T>* client() override { return new SGDClient<T>{this}; }
+    virtual OptimizerClient<T>* client() override const {
+      return new SGDClient<T>{this};
+    }
     virtual void step() override { _eta *= decay; }
     const auto eta(){ return _eta; }
   };
@@ -67,7 +69,9 @@ namespace HashDL {
     Adam& operator=(const Adam&) = default;
     Adam& operator=(Adam&&) = default;
     ~Adam() = default;
-    virtual OptimizerClient<T>* client() override { return new AdamClient<T>{this}; }
+    virtual OptimizerClient<T>* client() override const {
+      return new AdamClient<T>{this};
+    }
     virtual void step() override {
       _beta1t *= _beta1;
       _beta2t *= _beta2;
