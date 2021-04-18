@@ -317,7 +317,6 @@ namespace HashDL {
 
   template<typename T> class Network {
   private:
-    std::size_t input_dim;
     std::size_t output_dim;
     std::vector<std::unique_ptr<Layer<T>>> layer;
   public:
