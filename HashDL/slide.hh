@@ -107,8 +107,7 @@ namespace HashDL {
       std::for_each(std::execution::par, idx.begin(), idx.end(),
 		    [&N,this](auto i){
 		      for(std::size_t n=0, size=N.size(); n<size; ++n){
-			const auto W = N[n].w();
-			this->backet[i].insert(this->hash[i]->encode(W), n);
+			this->backet[i].insert(this->hash[i]->encode(N[n].w()), n);
 		      }
 		    });
       neuron_size = N.size();
