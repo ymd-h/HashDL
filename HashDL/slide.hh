@@ -256,7 +256,7 @@ namespace HashDL {
     const std::size_t neuron_size;
     std::vector<Neuron<T>> neuron;
     std::vector<idx_t> active_idx;
-    LSH hash;
+    LSH<T> hash;
     std::unique_ptr<Activation<T>> activation;
   public:
     DenseLayer(): DenseLayer{30}{}
