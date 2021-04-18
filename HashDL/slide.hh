@@ -88,39 +88,60 @@ namespace HashDL {
   };
 
 
+  template<typename T> class Param {
+  private:
+    T value;
+    std::atomic<T> grad;
+    std::unique_ptr<OptimizerClient<T>> opt;
+  public:
+    Param() = default;
+    Param(const std::unique_ptr<Optimizer<T>>& o): value{}, grad{}, opt{o->client()} {}
+    Param(const Param&) = default;
+    Param(Param&&) = default;
+    Param& operator=(const Param&) = default;
+    Param& operator=(Param&&) = default;
+    ~Param() = default;
+
+    void add_grad(T g){ grad.fetch_add(g); }
+    const auto& operator()() const noexcept { return value; }
+    void update(){ value += opt->diff(grad.exchange(0)); }
+  };
+
+
   template<typename T> class Weight {
   private:
-    std::vector<T> w;
-    T b;
-    std::vector<std::atomic<T>> w_grad;
-    std::atomic<T> b_grad;
+    std::vector<Param<T>> w;
+    Param<T> b;
   public:
-    Weight() = default;
-    Weight(std::size_t N): w(N), b{}, w_grad(N), b_grad{} {}
+    Weight() = delete;
+    Weight(std::size_t N, const std::unique_ptr<Optimizer<T>>& o): w{}, b{o} {
+      w.reserve(N);
+      for(auto i=0; i<N; ++i){ w.emplace_back(o); }
+    }
     Weight(const Weight&) = default;
     Weight(Weight&&) = default;
     Weight& operator=(const Weight&) = default;
     Weight& operator=(Weight&&) = default;
     ~Weight() = default;
 
-    const auto& weight() const noexcept { return w; }
-    auto weight(std::size_t i) const { return w[i]; }
-    auto bias() const noexcept { return b; }
+    auto weight() const noexcept {
+      return Data<T>{w.begin(), w.end(), [](auto& wi){ return wi(); }};
+    }
+    auto weight(std::size_t i) const { return w[i](); }
+    auto bias() const noexcept { return b(); }
 
     void update(){
-      for(std::size_t i=0, size=w.size(); i<size; ++i){
-	w[i] += w_grad[i].exchange(0);
-      }
-      b += b_grad.exchange(0);
+      for(auto& wi : w){ wi.update(); }
+      b.update();
     }
 
-    void add_weight_grad(std::size_t i, T d){ w_grad.fetch_add(d); }
-    void add_bias_grad(T d){ b_grad.fetch_add(d); }
+    void add_weight_grad(std::size_t i, T g){ w[i].add_grad(g); }
+    void add_bias_grad(T g){ b.add_grad(g); }
 
     auto affine(const Data<T>& X, const idx_t& prev_active) const {
-      auto result = b;
+      auto result = b();
       for(auto i : prev_active){
-	result += w[i]*X[i];
+	result += w[i]()*X[i];
       }
       return result;
     }
