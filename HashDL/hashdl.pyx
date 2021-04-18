@@ -29,7 +29,7 @@ cdef class Network:
 
 
     def __call__(self, X):
-        pass
+        return self.net(X)
 
-    def backprop(self, dL_dy):
-        pass
+    def backward(self, dL_dy):
+        self.backward(dl_dy)
