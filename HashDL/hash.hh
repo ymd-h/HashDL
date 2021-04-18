@@ -13,46 +13,9 @@
 #include <tuple>
 #include <vector>
 
+#include "data.hh"
 
 namespace HashDL {
-
-  using data_t = float;
-  using hashcode_t = std::uint64_t;
-
-  template<typename T> class Data {
-  private:
-    std::size_t size;
-    std::vector<T> data;
-
-  public:
-    Data<T>(): Data<T>{1};
-    Data<T>(std::size_t size): size{size}, data(size) {}
-    Data<T>(const std::vector<T>& data): size{data.size()}, data{data} {}
-    Data<T>(std::vector<T>&& data): size{data.size()}, data{data} {}
-    Data<T>(T* begin, T* end)
-      : size{std::distance(begin, end)}, data{begin, end} {}
-    template<typename F> Data<T>(T* begin, T* end, F&& f)
-      : size{std::distance(begin, end)}, data{} {
-      data.reserve(size);
-      while(begin != end){ data.emplace_back(f(*(begin++))); }
-    }
-    Data<T>(const Data<T>&) = default;
-    Data<T>(Data<T>&&) = default;
-    Data<T>& operator=(const Data<T>&) = default;
-    Data<T>& operator=(Data<T>&&) = default;
-    ~Data<T>() = default;
-
-    const auto size() const { return size; }
-    auto begin(){ data.begin(); }
-    auto end(){ data.end(); }
-    const auto operator[](std::size_t n) const { return data[n]; }
-    auto& operator[](std::size_t n){ return data[n]; }
-  };
-
-  inline auto begin(Data<T>& d){ return d.begin(); }
-  inline auto end(Data<T>& d){ return d.end(); }
-
-
   template<typename T> class Hash {
   public:
     Hash() = default;
