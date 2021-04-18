@@ -333,14 +333,10 @@ namespace HashDL {
 
       for(auto& L: layer){ L->reset(batch_size); }
 
-      idx_t batch_idx{}
-      batch_idx.reserve(batch_size);
-      std::generate_n(std::back_inserter(batch_idx), batch_size,
-		      [i=0]() mutable { return i++; });
-
+      auto batch_idx = index_vec(batch_size);
 
       // Parallel Feed-Forward over Batch
-      BatchData Y{output_dim, std::vector<T>(output_dim * batch_size, 0)};
+      BatchData Y{output_dim, batch_size, 0};
       std::for_each(std::execution::par, batch_idx.begin(), batch_idx.end(),
 		    [&, this](auto i){
 		      auto d = Data<T>{X.begin(i), X.end(i)};
