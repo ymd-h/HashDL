@@ -277,7 +277,7 @@ namespace HashDL {
 			  const Data<T>& dL_dy) override {
       const auto& X = prev()->fx(batch_i);
 
-      Data<T> dL_dx{X.get_data_size()};
+      Data<T> dL_dx{X.size()};
       for(auto n : active_idx[batch_i]){
 	this->neuron[n].backward(X, Y[n], dL_dy[n], dL_dx,
 				 prev()->active_id(batch_i), activation);
