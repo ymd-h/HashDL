@@ -186,7 +186,7 @@ namespace HashDL {
       Y.clear();
       Y.resize(batch_size);
     }
-    virtual void update(){}
+    virtual void update(bool){}
   };
 
 
@@ -299,7 +299,10 @@ namespace HashDL {
       return active_idx[batch_i];
     }
 
-    virtual void update() override { for(auto& n: neuron){ n->update(); } }
+    virtual void update(bool is_rehash) override {
+      for(auto& n: neuron){ n->update(); }
+      if(is_rehash){ rehash(); }
+    }
   };
 
 
@@ -360,8 +363,10 @@ namespace HashDL {
 		    });
 
       opt->step();
+
+      auto is_rehash = update_freq();
       std::for_each(std::execution::par, layer.begin(), layer.end(),
-		    [](auto& L){ L->update(); });
+		    [](auto& L){ L->update(is_rehash); });
     }
   };
 
