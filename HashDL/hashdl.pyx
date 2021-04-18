@@ -5,6 +5,7 @@ from HashDL cimport slide
 
 cdef class Optimizer:
     cdef slide.Optimizer* opt
+
     cdef slide.Optimizer* ptr(self):
         return self.opt
 
