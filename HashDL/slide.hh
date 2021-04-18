@@ -4,8 +4,8 @@
 #include <execution>
 #include <unordered_map>
 
-#include "Activation.hh"
-#include "Hash.hh"
+#include "activation.hh"
+#include "hash.hh"
 
 namespace HashDL {
   using idx_t = std::vector<std::size_t>;
