@@ -196,6 +196,7 @@ namespace HashDL {
       Y.clear();
       Y.resize(batch_size);
     }
+    virtual void update(){}
   };
 
 
@@ -310,6 +311,8 @@ namespace HashDL {
     virtual const idx_t& active_id(std::size_t batch_i) override const {
       return active_idx[batch_i];
     }
+
+    virtual void update() override { for(auto& n: neuron){ n->update(); } }
   };
 
 
