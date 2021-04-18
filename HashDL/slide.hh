@@ -81,14 +81,12 @@ namespace HashDL {
   public:
     LSH(): LSH(50, DWTA<T>::make_factory(8, 16, 8)){}
     LSH(std::size_t L, std::function<Hash*()> hash_factory)
-      : L{L}, hash_factory{hash_factory}, hash{}, backet(L), idx{}, neuron_size{}
+      : L{L}, hash_factory{hash_factory}, hash{}, backet(L),
+	idx{index_vec(L)}, neuron_size{}
     {
       hash.reserve(L);
       std::generate_n(std::back_inserter(hash), L,
 		      [&](){ return std::unique_ptr<Hash>{hash_factory()}; });
-
-      idx.reserve(L);
-      std::generate_n(std::back_inserter(idx), L, [i=0]() mutable { return i++; });
     }
     LSH(const LSH&) = default;
     LSH(LSH&&) = default;
@@ -107,20 +105,17 @@ namespace HashDL {
 
     void add(const std::vector<Neuron<T>>& N){
       std::for_each(std::execution::par, idx.begin(), idx.end(),
-		    [&W,this](auto i){
+		    [&N,this](auto i){
 		      for(std::size_t n=0, size=N.size(); n<size; ++n){
 			const auto& W = N[n].get_weight();
 			this->backet[i].insert(this->hash[i]->encode(W), n);
 		      }
 		    });
-      neuron_size = W.size();
+      neuron_size = N.size();
     }
 
     auto retrieve(const Data<T>& X) const {
-      idx_t neuron_id{};
-      neuron_id.reserve(neuron_size);
-      std::generate_n(std::back_inserter(neuron_id), neuron_size,
-		      [i=0]() mutable { return i++; });
+      auto neuron_id = index_vec(neuron_size);
 
       for(auto i=0; i<L; ++i){
 	auto [begin, end] = backet[i].equal_range(hash[i]->encode(X));
