@@ -53,7 +53,7 @@ namespace HashDL {
   inline auto end(Data<T>& d){ return d.end(); }
 
 
-  class Hash {
+  template<typename T> class Hash {
   public:
     Hash() = default;
     Hash(const Hash&) = default;
@@ -61,13 +61,13 @@ namespace HashDL {
     Hash& operator=(const Hash&) = default;
     Hash& operator=(Hash&&) = default;
     ~Hash() = default;
-    using Data_t = Data<data_t>;
+    using Data_t = Data<T>;
 
     virtual hashcode_t encode()(Data_t data) = 0;
   };
 
 
-  class WTA : public Hash {
+  template<typename T> class WTA : public Hash<T> {
   private:
     const std::size_t bin_size;
     const std::size_t data_size;
@@ -115,14 +115,14 @@ namespace HashDL {
     WTA& operator=(const WTA&) = default;
     WTA& operator=(WTA&&) = default;
     ~WTA() = default;
-    using Data_t = Data<data_t>;
+    using Data_t = Data<T>;
 
     virtual hashcode_t encode()(const Data_t& data) override {
       if(data.size() != data_size){ throw std::runtime_error("Data size mismuch!"); }
       hashcode_t hash = 0;
 
       for(const auto& th : theta){
-	auto max_v = std::numeric_limits<data_t>::lowest();
+	auto max_v = std::numeric_limits<T>::lowest();
 	std::size_t max_i = 0;
 	for(std::size_t i=0; i<sample_size; ++i){
 	  if(const auto v = data[th[i]]; v > max_v){ max_v = v; max_i = i; }
@@ -142,7 +142,7 @@ namespace HashDL {
 
 
 
-  class DWTA : public Hash {
+  template<T> class DWTA : public Hash<T> {
   private:
     const std::size_t bin_size;
     const std::size_t data_size;
@@ -207,19 +207,19 @@ namespace HashDL {
     DWTA& operator=(const DWTA&) = default;
     DWTA& operator=(DWTA&&) = default;
     ~DWTA() = default;
-    using Data_t = Data<data_t>;
+    using Data_t = Data<T>;
 
     virtual hashcode_t encode()(Data_t data) override {
       if(data.size() != data_size){ throw std::runtime_error("Data size mismuch!"); }
 
-      std::vector<data_t> max_vs{};
+      std::vector<T> max_vs{};
       max_vs.reserve(sample_size);
 
       std::vector<std::size_t> max_is{};
       max_is.reserve(sample_size);
 
       for(const auto& th : theta){
-	auto max_v = std::numeric_limits<data_t>::lowest();
+	auto max_v = std::numeric_limits<T>::lowest();
 	std::size_t max_i = 0;
 	for(std::size_t i=0; i<sample_size; ++i){
 	  if(const auto v = data[th[i]]; v > max_v){ max_v = v; max_i = i; }
