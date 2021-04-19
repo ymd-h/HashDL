@@ -41,4 +41,11 @@ cdef class Network:
         return self.net(view)
 
     def backward(self, dL_dy):
-        self.backward(dl_dy)
+        dL_dy = np.array(dL_dy, ndmin=2, copy=False, dtype=np.float)
+
+        cdef float[:,:] dl_dy = dL_dy
+        cdef BatchView[float] view = BatchView[float](dl_dy.shape[1],
+                                                      dl_dy.shape[0],
+                                                      &dl_dy[0])
+
+        self.backward(view)
