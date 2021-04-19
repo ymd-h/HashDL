@@ -1,13 +1,10 @@
 # distutils: language = c++
 # cython: linetrace=True
 
+cimport numpy as np
+import numpy as np
+
 from HashDL cimport slide
-
-cdef class BatchView:
-    cdef slide.BatchView data
-
-    def __cinit__(self):
-        pass
 
 
 cdef class Optimizer:
@@ -35,9 +32,13 @@ cdef class Network:
 
         self.net = new slide.Network(input_size, units, optimizer.ptr(), )
 
-
     def __call__(self, X):
-        return self.net(X)
+        X = np.array(X, ndmin=2, copy=False, dtype=np.float)
+
+        cdef float[:,:] x = X
+        cdef BatchView[float] view = BatchView[float](x.shape[1], x.shape[0], &x[0])
+
+        return self.net(view)
 
     def backward(self, dL_dy):
         self.backward(dl_dy)
