@@ -23,6 +23,19 @@ cdef class Adam(Optimizer):
     def __cinit__(self, rl=1e-4, *args, **kwargs):
         self.opt = (slide.Optimizer*) = new slide.Adam(rl)
 
+cdef class HashFunc:
+    cdef slide.HashFunc* hash
+
+    cdef slide.HashFunc* ptr(self):
+        return self.hash
+
+cdef class WTAFunc(HashFunc):
+    cdef __cinit__(self, bin_size, data_size, sample_size):
+        self.hash = new WTAFunc(bin_size, data_size, sample_size)
+
+cdef class DWTAFunc(HashFunc):
+    cdef __cinit__(self, bin_size, data_size, sample_size, max_attempt=100):
+        self.hash = new DWTAFunc(bin_size, data_size, sample_size, max_attempt)
 
 cdef class Network:
     cdef slide.Network* net
