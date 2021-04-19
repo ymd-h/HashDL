@@ -32,12 +32,12 @@ cdef class HashFunc:
 
 
 cdef class WTAFunc(HashFunc):
-    cdef __cinit__(self, bin_size, data_size, sample_size):
+    def __cinit__(self, bin_size, data_size, sample_size):
         self.hash = new WTAFunc(bin_size, data_size, sample_size)
 
 
 cdef class DWTAFunc(HashFunc):
-    cdef __cinit__(self, bin_size, data_size, sample_size, max_attempt=100):
+    def __cinit__(self, bin_size, data_size, sample_size, max_attempt=100):
         self.hash = new DWTAFunc(bin_size, data_size, sample_size, max_attempt)
 
 
