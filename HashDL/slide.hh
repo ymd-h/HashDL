@@ -73,20 +73,20 @@ namespace HashDL {
   template<typename T> class LSH {
   private:
     const std::size_t L;
-    std::function<Hash*()> hash_factory;
+    HashFunc<T>* hash_factory;
     std::vector<std::unique_ptr<Hash>> hash;
     std::vector<std::unordered_multimap<hashcode_t, std::size_t>> backet;
     idx_t idx;
     std::size_t neuron_size;
   public:
     LSH(): LSH(50, DWTA<T>::make_factory(8, 16, 8)){}
-    LSH(std::size_t L, std::function<Hash*()> hash_factory)
+    LSH(std::size_t L, HashFunc<T>* hash_factory)
       : L{L}, hash_factory{hash_factory}, hash{}, backet(L),
 	idx{index_vec(L)}, neuron_size{}
     {
       hash.reserve(L);
       std::generate_n(std::back_inserter(hash), L,
-		      [&](){ return std::unique_ptr<Hash>{hash_factory()}; });
+		      [&](){ return std::unique_ptr<Hash>{hash_factory->GetFunc()}; });
     }
     LSH(const LSH&) = default;
     LSH(LSH&&) = default;
@@ -247,7 +247,7 @@ namespace HashDL {
   public:
     DenseLayer(): DenseLayer{30}{}
     DenseLayer(std::size_t prev_units, std::size_t units, Activation<T>* f,
-	       std::size_t L, std::function<Hash*()> hash_factory)
+	       std::size_t L, HashFunc<T>* hash_factory)
       : neuron(units, Neuron{prev_units}), active_idx{},
 	hash{L, hash_factory}, activation{f}
     {
@@ -315,7 +315,7 @@ namespace HashDL {
   public:
     Network() = delete;
     Network(std::size_t input_size, std::vector<std::size_t> units,
-	    Optimizer* opt, std::function<bool()> update_freq)
+	    HashFunc<T>* hash, Optimizer* opt, std::function<bool()> update_freq)
       : output_dim{units.size() > 0 ? units.back(): input_size}, layer{},
 	opt{opt}, update_freq{update_freq}
     {
@@ -324,7 +324,7 @@ namespace HashDL {
       layer.emplace_back(new InputLayer{input_size});
       auto prev_units = input_size;
       for(auto& u : units){
-	layer.emplace_back(new DenseLayer{prev_units, u, new ReLU{}});
+	layer.emplace_back(new DenseLayer{prev_units, u, new ReLU{}, L, hash});
 	prev_units = u;
       }
       layer.emplace_back(new OutputLayer{prev_units});
