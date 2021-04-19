@@ -3,6 +3,13 @@
 
 from HashDL cimport slide
 
+cdef class BatchView:
+    cdef slide.BatchView data
+
+    def __cinit__(self):
+        pass
+
+
 cdef class Optimizer:
     cdef slide.Optimizer* opt
 
