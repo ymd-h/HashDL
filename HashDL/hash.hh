@@ -96,11 +96,6 @@ namespace HashDL {
 
       return hash;
     }
-    static std::function<WTA*()> make_factory(std::size_t bin_size,
-					      std::size_t data_size,
-					      std::size_t sample_size){
-      return [=](){ return new WTA{bin_size, data_size, sample_size}; };
-    }
   };
 
 
@@ -215,13 +210,53 @@ namespace HashDL {
       auto x = (i << attempt_bits) + attempt;
       return (x * coprime) % sample_size;
     }
-    static std::function<DWTA*()> make_factory(std::size_t bin_size,
-					       std::size_t data_size,
-					       std::size_t sample_size,
-					       std::size_t max_attempt=100){
-      return [=](){ return new DWTA{bin_size,data_size,sample_size,max_attempt}; };
+  };
+
+  template<typename T> class HashFunc {
+  public:
+    virtual Hash<T>* GetHash() = 0;
+  };
+
+  template<typename T> class WTAFunc : public HashFunc {
+  private:
+    std::size_t bin_size;
+    std::size_t data_size;
+    std::size_t sample_size;
+  public:
+    WTAFunc() = delete;
+    WTAFunc(std::size_t bin_size, std::size_t data_size, std::size_t sample_size)
+      : bin_size{bin_size}, data_size{data_size}, sample_size{sample_size} {}
+    WTAFunc(const WTAFunc&) = default;
+    WTAFunc(WTAFunc&&) = default;
+    WTAFunc& operator=(const WTAFunc&) = default;
+    WTAFunc& operator=(WTAFunc&&) = default;
+    ~WTAFunc() = default;
+
+    virtual Hash<T>* GetHash() override {
+      return new WTA<T>{bin_size, data_size, sample_size};
     }
   };
 
+  template<typename T> class DWTAFunc : public HashFunc {
+  private:
+    std::size_t bin_size;
+    std::size_t data_size;
+    std::size_t sample_size;
+    std::size_t max_attempt;
+  public:
+    DWTAFunc() = delete;
+    DWTAFunc(std::size_t bin, std::size_t data, std::size_t sample,
+	     std::size_t max = 100)
+      : bin_size{bin}, data_size{data}, sample_size{sample}, max_attempt{max} {}
+    DWTAFunc(const DWTAFunc&) = default;
+    DWTAFunc(DWTAFunc&&) = default;
+    DWTAFunc& operator=(const DWTAFunc&) = default;
+    DWTAFunc& operator=(DWTAFunc&&) = default;
+    ~DWTAFunc() = default;
+
+    virtual Hash<T>* GetHash() override {
+	return new DWTA<T>{bin_size, data_size, sample_size, max_attempt};
+      }
+    };
 }
 #endif
