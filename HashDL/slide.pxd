@@ -5,6 +5,11 @@ cdef extern from "slide.hh" namespace "HashDL":
         BatchData() except +
     cdef cppclass BatchView[T]:
         BatchView(size_t, size_t, T*) except +
+    cdef cppclass HashFunc[T]
+    cdef cppclass WTAFunc[T]:
+        WTAFunc(size_t, size_t, size_t) except +
+    cdef cppclass DWTAFunc[T]:
+        DWTAFunc(size_t, size_t, size_t, size_t) except +
     cdef cppclass SGD[T]:
         SGD(T, T) except +
     cdef cppclass Adam[T]:
