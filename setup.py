@@ -1,6 +1,9 @@
 import platform
+
 from setuptools import Extension, setup, find_packages
 
+
+debug = os.getenv('DEBUG_HASHDL')
 
 rb_source = "HashDL/hashdl"
 cpp_ext = ".cpp"
