@@ -73,4 +73,7 @@ class LazyImportBuildExtCommand(build_ext):
 setup(name="HashDL",
       version="0.0.0",
       install_requires=["numpy"],
-      setup_requires=setup_requires)
+      setup_requires=setup_requires,
+      cmdclass={'build_ext': LazyImportBuildExtCommand},
+      include_dirs=["HashDL"],
+      packages=["HashDL"])
