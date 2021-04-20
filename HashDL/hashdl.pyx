@@ -32,19 +32,21 @@ cdef class Hash:
 
 
 cdef class WTA(Hash):
-    def __cinit__(self, bin_size, data_size, sample_size):
-        self.hash = new WTAFunc(bin_size, data_size, sample_size)
+    def __cinit__(self, bin_size, sample_size):
+        self.hash = new WTAFunc(bin_size, sample_size)
 
 
 cdef class DWTA(Hash):
-    def __cinit__(self, bin_size, data_size, sample_size, max_attempt=100):
-        self.hash = new DWTAFunc(bin_size, data_size, sample_size, max_attempt)
+    def __cinit__(self, bin_size, sample_size, max_attempt=100):
+        self.hash = new DWTAFunc(bin_size, sample_size, max_attempt)
 
 
 cdef class Network:
     cdef slide.Network* net
     def __cinit__(self, input_size, units=(30, 30, 30),
-                  optimizer = None, *args, **kwargs):
+                  hash = None, optimizer = None, *args, **kwargs):
+
+        hash = hash or DWTA(8, 8)
         optimizer = optimizer or Adam()
 
         self.net = new slide.Network(input_size, units, optimizer.ptr(), )
