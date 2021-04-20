@@ -16,12 +16,12 @@ cdef class Optimizer:
 
 cdef class SGD(Optimizer):
     def __cinit__(self, rl=1e-4, decay=1.0, *args, **kwargs):
-        self.opt = (slide.Optimizer*) = new slide.SGD(rl, decay)
+        self.opt = new slide.SGD(rl, decay)
 
 
 cdef class Adam(Optimizer):
     def __cinit__(self, rl=1e-4, *args, **kwargs):
-        self.opt = (slide.Optimizer*) = new slide.Adam(rl)
+        self.opt = new slide.Adam(rl)
 
 
 cdef class Hash:
