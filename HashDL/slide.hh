@@ -80,7 +80,7 @@ namespace HashDL {
     idx_t idx;
     std::size_t neuron_size;
   public:
-    LSH(): LSH(50, DWTA<T>::make_factory(8, 16, 8)){}
+    LSH(): LSH(50, DWTAFunc<T>{8, 8}{}
     LSH(std::size_t L, std::size_t data_size, HashFunc<T>* hash_factory)
       : L{L}, data_size{data_size}, hash_factory{hash_factory}, hash{}, backet(L),
 	idx{index_vec(L)}, neuron_size{}
