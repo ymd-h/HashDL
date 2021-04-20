@@ -76,4 +76,4 @@ setup(name="HashDL",
       setup_requires=setup_requires,
       cmdclass={'build_ext': LazyImportBuildExtCommand},
       include_dirs=["HashDL"],
-      packages=["HashDL"])
+      packages=find_packages(""))
