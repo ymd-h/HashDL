@@ -75,5 +75,6 @@ setup(name="HashDL",
       install_requires=["numpy"],
       setup_requires=setup_requires,
       cmdclass={'build_ext': LazyImportBuildExtCommand},
+      ext_modules=ext_modules,
       include_dirs=["HashDL"],
-      packages=find_packages(""))
+      packages=["HashDL"])
