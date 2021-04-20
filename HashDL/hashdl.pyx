@@ -49,7 +49,7 @@ cdef class Network:
         hash = hash or DWTA(8, 8)
         optimizer = optimizer or Adam()
 
-        self.net = new slide.Network(input_size, units, optimizer.ptr(), )
+        self.net = new slide.Network(input_size, units, optimizer.ptr(), hash.ptr())
 
     def __call__(self, X):
         X = np.array(X, ndmin=2, copy=False, dtype=np.float)
