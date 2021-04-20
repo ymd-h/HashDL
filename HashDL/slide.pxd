@@ -10,11 +10,12 @@ cdef extern from "slide.hh" namespace "HashDL":
         WTAFunc(size_t, size_t) except +
     cdef cppclass DWTAFunc[T]:
         DWTAFunc(size_t, size_t, size_t) except +
+    cdef cppclass Optimizer[T]
     cdef cppclass SGD[T]:
         SGD(T, T) except +
     cdef cppclass Adam[T]:
         Adam(T) except +
     cdef cppclass Network[T]:
-        Network(size_t, vector[T], Optimizer*, HashFunc[T]*) except +
+        Network(size_t, vector[T], Optimizer[T]*, HashFunc[T]*) except +
         BatchData[T] operator()(const DataView[T]&) except +
         void backward(const DataView[T]&) except +
