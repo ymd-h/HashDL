@@ -214,25 +214,24 @@ namespace HashDL {
 
   template<typename T> class HashFunc {
   public:
-    virtual Hash<T>* GetHash() = 0;
+    virtual Hash<T>* GetHash(std::size_t) = 0;
   };
 
   template<typename T> class WTAFunc : public HashFunc {
   private:
     std::size_t bin_size;
-    std::size_t data_size;
     std::size_t sample_size;
   public:
     WTAFunc() = delete;
     WTAFunc(std::size_t bin_size, std::size_t data_size, std::size_t sample_size)
-      : bin_size{bin_size}, data_size{data_size}, sample_size{sample_size} {}
+      : bin_size{bin_size}, sample_size{sample_size} {}
     WTAFunc(const WTAFunc&) = default;
     WTAFunc(WTAFunc&&) = default;
     WTAFunc& operator=(const WTAFunc&) = default;
     WTAFunc& operator=(WTAFunc&&) = default;
     ~WTAFunc() = default;
 
-    virtual Hash<T>* GetHash() override {
+    virtual Hash<T>* GetHash(std::size_t data_size) override {
       return new WTA<T>{bin_size, data_size, sample_size};
     }
   };
@@ -240,21 +239,19 @@ namespace HashDL {
   template<typename T> class DWTAFunc : public HashFunc {
   private:
     std::size_t bin_size;
-    std::size_t data_size;
     std::size_t sample_size;
     std::size_t max_attempt;
   public:
     DWTAFunc() = delete;
-    DWTAFunc(std::size_t bin, std::size_t data, std::size_t sample,
-	     std::size_t max = 100)
-      : bin_size{bin}, data_size{data}, sample_size{sample}, max_attempt{max} {}
+    DWTAFunc(std::size_t bin, std::size_t sample, std::size_t max = 100)
+      : bin_size{bin}, sample_size{sample}, max_attempt{max} {}
     DWTAFunc(const DWTAFunc&) = default;
     DWTAFunc(DWTAFunc&&) = default;
     DWTAFunc& operator=(const DWTAFunc&) = default;
     DWTAFunc& operator=(DWTAFunc&&) = default;
     ~DWTAFunc() = default;
 
-    virtual Hash<T>* GetHash() override {
+    virtual Hash<T>* GetHash(std::size_t data_size) override {
 	return new DWTA<T>{bin_size, data_size, sample_size, max_attempt};
       }
     };
