@@ -2,6 +2,7 @@ import os
 import platform
 
 from setuptools import Extension, setup, find_packages
+from setuptools.command.build_ext import build_ext
 
 
 debug = os.getenv('DEBUG_HASHDL')
