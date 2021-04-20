@@ -10,7 +10,7 @@ from HashDL cimport slide
 cdef class Optimizer:
     cdef slide.Optimizer[float]* opt
 
-    cdef slide.Optimizer* ptr(self):
+    cdef slide.Optimizer[float]* ptr(self):
         return self.opt
 
 
@@ -27,7 +27,7 @@ cdef class Adam(Optimizer):
 cdef class Hash:
     cdef slide.HashFunc[float]* hash
 
-    cdef slide.HashFunc* ptr(self):
+    cdef slide.HashFunc[float]* ptr(self):
         return self.hash
 
 
