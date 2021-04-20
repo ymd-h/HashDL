@@ -17,5 +17,5 @@ cdef extern from "slide.hh" namespace "HashDL":
         Adam(T) except +
     cdef cppclass Network[T]:
         Network(size_t, vector[T], Optimizer[T]*, HashFunc[T]*) except +
-        BatchData[T] operator()(const DataView[T]&) except +
-        void backward(const DataView[T]&) except +
+        BatchData[T] operator()(const BatchView[T]&) except +
+        void backward(const BatchView[T]&) except +
