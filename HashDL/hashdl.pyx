@@ -8,7 +8,7 @@ from HashDL cimport slide
 
 
 cdef class Optimizer:
-    cdef slide.Optimizer* opt
+    cdef slide.Optimizer[float]* opt
 
     cdef slide.Optimizer* ptr(self):
         return self.opt
@@ -16,16 +16,16 @@ cdef class Optimizer:
 
 cdef class SGD(Optimizer):
     def __cinit__(self, rl=1e-4, decay=1.0, *args, **kwargs):
-        self.opt = new slide.SGD(rl, decay)
+        self.opt = new slide.SGD[float](rl, decay)
 
 
 cdef class Adam(Optimizer):
     def __cinit__(self, rl=1e-4, *args, **kwargs):
-        self.opt = new slide.Adam(rl)
+        self.opt = new slide.Adam[float](rl)
 
 
 cdef class Hash:
-    cdef slide.HashFunc* hash
+    cdef slide.HashFunc[float]* hash
 
     cdef slide.HashFunc* ptr(self):
         return self.hash
@@ -33,12 +33,12 @@ cdef class Hash:
 
 cdef class WTA(Hash):
     def __cinit__(self, bin_size, sample_size):
-        self.hash = new WTAFunc(bin_size, sample_size)
+        self.hash = new WTAFunc[float](bin_size, sample_size)
 
 
 cdef class DWTA(Hash):
     def __cinit__(self, bin_size, sample_size, max_attempt=100):
-        self.hash = new DWTAFunc(bin_size, sample_size, max_attempt)
+        self.hash = new DWTAFunc[float](bin_size, sample_size, max_attempt)
 
 
 cdef class Network:
