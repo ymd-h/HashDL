@@ -55,7 +55,9 @@ cdef class Network:
         X = np.array(X, ndmin=2, copy=False, dtype=np.float)
 
         cdef float[:,:] x = X
-        cdef BatchView[float] view = BatchView[float](x.shape[1], x.shape[0], &x[0])
+        cdef slide.BatchView[float] view = BatchView[float](x.shape[1],
+                                                            x.shape[0],
+                                                            &x[0])
 
         return self.net(view)
 
@@ -63,8 +65,8 @@ cdef class Network:
         dL_dy = np.array(dL_dy, ndmin=2, copy=False, dtype=np.float)
 
         cdef float[:,:] dl_dy = dL_dy
-        cdef BatchView[float] view = BatchView[float](dl_dy.shape[1],
-                                                      dl_dy.shape[0],
-                                                      &dl_dy[0])
+        cdef slide.BatchView[float] view = BatchView[float](dl_dy.shape[1],
+                                                            dl_dy.shape[0],
+                                                            &dl_dy[0])
 
         self.backward(view)
