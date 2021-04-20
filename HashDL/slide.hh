@@ -73,6 +73,7 @@ namespace HashDL {
   template<typename T> class LSH {
   private:
     const std::size_t L;
+    const std::size_t data_size;
     HashFunc<T>* hash_factory;
     std::vector<std::unique_ptr<Hash>> hash;
     std::vector<std::unordered_multimap<hashcode_t, std::size_t>> backet;
@@ -80,13 +81,15 @@ namespace HashDL {
     std::size_t neuron_size;
   public:
     LSH(): LSH(50, DWTA<T>::make_factory(8, 16, 8)){}
-    LSH(std::size_t L, HashFunc<T>* hash_factory)
-      : L{L}, hash_factory{hash_factory}, hash{}, backet(L),
+    LSH(std::size_t L, std::size_t data_size, HashFunc<T>* hash_factory)
+      : L{L}, data_size{data_size}, hash_factory{hash_factory}, hash{}, backet(L),
 	idx{index_vec(L)}, neuron_size{}
     {
       hash.reserve(L);
       std::generate_n(std::back_inserter(hash), L,
-		      [&](){ return std::unique_ptr<Hash>{hash_factory->GetFunc()}; });
+		      [&](){
+			return std::unique_ptr<Hash>{hash_factory->GetHash(data_size)};
+		      });
     }
     LSH(const LSH&) = default;
     LSH(LSH&&) = default;
@@ -249,7 +252,7 @@ namespace HashDL {
     DenseLayer(std::size_t prev_units, std::size_t units, Activation<T>* f,
 	       std::size_t L, HashFunc<T>* hash_factory)
       : neuron(units, Neuron{prev_units}), active_idx{},
-	hash{L, hash_factory}, activation{f}
+	hash{L, prev_units, hash_factory}, activation{f}
     {
       hash.add(neuron);
     }
