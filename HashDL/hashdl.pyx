@@ -42,9 +42,33 @@ cdef class DWTA(Hash):
     def __cinit__(self, bin_size, sample_size, max_attempt=100):
         self.hash = <slide.HashFunc[float]*> new slide.DWTAFunc[float](bin_size, sample_size, max_attempt)
 
+cdef class BatchWrapper:
+    cdef slide.BatchData[float]* ptr
+    cdef size_t itemsize
+
+    def __cinit__(self):
+        self.itemsize = sizeof(float)
+
+    cdef void set(self, slide.BatchData[float]* p):
+        self.ptr = p
+
+    def __getbuffer__(self, Py_buffer *buffer, int flags):
+        buffer.len = (ptr.end() - ptr.begin()) * self.itemsize
+        buffer.readonly = 0
+        buffer.ndim = 2
+        buffer.shape = (ptr.get_batch_size(), ptr.get_data_size())
+        buffer.strides = (ptr.get_data_size() * self.itemsize, self.itemsize)
+        buffer.suboffsets = NULL
+        buffer.itemsize = self.itemsize
+        buffer.internal = NULL
+        buffer.obj = self
+
 
 cdef class Network:
     cdef slide.Network[float]* net
+    cdef slide.BatchData[float] Y
+    cdef BatchWrapper y
+
     def __cinit__(self, input_size, units=(30, 30, 30),
                   hash = None, optimizer = None, *args, **kwargs):
 
@@ -63,7 +87,10 @@ cdef class Network:
                                                                        x.shape[0],
                                                                        &x[0,0])
 
-        return self.net(dereference(view))
+        self.Y = dereference(self.net)(dereference(view))
+        self.y.set(&self.Y)
+
+        return np.asarray(self.y)
 
     def backward(self, dL_dy):
         dL_dy = np.array(dL_dy, ndmin=2, copy=False, dtype=np.float)
