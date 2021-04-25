@@ -12,20 +12,20 @@ namespace HashDL {
 
   template<typename T> class Linear : public Activation<T> {
   public:
-    virtual T call(T x) override const { return x; }
-    virtual T back(T y, T dL_dy) override const { return dL_dy; }
+    T call(T x) const override { return x; }
+    T back(T y, T dL_dy) const override { return dL_dy; }
   };
 
   template<typename T> class ReLU : public Activation<T> {
   public:
-    virtual T call(T x) override const { return (x>0)? x: 0; }
-    virtual T back(T y, T dL_dy) override const {  return (y>0)? 1: 0; }
+    T call(T x) const override { return (x>0)? x: 0; }
+    T back(T y, T dL_dy) const override {  return (y>0)? 1: 0; }
   };
 
   template<typename T> class Sigmoid : public Activation<T> {
   public:
-    virtual T call(T x) override const { return 1.0/(1.0 + std::exp(-x)); }
-    virtual T back(T y, T dL_dy) override const { return y*(1-y); }
+    T call(T x) const override { return 1.0/(1.0 + std::exp(-x)); }
+    T back(T y, T dL_dy) const override { return y*(1-y); }
   }
 }
 
