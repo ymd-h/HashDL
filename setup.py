@@ -19,6 +19,7 @@ if platform.system() == 'Windows':
     if debug:
         extra_compile_args.append('/DCYTHON_TRACE_NOGIL=1')
 else:
+    # gcc >= 9.1 for <execution>
     extra_compile_args = ["-O3","-std=c++20","-march=native"]
     extra_link_args = ["-std=c++20", "-ltbb"]
     if debug:
