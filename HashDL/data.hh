@@ -31,7 +31,7 @@ namespace HashDL {
       : _size{std::distance(begin, end)}, data{} {
       data.reserve(_size);
 
-      auto it = begin
+      auto it = begin;
       while(it != end){ data.emplace_back(f(*(it++))); }
     }
     Data(const Data<T>&) = default;
