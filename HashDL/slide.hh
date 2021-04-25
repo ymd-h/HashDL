@@ -321,13 +321,13 @@ namespace HashDL {
     {
       layer.reserve(units.size() + 2);
 
-      layer.emplace_back(new InputLayer{input_size});
+      layer.emplace_back(new InputLayer<T>{input_size});
       auto prev_units = input_size;
       for(auto& u : units){
-	layer.emplace_back(new DenseLayer{prev_units, u, new ReLU{}, L, hash});
+	layer.emplace_back(new DenseLayer<T>{prev_units, u, new ReLU<T>{}, L, hash});
 	prev_units = u;
       }
-      layer.emplace_back(new OutputLayer{prev_units});
+      layer.emplace_back(new OutputLayer<T>{prev_units});
     }
     Network(const Network&) = default;
     Network(Network&&) = default;
