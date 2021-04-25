@@ -369,7 +369,7 @@ namespace HashDL {
 
       auto is_rehash = update_freq();
       std::for_each(std::execution::par, layer.begin(), layer.end(),
-		    [](auto& L){ L->update(is_rehash); });
+		    [=](auto& L){ L->update(is_rehash); });
     }
   };
 
