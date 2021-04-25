@@ -15,12 +15,13 @@ namespace HashDL {
     virtual void step(){}
   };
 
+  template<typename T> class SGD;
   template<typename T> class SGDClient : public OptimizerClient<T> {
   private:
     SGD<T>* sgd;
   public:
     SGDClient() = delete;
-    SGDClient(SGD* sgd): sgd{sgd} {}
+    SGDClient(SGD<T>* sgd): sgd{sgd} {}
     SGDClient(const SGDClient&) = default;
     SGDClient(SGDClient&&) = default;
     SGDClient& operator=(const SGDClient&) = default;
@@ -52,6 +53,7 @@ namespace HashDL {
     const auto eta(){ return _eta; }
   };
 
+  template<typename T> class Adam;
   template<typename T> class AdamClient : public OptimizerClient<T>{
   private:
     T m;
