@@ -75,7 +75,7 @@ namespace HashDL {
     const std::size_t L;
     const std::size_t data_size;
     HashFunc<T>* hash_factory;
-    std::vector<std::unique_ptr<Hash>> hash;
+    std::vector<std::unique_ptr<Hash<T>>> hash;
     std::vector<std::unordered_multimap<hashcode_t, std::size_t>> backet;
     idx_t idx;
     std::size_t neuron_size;
