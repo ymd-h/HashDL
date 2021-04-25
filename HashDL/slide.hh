@@ -206,7 +206,7 @@ namespace HashDL {
 
     Data<T> forward(std::size_t batch_i, const Data<T>& X) override {
       this->Y[batch_i] = X;
-      return next()->forward(batch_i, X);
+      return this->next()->forward(batch_i, X);
     }
 
     void backward(std::size_t batch_i, const Data<T>& dL_dy) override {}
@@ -233,7 +233,7 @@ namespace HashDL {
     }
 
     void backward(std::size_t batch_i, const Data<T>& dL_dy) override {
-      prev()->backward(batch_i, dL_dy);
+      this->prev()->backward(batch_i, dL_dy);
     }
 
     const idx_t& active_id(std::size_t batch_i) const override { return idx; }
@@ -270,22 +270,22 @@ namespace HashDL {
       active_idx[batch_i] = hash.retrieve(X);
 
       for(auto n : active_idx[batch_i]){
-	this->Y[batch_i][n] = neuron[n].forward(X, prev()->active_id(batch_i), activation);
+	this->Y[batch_i][n] = neuron[n].forward(X, this->prev()->active_id(batch_i), activation);
       }
 
-      return next()->forward(batch_i, this->Y[batch_i]);
+      return this->next()->forward(batch_i, this->Y[batch_i]);
     }
 
     void backward(std::size_t batch_i, const Data<T>& dL_dy) override {
-      const auto& X = prev()->fx(batch_i);
+      const auto& X = this->prev()->fx(batch_i);
 
       Data<T> dL_dx{X.size()};
       for(auto n : active_idx[batch_i]){
 	this->neuron[n].backward(X, Y[n], dL_dy[n], dL_dx,
-				 prev()->active_id(batch_i), activation);
+				 this->prev()->active_id(batch_i), activation);
       }
 
-      prev()->backward(batch_i, dL_dx);
+      this->prev()->backward(batch_i, dL_dx);
     }
 
     void reset(std::size_t batch_size) override {
