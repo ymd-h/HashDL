@@ -115,6 +115,8 @@ namespace HashDL {
     T* end(){ return data_ptr + data_size * batch_size; }
     T* begin(std::size_t i){ return data_ptr + data_size * i; }
     T* end(std::size_t i){ return data_ptr + data_size * (i+1); }
+    const T* begin(std::size_t i) const { return data_ptr + data_size * i; }
+    const T* end(std::size_t i) const { return data_ptr + data_size * (i+1); }
 
     auto get_data_size() const noexcept { return data_size; }
     auto get_batch_size() const noexcept { return batch_size; }
