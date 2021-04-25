@@ -50,10 +50,11 @@ cdef class Network:
                   hash = None, optimizer = None, *args, **kwargs):
 
         cdef Hash h = hash or DWTA(8, 8)
-        cdef Optimizer opt = optimizer or Adam()
+        cdef float rl = 1e-4
+        cdef Optimizer opt = optimizer or Adam(rl)
 
         cdef vector[size_t] u = units
-        self.net = new slide.Network(input_size, u, opt.ptr(), h.ptr())
+        self.net = new slide.Network[float](input_size, u, opt.ptr(), h.ptr())
 
     def __call__(self, X):
         X = np.array(X, ndmin=2, copy=False, dtype=np.float)
