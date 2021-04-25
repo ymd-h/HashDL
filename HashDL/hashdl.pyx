@@ -90,7 +90,7 @@ cdef class Network:
         cdef Optimizer opt = optimizer or Adam(rl)
 
         cdef vector[size_t] u = units
-        self.net = new slide.Network[float](input_size, u, h.ptr(), opt.ptr())
+        self.net = new slide.Network[float](input_size, u, L, h.ptr(), opt.ptr())
 
     def __call__(self, X):
         X = np.array(X, ndmin=2, copy=False, dtype=np.float)
