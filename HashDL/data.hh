@@ -27,10 +27,12 @@ namespace HashDL {
     Data(std::vector<T>&& data): _size{data.size()}, data{data} {}
     Data(T* begin, T* end)
       : _size{std::distance(begin, end)}, data{begin, end} {}
-    template<typename F> Data<T>(T* begin, T* end, F&& f)
+    template<typename F> Data<T>(const T* begin, const T* end, F&& f)
       : _size{std::distance(begin, end)}, data{} {
       data.reserve(_size);
-      while(begin != end){ data.emplace_back(f(*(begin++))); }
+
+      auto it = begin
+      while(it != end){ data.emplace_back(f(*(it++))); }
     }
     Data(const Data<T>&) = default;
     Data(Data<T>&&) = default;
