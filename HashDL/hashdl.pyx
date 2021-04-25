@@ -82,7 +82,7 @@ cdef class Network:
     cdef slide.BatchData[float] Y
     cdef BatchWrapper y
 
-    def __cinit__(self, input_size, units=(30, 30, 30),
+    def __cinit__(self, input_size, units=(30, 30, 30), L = 50,
                   hash = None, optimizer = None, *args, **kwargs):
 
         cdef Hash h = hash or DWTA(8, 8)

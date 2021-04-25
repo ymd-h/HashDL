@@ -314,7 +314,7 @@ namespace HashDL {
     std::function<bool()> update_freq;
   public:
     Network() = delete;
-    Network(std::size_t input_size, std::vector<std::size_t> units,
+    Network(std::size_t input_size, std::vector<std::size_t> units, std::size_t L,
 	    HashFunc<T>* hash, Optimizer<T>* opt, std::function<bool()> update_freq)
       : output_dim{units.size() > 0 ? units.back(): input_size}, layer{},
 	opt{opt}, update_freq{update_freq}
