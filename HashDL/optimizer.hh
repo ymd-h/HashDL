@@ -15,6 +15,23 @@ namespace HashDL {
     virtual void step(){}
   };
 
+  template<typename T> class SGDClient : public OptimizerClient<T> {
+  private:
+    SGD<T>* sgd;
+  public:
+    SGDClient() = delete;
+    SGDClient(SGD* sgd): sgd{sgd} {}
+    SGDClient(const SGDClient&) = default;
+    SGDClient(SGDClient&&) = default;
+    SGDClient& operator=(const SGDClient&) = default;
+    SGDClient& operator=(SGDClient&&) = default;
+    ~SGDClient() = default;
+
+    virtual T diff(T grad){
+      return - sgd->eta() * grad;
+    }
+  };
+
   template<typename T> class SGD : public Optimizer<T> {
   private:
     T _eta;
@@ -35,20 +52,31 @@ namespace HashDL {
     const auto eta(){ return _eta; }
   };
 
-  template<typename T> class SGDClient : public OptimizerClient<T> {
+  template<typename T> class AdamClient : public OptimizerClient<T>{
   private:
-    SGD<T>* sgd;
+    T m;
+    T v;
+    Adam<T>* adam;
   public:
-    SGDClient() = delete;
-    SGDClient(SGD* sgd): sgd{sgd} {}
-    SGDClient(const SGDClient&) = default;
-    SGDClient(SGDClient&&) = default;
-    SGDClient& operator=(const SGDClient&) = default;
-    SGDClient& operator=(SGDClient&&) = default;
-    ~SGDClient() = default;
+    AdamClient() = delete;
+    AdamClient(Adam<T>* adam): m{0}, T{0}, adam{adam} {}
+    AdamClient(const AdamClient&) = default;
+    AdamClient(AdamClient&&) = default;
+    AdamClient& operator=(const AdamClient&) = default;
+    AdamClient& operator=(AdamClient&&) = default;
+    ~AdamClient() = default;
 
-    virtual T diff(T grad){
-      return - sgd->eta() * grad;
+    T diff(T grad) override {
+      const auto beta1 = adam->beta1();
+      const auto beta2 = adam->beta2();
+
+      m = beta1 * m + (1 - beta1) * grad;
+      v = beta2 * v + (1 - beta2) * grad * grad;
+
+      const auto m_hat = m / (1 - adam->beta1t());
+      const auto v_hat = v / (1 - adam->beta2t());
+
+      return - adam->eta() * m_hat / (std::sqrt(v_hat) + adam->eps());
     }
   };
 
@@ -83,35 +111,6 @@ namespace HashDL {
     const auto beta2() const noexcept { return _beta2; }
     const auto beta2t() const noexcept { return _beta2t; }
   };
-
-  template<typename T> class AdamClient : public OptimizerClient<T>{
-  private:
-    T m;
-    T v;
-    Adam<T>* adam;
-  public:
-    AdamClient() = delete;
-    AdamClient(Adam<T>* adam): m{0}, T{0}, adam{adam} {}
-    AdamClient(const AdamClient&) = default;
-    AdamClient(AdamClient&&) = default;
-    AdamClient& operator=(const AdamClient&) = default;
-    AdamClient& operator=(AdamClient&&) = default;
-    ~AdamClient() = default;
-
-    T diff(T grad) override {
-      const auto beta1 = adam->beta1();
-      const auto beta2 = adam->beta2();
-
-      m = beta1 * m + (1 - beta1) * grad;
-      v = beta2 * v + (1 - beta2) * grad * grad;
-
-      const auto m_hat = m / (1 - adam->beta1t());
-      const auto v_hat = v / (1 - adam->beta2t());
-
-      return - adam->eta() * m_hat / (std::sqrt(v_hat) + adam->eps());
-    }
-  };
-
 }
 
 #endif
