@@ -198,7 +198,7 @@ namespace HashDL {
   public:
     InputLayer() = default;
     InputLayer(std::size_t units): idx{index_vec(units)}, Y{} {}
-    InputLayer(const InputLayer>&) = default;
+    InputLayer(const InputLayer&) = default;
     InputLayer(InputLayer&&) = default;
     InputLayer& operator=(const InputLayer&) = default;
     InputLayer& operator=(InputLayer&&) = default;
