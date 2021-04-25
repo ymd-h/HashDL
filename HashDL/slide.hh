@@ -113,7 +113,8 @@ namespace HashDL {
     const std::size_t L;
     const std::size_t data_size;
     HashFunc<T>* hash_factory;
-    std::vector<std::unique_ptr<Hash<T>>> hash;
+    using hash_ptr = std::unique_ptr<Hash<T>>;
+    std::vector<hash_ptr> hash;
     std::vector<std::unordered_multimap<hashcode_t, std::size_t>> backet;
     idx_t idx;
     std::size_t neuron_size;
@@ -126,7 +127,7 @@ namespace HashDL {
       hash.reserve(L);
       std::generate_n(std::back_inserter(hash), L,
 		      [&](){
-			return std::unique_ptr<Hash>{hash_factory->GetHash(data_size)};
+			return hash_ptr{hash_factory->GetHash(data_size)};
 		      });
     }
     LSH(const LSH&) = default;
