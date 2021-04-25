@@ -22,7 +22,7 @@ namespace HashDL {
     std::vector<T> data;
 
   public:
-    Data(): Data<T>{1};
+    Data(): Data{1} {}
     Data(std::size_t size): _size{size}, data(size) {}
     Data(const std::vector<T>& data): _size{data.size()}, data{data} {}
     Data(std::vector<T>&& data): _size{data.size()}, data{data} {}
