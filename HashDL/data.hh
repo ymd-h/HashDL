@@ -46,8 +46,8 @@ namespace HashDL {
     auto& operator[](std::size_t n){ return data[n]; }
   };
 
-  inline auto begin(Data<T>& d){ return d.begin(); }
-  inline auto end(Data<T>& d){ return d.end(); }
+  template<typename T> inline auto begin(Data<T>& d){ return d.begin(); }
+  template<typename T> inline auto end(Data<T>& d){ return d.end(); }
 
 
   template<typename T> class BatchData {
