@@ -18,10 +18,10 @@ namespace HashDL {
   template<typename T> class SGD;
   template<typename T> class SGDClient : public OptimizerClient<T> {
   private:
-    SGD<T>* sgd;
+    const SGD<T>* sgd;
   public:
     SGDClient() = delete;
-    SGDClient(SGD<T>* sgd): sgd{sgd} {}
+    SGDClient(const SGD<T>* sgd): sgd{sgd} {}
     SGDClient(const SGDClient&) = default;
     SGDClient(SGDClient&&) = default;
     SGDClient& operator=(const SGDClient&) = default;
@@ -58,10 +58,10 @@ namespace HashDL {
   private:
     T m;
     T v;
-    Adam<T>* adam;
+    const Adam<T>* adam;
   public:
     AdamClient() = delete;
-    AdamClient(Adam<T>* adam): m{0}, T{0}, adam{adam} {}
+    AdamClient(const Adam<T>* adam): m{0}, T{0}, adam{adam} {}
     AdamClient(const AdamClient&) = default;
     AdamClient(AdamClient&&) = default;
     AdamClient& operator=(const AdamClient&) = default;
