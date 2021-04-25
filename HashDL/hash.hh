@@ -157,7 +157,7 @@ namespace HashDL {
 
       std::uniform_int_distribution<std::size_t> dist(0, std::numeric_limits<std::size_t>::max());
       coprime = dist(generator);
-      while(std::gcd(sample_size, coprime) != 1){ coprime = dist(gen); }
+      while(std::gcd(sample_size, coprime) != 1){ coprime = dist(generator); }
     }
     DWTA(const DWTA&) = default;
     DWTA(DWTA&&) = default;
