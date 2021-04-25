@@ -28,16 +28,16 @@ namespace HashDL {
     SGD& operator=(SGD&&) = default;
     ~SGD() = default;
 
-    virtual OptimizerClient<T>* client() override const {
+    OptimizerClient<T>* client() const override {
       return new SGDClient<T>{this};
     }
-    virtual void step() override { _eta *= decay; }
+    void step() override { _eta *= decay; }
     const auto eta(){ return _eta; }
   };
 
   template<typename T> class SGDClient : public OptimizerClient<T> {
   private:
-    SGD* sgd;
+    SGD<T>* sgd;
   public:
     SGDClient() = delete;
     SGDClient(SGD* sgd): sgd{sgd} {}
@@ -69,10 +69,10 @@ namespace HashDL {
     Adam& operator=(const Adam&) = default;
     Adam& operator=(Adam&&) = default;
     ~Adam() = default;
-    virtual OptimizerClient<T>* client() override const {
+    OptimizerClient<T>* client() const override {
       return new AdamClient<T>{this};
     }
-    virtual void step() override {
+    void step() override {
       _beta1t *= _beta1;
       _beta2t *= _beta2;
     }
@@ -98,7 +98,7 @@ namespace HashDL {
     AdamClient& operator=(AdamClient&&) = default;
     ~AdamClient() = default;
 
-    virtual T diff(T grad) override {
+    T diff(T grad) override {
       const auto beta1 = adam->beta1();
       const auto beta2 = adam->beta2();
 
