@@ -99,8 +99,7 @@ namespace HashDL {
   };
 
 
-
-  template<T> class DWTA : public Hash<T> {
+  template<typename T> class DWTA : public Hash<T> {
   private:
     const std::size_t bin_size;
     const std::size_t data_size;
