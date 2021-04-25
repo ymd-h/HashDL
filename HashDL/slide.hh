@@ -204,14 +204,14 @@ namespace HashDL {
     InputLayer& operator=(InputLayer&&) = default;
     ~InputLayer() = default;
 
-    virtual Data<T> forward(std::size_t batch_i, const Data<T>& X) override {
+    Data<T> forward(std::size_t batch_i, const Data<T>& X) override {
       Y[batch_i] = X;
       return next()->forward(batch_i, X);
     }
 
-    virtual void backward(std::size_t batch_i, const Data<T>& dL_dy) override {}
+    void backward(std::size_t batch_i, const Data<T>& dL_dy) override {}
 
-    virtual const idx_t& active_id(std::size_t batch_i) override const { return idx; }
+    const idx_t& active_id(std::size_t batch_i) const override { return idx; }
   };
 
 
@@ -227,16 +227,16 @@ namespace HashDL {
     OutputLayer& operator=(OutputLayer&&) = default;
     ~OutputLayer() = default;
 
-    virtual Data<T> forward(std::size_t batch_i, const Data<T>& X) override {
+    Data<T> forward(std::size_t batch_i, const Data<T>& X) override {
       Y[batch_i] = X;
       return X;
     }
 
-    virtual void backward(std::size_t batch_i, const Data<T>& dL_dy) override {
+    void backward(std::size_t batch_i, const Data<T>& dL_dy) override {
       prev()->backward(batch_i, dL_dy);
     }
 
-    virtual const idx_t& active_id(std::size_t batch_i) override const { return idx; }
+    const idx_t& active_id(std::size_t batch_i) const override { return idx; }
   };
 
 
@@ -266,8 +266,7 @@ namespace HashDL {
       hash.add(neuron);
     }
 
-    virtual Data<T> forward(std::size_t batch_i,
-			    const Data<T>& X) override {
+    Data<T> forward(std::size_t batch_i, const Data<T>& X) override {
       active_idx[batch_i] = hash.retrieve(X);
 
       for(auto n : active_idx[batch_i]){
@@ -277,8 +276,7 @@ namespace HashDL {
       return next()->forward(batch_i, Y[batch_i]);
     }
 
-    virtual void backward(std::size_t batch_i,
-			  const Data<T>& dL_dy) override {
+    void backward(std::size_t batch_i, const Data<T>& dL_dy) override {
       const auto& X = prev()->fx(batch_i);
 
       Data<T> dL_dx{X.size()};
@@ -290,18 +288,18 @@ namespace HashDL {
       prev()->backward(batch_i, dL_dx);
     }
 
-    virtual void reset(std::size_t batch_size) override {
+    void reset(std::size_t batch_size) override {
       Layer::reset(batch_i);
 
       active_idx.clear();
       active_idx.resize(batch_size);
     }
 
-    virtual const idx_t& active_id(std::size_t batch_i) override const {
+    const idx_t& active_id(std::size_t batch_i) const override {
       return active_idx[batch_i];
     }
 
-    virtual void update(bool is_rehash) override {
+    void update(bool is_rehash) override {
       for(auto& n: neuron){ n->update(); }
       if(is_rehash){ rehash(); }
     }
