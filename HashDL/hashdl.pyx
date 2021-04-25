@@ -1,6 +1,7 @@
 # distutils: language = c++
 # cython: linetrace=True
 
+from libc.stdlib cimport malloc, free
 from cython.operator cimport dereference
 from libcpp.vector cimport vector
 
@@ -45,24 +46,36 @@ cdef class DWTA(Hash):
 cdef class BatchWrapper:
     cdef slide.BatchData[float]* ptr
     cdef size_t itemsize
+    cdef Py_ssize_t* shape
+    cdef Py_ssize_t* strides
 
     def __cinit__(self):
         self.itemsize = sizeof(float)
+        self.shape   = <Py_ssize_t*>malloc(sizeof(Py_ssize_t) * 2)
+        self.strides = <Py_ssize_t*>malloc(sizeof(Py_ssize_t) * 2)
 
     cdef void set(self, slide.BatchData[float]* p):
         self.ptr = p
 
     def __getbuffer__(self, Py_buffer *buffer, int flags):
-        buffer.len = (ptr.end() - ptr.begin()) * self.itemsize
+        self.shape[0] = self.ptr.get_batch_size()
+        self.shape[1] = self.ptr.get_data_size()
+        self.strides[0] = self.ptr.get_data_size() * self.itemsize
+        self.strides[1] = self.itemsize
+
+        buffer.len = (self.ptr.end() - self.ptr.begin()) * self.itemsize
         buffer.readonly = 0
         buffer.ndim = 2
-        buffer.shape = (ptr.get_batch_size(), ptr.get_data_size())
-        buffer.strides = (ptr.get_data_size() * self.itemsize, self.itemsize)
+        buffer.shape = self.shape
+        buffer.strides = self.strides
         buffer.suboffsets = NULL
         buffer.itemsize = self.itemsize
         buffer.internal = NULL
         buffer.obj = self
 
+    def __dealloc__(self):
+        free(self.shape)
+        free(self.strides)
 
 cdef class Network:
     cdef slide.Network[float]* net
