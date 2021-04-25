@@ -77,7 +77,7 @@ namespace HashDL {
     Neuron(): Neuron{16};
     Neuron(std::size_t prev_units,
 	   std::function<T()> weight_initializer = [](){ return 0; })
-      : data{}, gradient{}, weight{prev_units} {}
+      : gradient{}, weight{prev_units} {}
     Neuron(const Neuron&) = default;
     Neuron(Neuron&&) = default;
     Neuron& operator=(const Neuron&) = default;
