@@ -26,7 +26,7 @@ namespace HashDL {
   public:
     T call(T x) const override { return 1.0/(1.0 + std::exp(-x)); }
     T back(T y, T dL_dy) const override { return y*(1-y); }
-  }
+  };
 }
 
 #endif
