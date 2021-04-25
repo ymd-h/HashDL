@@ -216,7 +216,7 @@ namespace HashDL {
     virtual Hash<T>* GetHash(std::size_t) = 0;
   };
 
-  template<typename T> class WTAFunc : public HashFunc {
+  template<typename T> class WTAFunc : public HashFunc<T> {
   private:
     std::size_t bin_size;
     std::size_t sample_size;
@@ -235,7 +235,7 @@ namespace HashDL {
     }
   };
 
-  template<typename T> class DWTAFunc : public HashFunc {
+  template<typename T> class DWTAFunc : public HashFunc<T> {
   private:
     std::size_t bin_size;
     std::size_t sample_size;
