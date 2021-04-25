@@ -289,7 +289,7 @@ namespace HashDL {
     }
 
     void reset(std::size_t batch_size) override {
-      Layer::reset(batch_i);
+      Layer<T>::reset(batch_i);
 
       active_idx.clear();
       active_idx.resize(batch_size);
