@@ -205,7 +205,7 @@ namespace HashDL {
     ~InputLayer() = default;
 
     Data<T> forward(std::size_t batch_i, const Data<T>& X) override {
-      Y[batch_i] = X;
+      this->Y[batch_i] = X;
       return next()->forward(batch_i, X);
     }
 
@@ -228,7 +228,7 @@ namespace HashDL {
     ~OutputLayer() = default;
 
     Data<T> forward(std::size_t batch_i, const Data<T>& X) override {
-      Y[batch_i] = X;
+      this->Y[batch_i] = X;
       return X;
     }
 
@@ -270,10 +270,10 @@ namespace HashDL {
       active_idx[batch_i] = hash.retrieve(X);
 
       for(auto n : active_idx[batch_i]){
-	Y[batch_i][n] = neuron[n].forward(X, prev()->active_id(batch_i), activation);
+	this->Y[batch_i][n] = neuron[n].forward(X, prev()->active_id(batch_i), activation);
       }
 
-      return next()->forward(batch_i, Y[batch_i]);
+      return next()->forward(batch_i, this->Y[batch_i]);
     }
 
     void backward(std::size_t batch_i, const Data<T>& dL_dy) override {
