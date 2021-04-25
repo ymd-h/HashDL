@@ -105,7 +105,7 @@ namespace HashDL {
     const std::size_t data_size;
     const std::size_t sample_size;
     std::size_t sample_bits;
-    const std::max_attempt;
+    const std::size_t max_attempt;
     std::size_t attempt_bits;
     std::vector<std::vector<std::size_t>> theta; // [bin_size, sample_size]
     std::size_t coprime;
