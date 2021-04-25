@@ -2,7 +2,6 @@
 #define DATA_HH
 
 namespace HashDL {
-  using data_t = float;
   using hashcode_t = std::uint64_t;
   using idx_t = std::vector<std::size_t>;
 
