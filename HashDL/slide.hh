@@ -335,7 +335,7 @@ namespace HashDL {
     Network& operator=(Network&&) = default;
     ~Network() = default;
 
-    auto operator()(const DataView<T>& X){
+    auto operator()(const BatchView<T>& X){
       const auto batch_size = X.get_batch_size();
 
       for(auto& L: layer){ L->reset(batch_size); }
@@ -355,7 +355,7 @@ namespace HashDL {
       return Y;
     }
 
-    auto backward(const DataView<T>& dL_dy){
+    auto backward(const BatchView<T>& dL_dy){
       const auto batch_size = dL_dy.get_batch_size();
 
       auto batch_idx = index_vec(batch_size);
