@@ -4,15 +4,15 @@
 #include <cmath>
 
 namespace HashDL {
+  template<typename T> class OptimizerClient {
+  public:
+    virtual T diff(T grad) = 0;
+  };
+
   template<typename T> class Optimizer {
   public:
     virtual OptimizerClient<T>* client() const = 0;
     virtual void step(){}
-  };
-
-  template<typename T> class OptimizerClient {
-  public:
-    virtual T diff(T grad) = 0;
   };
 
   template<typename T> class SGD : public Optimizer<T> {
