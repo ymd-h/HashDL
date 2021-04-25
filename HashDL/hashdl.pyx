@@ -10,41 +10,41 @@ import numpy as np
 from . cimport slide
 
 cdef class Optimizer:
-    cdef slide.Optimizer *opt
+    cdef slide.Optimizer[float] *opt
 
-    cdef slide.Optimizer* ptr(self):
+    cdef slide.Optimizer[float]* ptr(self):
         return self.opt
 
 
 cdef class SGD(Optimizer):
     def __cinit__(self, rl=1e-4, decay=1.0, *args, **kwargs):
-        self.opt = <slide.Optimizer*> new slide.SGD[float](rl, decay)
+        self.opt = <slide.Optimizer[float]*> new slide.SGD[float](rl, decay)
 
 
 cdef class Adam(Optimizer):
     def __cinit__(self, rl=1e-4, *args, **kwargs):
-        self.opt = <slide.Optimizer*> new slide.Adam[float](rl)
+        self.opt = <slide.Optimizer[float]*> new slide.Adam[float](rl)
 
 
 cdef class Hash:
-    cdef slide.HashFunc *hash
+    cdef slide.HashFunc[float] *hash
 
-    cdef slide.HashFunc* ptr(self):
+    cdef slide.HashFunc[float]* ptr(self):
         return self.hash
 
 
 cdef class WTA(Hash):
     def __cinit__(self, bin_size, sample_size):
-        self.hash = <slide.HashFunc*> new slide.WTAFunc[float](bin_size, sample_size)
+        self.hash = <slide.HashFunc[float]*> new slide.WTAFunc[float](bin_size, sample_size)
 
 
 cdef class DWTA(Hash):
     def __cinit__(self, bin_size, sample_size, max_attempt=100):
-        self.hash = <slide.HashFunc*> new slide.DWTAFunc[float](bin_size, sample_size, max_attempt)
+        self.hash = <slide.HashFunc[float]*> new slide.DWTAFunc[float](bin_size, sample_size, max_attempt)
 
 
 cdef class Network:
-    cdef slide.Network* net
+    cdef slide.Network[float]* net
     def __cinit__(self, input_size, units=(30, 30, 30),
                   hash = None, optimizer = None, *args, **kwargs):
 
