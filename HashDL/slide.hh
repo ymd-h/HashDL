@@ -362,7 +362,7 @@ namespace HashDL {
       std::for_each(std::execution::par, batch_idx.begin(), batch_idx.end(),
 		    [&, this](auto i){
 		      auto d = Data<T>{dL_dy.begin(i), dL_dy.end(i)};
-		      layer.back()->backward(i, d);
+		      this->layer.back()->backward(i, d);
 		    });
 
       opt->step();
