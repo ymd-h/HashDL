@@ -70,6 +70,45 @@ namespace HashDL {
   };
 
 
+  template<typename T> class Neuron {
+  private:
+    Weight<T> weight;
+  public:
+    Neuron(): Neuron{16};
+    Neuron(std::size_t prev_units,
+	   std::function<T()> weight_initializer = [](){ return 0; })
+      : data{}, gradient{}, weight{prev_units}, bias{}
+    {}
+    Neuron(const Neuron&) = default;
+    Neuron(Neuron&&) = default;
+    Neuron& operator=(const Neuron&) = default;
+    Neuron& operator=(Neuron&&) = default;
+    ~Neuron() = default;
+
+    const auto forward(const Data<T>& X,
+		       const idx_t& prev_active,
+		       const std::unique_ptr<Activation<T>>& f){
+      return f->call(weight.affine(X, prev_active));
+    }
+
+    const auto backward(const Data<T>& X, T y,
+			T dL_dy, Data<T>& dL_dx,
+			const idx_t& prev_active,
+			const std::unique_ptr<Activation<T>>& f){
+      dL_dy = f->back(y, dL_dy);
+
+      for(auto i : prev_active){
+	dL_dx[i] += dL_dy * weight.weight(i);
+	weight.add_weight_grad(i, dL_dy * X[i]);
+      }
+      weight.add_bias_grad(dL_dy);
+    }
+
+    const auto w() const noexcept { return weight.weight(); }
+
+    void update(){ weight->update(); }
+  };
+
   template<typename T> class LSH {
   private:
     const std::size_t L;
@@ -80,7 +119,7 @@ namespace HashDL {
     idx_t idx;
     std::size_t neuron_size;
   public:
-    LSH(): LSH(50, DWTAFunc<T>{8, 8}{}
+    LSH(): LSH(50, DWTAFunc<T>{8, 8}) {}
     LSH(std::size_t L, std::size_t data_size, HashFunc<T>* hash_factory)
       : L{L}, data_size{data_size}, hash_factory{hash_factory}, hash{}, backet(L),
 	idx{index_vec(L)}, neuron_size{}
@@ -127,46 +166,6 @@ namespace HashDL {
 
       return neuron_id;
     }
-  };
-
-
-  template<typename T> class Neuron {
-  private:
-    Weight<T> weight;
-  public:
-    Neuron(): Neuron{16};
-    Neuron(std::size_t prev_units,
-	   std::function<T()> weight_initializer = [](){ return 0; })
-      : data{}, gradient{}, weight{prev_units}, bias{}
-    {}
-    Neuron(const Neuron&) = default;
-    Neuron(Neuron&&) = default;
-    Neuron& operator=(const Neuron&) = default;
-    Neuron& operator=(Neuron&&) = default;
-    ~Neuron() = default;
-
-    const auto forward(const Data<T>& X,
-		       const idx_t& prev_active,
-		       const std::unique_ptr<Activation<T>>& f){
-      return f->call(weight.affine(X, prev_active));
-    }
-
-    const auto backward(const Data<T>& X, T y,
-			T dL_dy, Data<T>& dL_dx,
-			const idx_t& prev_active,
-			const std::unique_ptr<Activation<T>>& f){
-      dL_dy = f->back(y, dL_dy);
-
-      for(auto i : prev_active){
-	dL_dx[i] += dL_dy * weight.weight(i);
-	weight.add_weight_grad(i, dL_dy * X[i]);
-      }
-      weight.add_bias_grad(dL_dy);
-    }
-
-    const auto w() const noexcept { return weight.weight(); }
-
-    void update(){ weight->update(); }
   };
 
 
