@@ -7,8 +7,7 @@ from libcpp.vector cimport vector
 cimport numpy as np
 import numpy as np
 
-from HashDL cimport slide
-
+from . cimport slide
 
 cdef class Optimizer:
     cdef slide.Optimizer *opt
