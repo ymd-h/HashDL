@@ -222,7 +222,7 @@ namespace HashDL {
     std::size_t sample_size;
   public:
     WTAFunc() = delete;
-    WTAFunc(std::size_t bin_size, std::size_t data_size, std::size_t sample_size)
+    WTAFunc(std::size_t bin_size, std::size_t sample_size)
       : bin_size{bin_size}, sample_size{sample_size} {}
     WTAFunc(const WTAFunc&) = default;
     WTAFunc(WTAFunc&&) = default;
