@@ -193,7 +193,7 @@ namespace HashDL {
 	}else{ // == 0.0
 	  std::size_t next = i;
 	  for(std::size_t attempt=0; attempt<max_attempt; ++attempt){
-	    next = univarsal_hash(i, attempt);
+	    next = universal_hash(i, attempt);
 	    if(max_vs[next]){ break; }
 	  }
 	  // Original DWTA adds "attempt + C", however, SLIDE doesn't.
