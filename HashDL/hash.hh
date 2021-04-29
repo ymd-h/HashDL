@@ -26,7 +26,7 @@ namespace HashDL {
     ~Hash() = default;
     using Data_t = Data<T>;
 
-    virtual hashcode_t encode()(const Data_t& data) = 0;
+    virtual hashcode_t encode(const Data_t& data) = 0;
   };
 
 
@@ -80,7 +80,7 @@ namespace HashDL {
     ~WTA() = default;
     using Data_t = Data<T>;
 
-    hashcode_t encode()(const Data_t& data) override {
+    hashcode_t encode(const Data_t& data) override {
       if(data.size() != data_size){ throw std::runtime_error("Data size mismuch!"); }
       hashcode_t hash = 0;
 
@@ -166,7 +166,7 @@ namespace HashDL {
     ~DWTA() = default;
     using Data_t = Data<T>;
 
-    hashcode_t encode()(const Data_t& data) override {
+    hashcode_t encode(const Data_t& data) override {
       if(data.size() != data_size){ throw std::runtime_error("Data size mismuch!"); }
 
       std::vector<T> max_vs{};
