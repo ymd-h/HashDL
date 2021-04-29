@@ -41,8 +41,8 @@ namespace HashDL {
     ~Data() = default;
 
     std::size_t size() const noexcept { return _size; }
-    auto begin(){ data.begin(); }
-    auto end(){ data.end(); }
+    auto begin(){ return data.begin(); }
+    auto end(){ return data.end(); }
     const auto operator[](std::size_t n) const { return data[n]; }
     auto& operator[](std::size_t n){ return data[n]; }
   };
