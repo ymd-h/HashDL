@@ -50,7 +50,7 @@ namespace HashDL {
       return new SGDClient<T>{this};
     }
     void step() override { _eta *= decay; }
-    const auto eta(){ return _eta; }
+    const auto eta() const { return _eta; }
   };
 
   template<typename T> class Adam;
