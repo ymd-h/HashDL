@@ -107,7 +107,7 @@ namespace HashDL {
 
     const auto w() const noexcept { return weight.weight(); }
 
-    void update(){ weight->update(); }
+    void update(){ weight.update(); }
   };
 
   template<typename T> class LSH {
@@ -304,7 +304,7 @@ namespace HashDL {
     }
 
     void update(bool is_rehash) override {
-      for(auto& n: neuron){ n->update(); }
+      for(auto& n: neuron){ n.update(); }
       if(is_rehash){ rehash(); }
     }
   };
