@@ -21,7 +21,15 @@ cdef extern from "slide.hh" namespace "HashDL":
         SGD(T, T) except +
     cdef cppclass Adam[T]:
         Adam(T) except +
+    cdef cppclass Scheduler:
+        Scheduler() except +
+    cdef cppclass ConstantFrequency:
+        ConstantFrequency() except +
+        ConstantFrequency(size_t) except +
+    cdef cppclass ExponentialDecay[T]:
+        ExponentialDecay() except +
+        ExponentialDecay(size_t, T) except +
     cdef cppclass Network[T]:
-        Network(size_t&,vector[size_t]&,size_t&, HashFunc[T]*, Optimizer[T]*) except +
+        Network(size_t&,vector[size_t]&,size_t&, HashFunc[T]*, Optimizer[T]*, Scheduler*) except +
         BatchData[T] operator()(const BatchView[T]&) except +
         void backward(const BatchView[T]&) except +

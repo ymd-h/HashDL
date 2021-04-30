@@ -8,6 +8,7 @@
 #include "activation.hh"
 #include "optimizer.hh"
 #include "hash.hh"
+#include "scheduler.hh"
 
 namespace HashDL {
   template<typename T> class Param {
@@ -311,11 +312,11 @@ namespace HashDL {
     std::size_t output_dim;
     std::vector<std::unique_ptr<Layer<T>>> layer;
     std::unique_ptr<Optimizer<T>> opt;
-    std::function<bool()> update_freq;
+    std::unique_ptr<Scheduler> update_freq;
   public:
     Network() = delete;
     Network(std::size_t& input_size, std::vector<std::size_t>& units, std::size_t& L,
-	    HashFunc<T>* hash, Optimizer<T>* opt, std::function<bool()> update_freq)
+	    HashFunc<T>* hash, Optimizer<T>* opt, Scheduler* update_freq)
       : output_dim{units.size() > 0 ? units.back(): input_size}, layer{},
 	opt{opt}, update_freq{update_freq}
     {
