@@ -328,7 +328,8 @@ namespace HashDL {
       layer.emplace_back(new InputLayer<T>{input_size});
       auto prev_units = input_size;
       for(auto& u : units){
-	layer.emplace_back(new DenseLayer<T>{prev_units, u, new ReLU<T>{}, L, hash, opt});
+	layer.emplace_back(new DenseLayer<T>{prev_units, u, new ReLU<T>{}, L,
+					     hash, this->opt});
 	prev_units = u;
       }
       layer.emplace_back(new OutputLayer<T>{prev_units});
