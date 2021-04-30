@@ -1,14 +1,16 @@
 #ifndef SCHEDULER_HH
 #define SCHEDULER_HH
 
+#include <cmath>
+
 namespace HashDL {
 
-  template<typename T> Scheduler {
-  pubvlic:
+  class Scheduler {
+  public:
     virtual bool operator()() = 0;
   };
 
-  template<typename T> ConstantFrequency : public Scheduler<T> {
+  class ConstantFrequency : public Scheduler {
   private:
     std::size_t counter;
     std::size_t N;
