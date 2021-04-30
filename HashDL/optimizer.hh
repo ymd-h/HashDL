@@ -61,7 +61,7 @@ namespace HashDL {
     const Adam<T>* adam;
   public:
     AdamClient() = delete;
-    AdamClient(const Adam<T>* adam): m{0}, T{0}, adam{adam} {}
+    AdamClient(const Adam<T>* adam): m{0}, v{0}, adam{adam} {}
     AdamClient(const AdamClient&) = default;
     AdamClient(AdamClient&&) = default;
     AdamClient& operator=(const AdamClient&) = default;
