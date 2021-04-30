@@ -254,7 +254,7 @@ namespace HashDL {
     DenseLayer(std::size_t prev_units, std::size_t units, Activation<T>* f,
 	       std::size_t L, HashFunc<T>* hash_factory,
 	       const std::unique_ptr<Optimizer<T>>& optimizer)
-      : neuron(units, Neuron<T>{prev_units}, optimizer), active_idx{},
+      : neuron(units, Neuron<T>{prev_units, optimizer}), active_idx{},
 	hash{L, prev_units, hash_factory}, activation{f}
     {
       hash.add(neuron);
