@@ -160,7 +160,7 @@ namespace HashDL {
     auto retrieve(const Data<T>& X) const {
       auto neuron_id = index_vec(neuron_size);
 
-      for(auto i=0; i<L; ++i){
+      for(std::size_t i=0; i<L; ++i){
 	auto [begin, end] = backet[i].equal_range(hash[i]->encode(X));
 	std::remove_if(neuron_id.begin(), neuron_id.end(),
 		       [=](auto n){ return std::find(begin, end, n) == end; });
