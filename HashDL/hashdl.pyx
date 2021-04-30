@@ -64,7 +64,7 @@ cdef class ExponentialDecay(Scheduler):
         self.decay = decay
 
     cdef slide.Scheduler* ptr(self):
-        return <slide.Scheduler> new slide.ExponentialDecay[float](self.N, self.decay)
+        return <slide.Scheduler*> new slide.ExponentialDecay[float](self.N,self.decay)
 
 
 cdef class BatchWrapper:
