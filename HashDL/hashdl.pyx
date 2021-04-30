@@ -107,14 +107,19 @@ cdef class Network:
     cdef BatchWrapper y
 
     def __cinit__(self, input_size, units=(30, 30, 30), L = 50,
-                  hash = None, optimizer = None, *args, **kwargs):
+                  hash = None, optimizer = None, scheduler = None, *args, **kwargs):
 
         cdef Hash h = hash or DWTA(8, 8)
         cdef float rl = 1e-4
         cdef Optimizer opt = optimizer or Adam(rl)
 
+        cdef size_t N = 50
+        cdef float decay = 1e-3
+        cdef Scheduler sch = scheduler or ExponentialDecay(N, decay)
+
         cdef vector[size_t] u = units
-        self.net = new slide.Network[float](input_size, u, L, h.ptr(), opt.ptr())
+        self.net = new slide.Network[float](input_size, u, L,
+                                            h.ptr(), opt.ptr(), sch.opt())
 
     def __call__(self, X):
         X = np.array(X, ndmin=2, copy=False, dtype=np.float)
