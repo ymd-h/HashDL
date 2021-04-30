@@ -43,6 +43,30 @@ cdef class DWTA(Hash):
     def __cinit__(self, bin_size, sample_size, max_attempt=100):
         self.hash = <slide.HashFunc[float]*> new slide.DWTAFunc[float](bin_size, sample_size, max_attempt)
 
+
+cdef class Scheduler:
+    cdef slide.Scheduler* ptr(self):
+        return NULL
+
+cdef class ConstantFrequency(Scheduler):
+    cdef size_t N
+    def __cinit__(self, N):
+        self.N = N
+
+    cdef slide.Scheduler* ptr(self):
+        return <slide.Scheduler*> new slide.ConstantFrequency(self.N)
+
+cdef class ExponentialDecay(Scheduler):
+    cdef size_t N
+    cdef float decay
+    def __cinit__(self, N, decay):
+        self.N = N
+        self.decay = decay
+
+    cdef slide.Scheduler* ptr(self):
+        return <slide.Scheduler> new slide.ExponentialDecay(self.N, self.decay)
+
+
 cdef class BatchWrapper:
     cdef slide.BatchData[float]* ptr
     cdef size_t itemsize
