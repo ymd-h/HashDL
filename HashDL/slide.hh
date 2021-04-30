@@ -75,10 +75,11 @@ namespace HashDL {
   private:
     Weight<T> weight;
   public:
-    Neuron(): Neuron{16} {}
+    Neuron(): Neuron{16, new Adam<T>{}} {}
     Neuron(std::size_t prev_units,
+	   const std::unique_ptr<Optimizer<T>>& optimizer,
 	   std::function<T()> weight_initializer = [](){ return 0; })
-      : weight{prev_units} {}
+      : weight{prev_units, optimizer} {}
     Neuron(const Neuron&) = default;
     Neuron(Neuron&&) = default;
     Neuron& operator=(const Neuron&) = default;
@@ -250,8 +251,9 @@ namespace HashDL {
   public:
     DenseLayer(): DenseLayer{30}{}
     DenseLayer(std::size_t prev_units, std::size_t units, Activation<T>* f,
-	       std::size_t L, HashFunc<T>* hash_factory)
-      : neuron(units, Neuron<T>{prev_units}), active_idx{},
+	       std::size_t L, HashFunc<T>* hash_factory,
+	       const std::unique_ptr<Optimizer<T>>& optimizer)
+      : neuron(units, Neuron<T>{prev_units}, optimizer), active_idx{},
 	hash{L, prev_units, hash_factory}, activation{f}
     {
       hash.add(neuron);
@@ -325,7 +327,7 @@ namespace HashDL {
       layer.emplace_back(new InputLayer<T>{input_size});
       auto prev_units = input_size;
       for(auto& u : units){
-	layer.emplace_back(new DenseLayer<T>{prev_units, u, new ReLU<T>{}, L, hash});
+	layer.emplace_back(new DenseLayer<T>{prev_units, u, new ReLU<T>{}, L, hash, opt});
 	prev_units = u;
       }
       layer.emplace_back(new OutputLayer<T>{prev_units});
