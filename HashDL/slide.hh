@@ -35,10 +35,12 @@ namespace HashDL {
   template<typename T> class Weight {
   private:
     std::vector<std::unique_ptr<Param<T>>> w;
-    Param<T> b;
+    std::unique_ptr<Param<T>> b;
   public:
     Weight() = delete;
-    Weight(std::size_t N, const std::unique_ptr<Optimizer<T>>& o): w{}, b{o} {
+    Weight(std::size_t N, const std::unique_ptr<Optimizer<T>>& o)
+      : w{}, b{new Param<T>{o}}
+    {
       w.reserve(N);
       std::generate_n(std::back_inserter(w), N,
 		      [&](){ return std::unique_ptr{new Param<T>{o}}; });
@@ -53,18 +55,18 @@ namespace HashDL {
       return Data<T>{w.begin(), w.end(), [](auto& wi){ return (*wi)(); }};
     }
     auto weight(std::size_t i) const { return (*w[i])(); }
-    auto bias() const noexcept { return b(); }
+    auto bias() const noexcept { return (*b)(); }
 
     void update(){
       for(auto& wi : w){ wi->update(); }
-      b.update();
+      b->update();
     }
 
     void add_weight_grad(std::size_t i, T g){ w[i]->add_grad(g); }
-    void add_bias_grad(T g){ b.add_grad(g); }
+    void add_bias_grad(T g){ b->add_grad(g); }
 
     auto affine(const Data<T>& X, const idx_t& prev_active) const {
-      auto result = b();
+      auto result = (*b)();
       for(auto i : prev_active){
 	result += (*w[i])()*X[i];
       }
