@@ -285,7 +285,7 @@ namespace HashDL {
 
       Data<T> dL_dx{X.size()};
       for(auto n : active_idx[batch_i]){
-	this->neuron[n].backward(X, this->Y[n], dL_dy[n], dL_dx,
+	this->neuron[n].backward(X, this->Y[batch_i][n], dL_dy[n], dL_dx,
 				 this->prev()->active_id(batch_i), activation);
       }
 
