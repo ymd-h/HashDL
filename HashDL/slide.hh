@@ -260,7 +260,7 @@ namespace HashDL {
       : neuron{}, active_idx{}, hash{L, prev_units, hash_factory}, activation{f}
     {
       neuron.reserve(units);
-      std::generate_n(units, std::back_inserter(neuron),
+      std::generate_n(std::back_inserter(neuron), units,
 		      [&](){ return Neuron<T>{prev_units, optimizer}; });
 
       hash.add(neuron);
