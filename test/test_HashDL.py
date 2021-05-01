@@ -107,5 +107,26 @@ class TestExponentialDecay(unittest.TestCase):
         with self.assertRaises(TypeError):
             ed = HashDL.ExponentialDecay(50, None)
 
+
+class TestNetwork(unittest.TestCase):
+    def test_default_network(self):
+        net = HashDL.Network(2)
+
+
+    def test_negetive_intput_size(self):
+        with self.assertRaises(ValueError):
+            net = HashDL.Network(-2)
+
+    def test_invalid_type_str_input_size(self):
+        with self.assertRaises(TypeError):
+            net = HashDL.Network("abc")
+
+
+    def test_invalid_type_None(self):
+        with self.assertRaises(TypeError):
+            net = HashDL.Network(None)
+
+
+
 if __name__ == "__main__":
     unittest.main()
