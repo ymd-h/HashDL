@@ -139,10 +139,10 @@ class TestNetwork(unittest.TestCase):
         net = HashDL.Network(4, optimizer=HashDL.Adam())
 
     def test_WTA(self):
-        net = HashDL.Network(4, hash=HashDL.WTA(8, 10))
+        net = HashDL.Network(4, hash=HashDL.WTA(32, 10))
 
     def test_DWTA(self):
-        net = HashDL.Network(4, hash=HashDL.DWTA(8, 10))
+        net = HashDL.Network(4, hash=HashDL.DWTA(32, 10))
 
     def test_ConstantFrequency(self):
         net = HashDL.Network(4, scheduler=HashDL.ConstantFrequency(50))
