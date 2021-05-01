@@ -139,7 +139,7 @@ namespace HashDL {
     ~LSH() = default;
 
     void reset(){
-      for(auto& h : hash){ h.reset(hash_factory()); }
+      for(auto& h : hash){ h.reset(hash_factory->GetHash(data_size)); }
 
       backet.clear();
       backet.resize(L);
