@@ -17,6 +17,19 @@ class TestWTA(unittest.TestCase):
     def test_WTA(self):
         wta = HashDL.WTA(8, 32)
 
+    def test_invalid_type_str(self):
+        with self.assertRaises(TypeError):
+            wta = HashDL.WTA("act", 32)
+
+        with self.assertRaises(TypeError):
+            wta = HashDL.WTA(8, "32")
+
+    def test_invalid_type_None(self):
+        with self.assertRaises(TypeError):
+            wta = HashDL.WTA(None, 32)
+
+        with self.assertRaises(TypeError):
+            wta = HashDL.WTA(8, None)
 
 
 class TestDWTA(unittest.TestCase):
