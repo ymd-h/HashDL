@@ -7,10 +7,26 @@ class TestSGD(unittest.TestCase):
     def test_SGD(self):
         sgd = HashDL.SGD()
 
+    def test_invalid_type_str(self):
+        with self.assertRaises(TypeError):
+            sgd = HashDL.SGD("str")
+
+    def test_invalid_type_None(self):
+        with self.assertRaises(TypeError):
+            sgd = HashDL.SGD(None)
+
 
 class TestAdam(unittest.TestCase):
     def test_Adam(self):
         adam = HashDL.Adam()
+
+    def test_invalid_type_str(self):
+        with self.assertRaises(TypeError):
+            adam = HashDL.Adam("str")
+
+    def test_invalid_type_None(self):
+        with self.assertRaises(TypeError):
+            adam = HashDL.Adam(None)
 
 
 class TestWTA(unittest.TestCase):
