@@ -34,8 +34,9 @@ namespace HashDL {
 
   template<typename T> class Weight {
   private:
-    std::vector<std::unique_ptr<Param<T>>> w;
-    std::unique_ptr<Param<T>> b;
+    using Param_t = std::unique_ptr<Param<T>>;
+    std::vector<Param_t> w;
+    Param_t b;
   public:
     Weight() = delete;
     Weight(std::size_t N, const std::unique_ptr<Optimizer<T>>& o)
@@ -43,7 +44,7 @@ namespace HashDL {
     {
       w.reserve(N);
       std::generate_n(std::back_inserter(w), N,
-		      [&](){ return std::unique_ptr{new Param<T>{o}}; });
+		      [&](){ return Param_t{new Param<T>{o}}; });
     }
     Weight(const Weight&) = default;
     Weight(Weight&&) = default;
