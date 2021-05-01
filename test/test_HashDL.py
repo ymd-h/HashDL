@@ -23,6 +23,20 @@ class TestDWTA(unittest.TestCase):
     def test_DWTA(self):
         dwta = HashDL.DWTA(8, 32)
 
+    def test_invalid_type_str(self):
+        with self.assertRaises(TypeError):
+            dwta = HashDL.DWTA("act", 32)
+
+        with self.assertRaises(TypeError):
+            dwta = HashDL.DWTA(8, "32")
+
+    def test_invalid_type_None(self):
+        with self.assertRaises(TypeError):
+            dwta = HashDL.DWTA(None, 32)
+
+        with self.assertRaises(TypeError):
+            dwta = HashDL.DWTA(8, None)
+
 
 class TestConstantFrequency(unittest.TestCase):
     def test_ConstantFrequency(self):
