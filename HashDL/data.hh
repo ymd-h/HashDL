@@ -27,7 +27,7 @@ namespace HashDL {
     Data(std::vector<T>&& data): _size{data.size()}, data{data} {}
     Data(const T* begin,const  T* end)
       : _size{std::distance(begin, end)}, data{begin, end} {}
-    template<typename F> Data<T>(const T* begin, const T* end, F&& f)
+    template<typename I, typename F> Data<T>(I&& begin, I&& end, F&& f)
       : _size{std::distance(begin, end)}, data{} {
       data.reserve(_size);
 
