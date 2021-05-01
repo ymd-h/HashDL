@@ -1,1 +1,4 @@
-from .hashdl import (SGD, Adam, WTA, DWTA, Network)
+from .hashdl import (SGD, Adam,
+                     WTA, DWTA,
+                     ConstantFrequency, ExponentialDecay,
+                     Network)
