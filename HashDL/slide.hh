@@ -20,8 +20,8 @@ namespace HashDL {
     Param() = default;
     Param(const std::unique_ptr<Optimizer<T>>& o)
       : value{}, grad{}, opt{o->client()} {}
-    Param(const Param&) = default;
-    Param(Param&&) = default;
+    Param(const Param&) = delete;
+    Param(Param&&) = delete;
     Param& operator=(const Param&) = default;
     Param& operator=(Param&&) = default;
     ~Param() = default;
