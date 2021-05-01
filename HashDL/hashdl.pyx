@@ -19,11 +19,17 @@ cdef class Optimizer:
 
 cdef class SGD(Optimizer):
     def __cinit__(self, rl=1e-4, decay=1.0, *args, **kwargs):
+        if rl < 0:
+            raise ValueError(f"Learning Rate (rl) must be positive: {rl}")
+
         self.opt = <slide.Optimizer[float]*> new slide.SGD[float](rl, decay)
 
 
 cdef class Adam(Optimizer):
     def __cinit__(self, rl=1e-4, *args, **kwargs):
+        if rl < 0:
+            raise ValueError(f"Learning Rate (rl) must be positive: {rl}")
+
         self.opt = <slide.Optimizer[float]*> new slide.Adam[float](rl)
 
 

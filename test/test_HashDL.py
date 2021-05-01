@@ -15,6 +15,10 @@ class TestSGD(unittest.TestCase):
         with self.assertRaises(TypeError):
             sgd = HashDL.SGD(None)
 
+    def test_negative_learning_rate(self):
+        with self.assertRaises(ValueError):
+            sgd = HashDL.SGD(-10)
+
 
 class TestAdam(unittest.TestCase):
     def test_Adam(self):
@@ -27,6 +31,10 @@ class TestAdam(unittest.TestCase):
     def test_invalid_type_None(self):
         with self.assertRaises(TypeError):
             adam = HashDL.Adam(None)
+
+    def test_negative_learning_rate(self):
+        with self.assertRaises(ValueError):
+            adam = HashDL.Adam(-10)
 
 
 class TestWTA(unittest.TestCase):
