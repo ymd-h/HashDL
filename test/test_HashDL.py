@@ -28,6 +28,14 @@ class TestConstantFrequency(unittest.TestCase):
     def test_ConstantFrequency(self):
         cf = HashDL.ConstantFrequency(50)
 
+    def test_invalid_type_str(self):
+        with self.assertRaises(TypeError):
+            cf = HashDL.ConstantFrequency("str")
+
+    def test_invalid_type_None(self):
+        with self.assertRaises(TypeError):
+            cf = HashDL.ConstantFrequency(None)
+
 
 class TestExponentialDecay(unittest.TestCase):
     def test_ExponentialDecay(self):
