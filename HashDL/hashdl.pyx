@@ -115,6 +115,12 @@ cdef class Network:
     def __cinit__(self, input_size, units=(30, 30, 30), L = 50,
                   hash = None, optimizer = None, scheduler = None, *args, **kwargs):
 
+        if input_size <= 0:
+            raise ValueError(f"input_size must be positive: {input_size}")
+
+        if (np.asarray(units) <= 0).any():
+            raise ValueError(f"units must be positive: {units}")
+
         cdef Hash h = hash or DWTA(8, 8)
         cdef float rl = 1e-4
         cdef Optimizer opt = optimizer or Adam(rl)
