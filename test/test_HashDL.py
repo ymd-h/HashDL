@@ -33,5 +33,13 @@ class TestExponentialDecay(unittest.TestCase):
     def test_ExponentialDecay(self):
         ed = HashDL.ExponentialDecay(50, 1e-5)
 
+    def test_invalid_type_str(self):
+        with self.assertRaises(TypeError):
+            ed = HashDL.ExponentialDecay("abc", 1e-5)
+
+    def test_invalud_type_None(self):
+        with self.assertRaises(TypeError):
+            ed = HashDL.ExponentialDecay(None, 1e-5)
+
 if __name__ == "__main__":
     unittest.main()
