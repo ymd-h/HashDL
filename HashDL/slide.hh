@@ -34,13 +34,13 @@ namespace HashDL {
 
   template<typename T> class Weight {
   private:
-    std::vector<Param<T>> w;
+    std::vector<std::unique_ptr<Param<T>>> w;
     Param<T> b;
   public:
     Weight() = delete;
     Weight(std::size_t N, const std::unique_ptr<Optimizer<T>>& o): w{}, b{o} {
       w.reserve(N);
-      for(std::size_t i=0; i<N; ++i){ w.emplace_back(o); }
+      for(std::size_t i=0; i<N; ++i){ w.emplace_back(new Param<T>{o}); }
     }
     Weight(const Weight&) = default;
     Weight(Weight&&) = default;
@@ -49,23 +49,23 @@ namespace HashDL {
     ~Weight() = default;
 
     auto weight() const noexcept {
-      return Data<T>{w.begin(), w.end(), [](auto& wi){ return wi(); }};
+      return Data<T>{w.begin(), w.end(), [](auto& wi){ return (*wi)(); }};
     }
-    auto weight(std::size_t i) const { return w[i](); }
+    auto weight(std::size_t i) const { return (*w[i])(); }
     auto bias() const noexcept { return b(); }
 
     void update(){
-      for(auto& wi : w){ wi.update(); }
+      for(auto& wi : w){ wi->update(); }
       b.update();
     }
 
-    void add_weight_grad(std::size_t i, T g){ w[i].add_grad(g); }
+    void add_weight_grad(std::size_t i, T g){ w[i]->add_grad(g); }
     void add_bias_grad(T g){ b.add_grad(g); }
 
     auto affine(const Data<T>& X, const idx_t& prev_active) const {
       auto result = b();
       for(auto i : prev_active){
-	result += w[i]()*X[i];
+	result += (*w[i])()*X[i];
       }
       return result;
     }
