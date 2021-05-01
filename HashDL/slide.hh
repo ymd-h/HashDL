@@ -40,7 +40,8 @@ namespace HashDL {
     Weight() = delete;
     Weight(std::size_t N, const std::unique_ptr<Optimizer<T>>& o): w{}, b{o} {
       w.reserve(N);
-      for(std::size_t i=0; i<N; ++i){ w.emplace_back(new Param<T>{o}); }
+      std::generate_n(std::back_inserter(w), N,
+		      [&](){ return std::unique_ptr{new Param<T>{o}}; });
     }
     Weight(const Weight&) = default;
     Weight(Weight&&) = default;
