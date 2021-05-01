@@ -121,6 +121,9 @@ cdef class Network:
         if (np.asarray(units) <= 0).any():
             raise ValueError(f"units must be positive: {units}")
 
+        if L <= 0:
+            raise ValueError(f"L must be positive: {L}")
+
         cdef Hash h = hash or DWTA(8, 8)
         cdef float rl = 1e-4
         cdef Optimizer opt = optimizer or Adam(rl)
