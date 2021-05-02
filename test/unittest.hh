@@ -28,6 +28,7 @@ public:
   auto operator()(){
     try { test(); } catch (...) { fail = true; }
   }
+  explicit operator bool() const { return !fail; }
 };
 
 class Test {
