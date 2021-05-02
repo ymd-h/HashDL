@@ -39,18 +39,18 @@ class TestAdam(unittest.TestCase):
 
 class TestWTA(unittest.TestCase):
     def test_WTA(self):
-        wta = HashDL.WTA(8, 32)
+        wta = HashDL.WTA(32, 8)
 
     def test_invalid_type_str(self):
         with self.assertRaises(TypeError):
-            wta = HashDL.WTA("act", 32)
+            wta = HashDL.WTA("act", 8)
 
         with self.assertRaises(TypeError):
             wta = HashDL.WTA(8, "32")
 
     def test_invalid_type_None(self):
         with self.assertRaises(TypeError):
-            wta = HashDL.WTA(None, 32)
+            wta = HashDL.WTA(None, 8)
 
         with self.assertRaises(TypeError):
             wta = HashDL.WTA(8, None)
@@ -58,18 +58,18 @@ class TestWTA(unittest.TestCase):
 
 class TestDWTA(unittest.TestCase):
     def test_DWTA(self):
-        dwta = HashDL.DWTA(8, 32)
+        dwta = HashDL.DWTA(8, 8)
 
     def test_invalid_type_str(self):
         with self.assertRaises(TypeError):
-            dwta = HashDL.DWTA("act", 32)
+            dwta = HashDL.DWTA("act", 8)
 
         with self.assertRaises(TypeError):
             dwta = HashDL.DWTA(8, "32")
 
     def test_invalid_type_None(self):
         with self.assertRaises(TypeError):
-            dwta = HashDL.DWTA(None, 32)
+            dwta = HashDL.DWTA(None, 8)
 
         with self.assertRaises(TypeError):
             dwta = HashDL.DWTA(8, None)
@@ -110,7 +110,7 @@ class TestExponentialDecay(unittest.TestCase):
 
 class TestNetwork(unittest.TestCase):
     def test_default_network(self):
-        net = HashDL.Network(2)
+        net = HashDL.Network(16)
 
     def test_negetive_intput_size(self):
         with self.assertRaises(ValueError):
@@ -126,29 +126,29 @@ class TestNetwork(unittest.TestCase):
 
     def test_negative_units(self):
         with self.assertRaises(ValueError):
-            net = HashDL.Network(2, [-10, 2, 5])
+            net = HashDL.Network(16, [-10, 2, 5])
 
     def test_negative_L(self):
         with self.assertRaises(ValueError):
-            net = HashDL.Network(2, (10, 10), -3)
+            net = HashDL.Network(16, (10, 10), -3)
 
     def test_SGD(self):
-        net = HashDL.Network(4, optimizer=HashDL.SGD())
+        net = HashDL.Network(16, optimizer=HashDL.SGD())
 
     def test_Adam(self):
-        net = HashDL.Network(4, optimizer=HashDL.Adam())
+        net = HashDL.Network(16, optimizer=HashDL.Adam())
 
     def test_WTA(self):
-        net = HashDL.Network(4, hash=HashDL.WTA(32, 10))
+        net = HashDL.Network(16, hash=HashDL.WTA(8, 8))
 
     def test_DWTA(self):
-        net = HashDL.Network(4, hash=HashDL.DWTA(32, 10))
+        net = HashDL.Network(16, hash=HashDL.DWTA(8, 8))
 
     def test_ConstantFrequency(self):
-        net = HashDL.Network(4, scheduler=HashDL.ConstantFrequency(50))
+        net = HashDL.Network(16, scheduler=HashDL.ConstantFrequency(50))
 
     def test_ExponentialDecay(self):
-        net = HashDL.Network(4, scheduler=HashDL.ExponentialDecay(50, 1e-3))
+        net = HashDL.Network(16, scheduler=HashDL.ExponentialDecay(50, 1e-3))
 
 
 if __name__ == "__main__":
