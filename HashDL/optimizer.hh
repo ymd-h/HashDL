@@ -6,11 +6,25 @@
 namespace HashDL {
   template<typename T> class OptimizerClient {
   public:
+    OptimizerClient() = default;
+    OptimizerClient(const OptimizerClient&) = default;
+    OptimizerClient(OptimizerClient&&) = default;
+    OptimizerClient& operator=(const OptimizerClient&) = default;
+    OptimizerClient& operator=(OptimizerClient&&) = default;
+    virtual ~OptimizerClient() = default;
+
     virtual T diff(T grad) = 0;
   };
 
   template<typename T> class Optimizer {
   public:
+    Optimizer() = default;
+    Optimizer(const Optimizer&) = default;
+    Optimizer(Optimizer&&) = default;
+    Optimizer& operator=(const Optimizer&) = default;
+    Optimizer& operator=(Optimizer&&) = default;
+    virtual ~Optimizer() = default;
+
     virtual OptimizerClient<T>* client() const = 0;
     virtual void step(){}
   };

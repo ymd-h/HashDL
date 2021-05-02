@@ -21,7 +21,7 @@ namespace HashDL {
     ConstantFrequency(ConstantFrequency&&) = default;
     ConstantFrequency& operator=(const ConstantFrequency&) = default;
     ConstantFrequency& operator=(ConstantFrequency&&) = default;
-    ~ConstantFrequency() = default;
+    virtual ~ConstantFrequency() = default;
 
     bool operator()() override {
       auto fulfilled = counter++ >= N;

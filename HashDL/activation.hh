@@ -6,6 +6,13 @@
 namespace HashDL {
   template<typename T> class Activation {
   public:
+    Activation() = default;
+    Activation(const Activation&) = default;
+    Activation(Activation&&) = default;
+    Activation& operator=(const Activation&) = default;
+    Activation& operator=(Activation&&) = default;
+    virtual ~Activation() = default;
+
     virtual T call(T x) const = 0;
     virtual T back(T y, T dL_dy) const = 0;
   };

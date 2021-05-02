@@ -23,7 +23,7 @@ namespace HashDL {
     Hash(Hash&&) = default;
     Hash& operator=(const Hash&) = default;
     Hash& operator=(Hash&&) = default;
-    ~Hash() = default;
+    virtual ~Hash() = default;
     using Data_t = Data<T>;
 
     virtual hashcode_t encode(const Data_t& data) = 0;
@@ -213,6 +213,13 @@ namespace HashDL {
 
   template<typename T> class HashFunc {
   public:
+    HashFunc() = default;
+    HashFunc(const HashFunc&) = default;
+    HashFunc(HashFunc&&) = default;
+    HashFunc& operator=(const HashFunc&) = default;
+    HashFunc& operator=(HashFunc&&) = default;
+    virtual ~HashFunc() = default;
+
     virtual Hash<T>* GetHash(std::size_t) = 0;
   };
 
