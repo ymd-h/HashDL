@@ -1,5 +1,7 @@
 import unittest
 
+import numpy as np
+
 import HashDL
 
 
@@ -150,6 +152,17 @@ class TestNetwork(unittest.TestCase):
     def test_ExponentialDecay(self):
         net = HashDL.Network(16, scheduler=HashDL.ExponentialDecay(50, 1e-3))
 
+    def test_call(self):
+        data_size = 16
+        batch_size = 32
+
+        net = HashDL.Network(data_size, units=(30, 30), L = 50,
+                             optimizer = HashDL.Adam(),
+                             scheduler = HashDL.ExponentialDecay(50, 1e-3),
+                             hash = HashDL.DWTA(8, 8))
+
+        X = np.zeros((batch_size, data_size))
+        Y = net(X)
 
 if __name__ == "__main__":
     unittest.main()
