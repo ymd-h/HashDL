@@ -113,7 +113,7 @@ inline constexpr void AssertEqual(L&& lhs, R&& rhs){
   if constexpr (std::is_floating_point_v<LL> || std::is_floating_point_v<RR>){
     using LR = std::common_type_t<LL, RR>;
 
-    not_equal = std::abs(lhs - rhs) <= std::numeric_limits<LR>::epsilon();
+    not_equal = std::abs(lhs - rhs) > std::numeric_limits<LR>::epsilon();
   } else {
     not_equal = (lhs != rhs);
   }
