@@ -38,6 +38,12 @@ int main(int argc, char** argv){
     auto R = ReLU{};
 
     AssertEqual(R.back(0.5, 0.5), 1);
+    AssertEqual(R.back(10, 7), 1);
+    AssertEqual(R.back(1, -0.5), 1);
+
+    AssertEqual(R.back(-0.5, 0.5), 0);
+    AssertEqual(R.back(-10, 0.5), 0);
+    AssertEqual(R.back(-1, 0.5), 0);
   },"ReLU back");
 
   return test.Run();
