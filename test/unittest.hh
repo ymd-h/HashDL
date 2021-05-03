@@ -32,7 +32,7 @@ public:
       success = true;
     } catch (...) {
       auto e = std::current_exception();
-      msg = e ? e.what() : "No description."
+      msg = e ? e->what() : "No description."
     }
   }
 
