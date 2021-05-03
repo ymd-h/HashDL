@@ -74,34 +74,43 @@ public:
   }
 };
 
-template<typename T> inline constexpr auto size(T&& v){ return v.size(); }
-
-template<typename T, std::size_t N>
-inline constexpr auto size(const T[N]&){ return N; }
 
 template<typename L, typename R>
 inline constexpr void AssertEqual(L&& lhs, R&& rhs){
+  using namespace assert;
+
   if(lhs != rhs){
     using std::to_string;
     throw std::runtime_error(to_string(lhs) + " != " + to_string(rhs));
   }
 }
 
-template<typename L, typename R>
-inline constexpr void AssertEqual(L&& lhs, R&& rhs){
-  using std::begin;
-  using std::end;
+namespace assert {
+  template<typename T> inline constexpr auto size(T&& v){ return v.size(); }
 
-  try {
-    if(lhs.size() != rhs.size()){ throw ""; }
+  template<typename T, std::size_t N>
+  inline constexpr auto size(const T[N]&){ return N; }
 
-    std::for_each(begin(lhs), end(lhs),
-		  [it=begin(rhs)](auto& v) mutable { AssertEqual(v, *(it++)); });
-  } catch (...){
+  template<typename T>
+  inline constexpr auto to_string(T&& v){
     using std::to_string;
 
-    throw std::runtime_error();
+    std::string msg = "[";
+    for(auto& vi : v){
+      msg += to_string(vi);
+      msg += ",";
+    }
+    msg += "]";
   }
+
+  template<typename L, typename R>
+  inline constexpr auto operator!=(L&& lhs, R&& rhs){
+    using std::begin;
+    using std::end;
+
+    return !std::equal(begin(lhs), end(lhs), begin(rhs), end(rhs));
+  }
+
 }
 
 #endif
