@@ -66,7 +66,7 @@ public:
 
     Summary();
 
-    return fail ? std::EXIT_FAILURE: std::EXIT_SUCCESS;
+    return fail ? EXIT_FAILURE: EXIT_SUCCESS;
   }
 
   void Summary(){
