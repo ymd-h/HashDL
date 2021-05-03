@@ -114,7 +114,7 @@ inline constexpr void AssertEqual(L&& lhs, R&& rhs){
     using std::abs;
     constexpr auto eps = std::numeric_limits<LR>::epsilon();
 
-    not_equal = abs(lhs - rhs) > eps * std::max<LR>(abs(lhs), abs(rhs));
+    not_equal = !(abs(lhs - rhs) <= eps * std::max<LR>(abs(lhs), abs(rhs)));
   } else {
     not_equal = (lhs != rhs);
   }
