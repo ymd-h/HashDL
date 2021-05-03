@@ -112,7 +112,7 @@ inline constexpr void AssertEqual(L&& lhs, R&& rhs){
 
   if constexpr (std::is_floating_point_v<LR>){
     using std::abs;
-    constexpr auto eps = std::numeric_limits<LR>::epsilon();
+    constexpr auto eps = 1e-6;
 
     not_equal = !(abs(lhs - rhs) <= eps * std::max<LR>(abs(lhs), abs(rhs)));
   } else {
