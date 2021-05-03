@@ -13,12 +13,26 @@ stages:
 
 
 activation.cc:
+  variables:
+    <<: *global-variables
+    SOURCE: activation
   stage: cpptest
   image: gcc:10
   script:
     - apt update && apt install -y libtbb-dev
-    - $CXX -o test/test_activation.{out,cc}
-    - ./test/test_activation.out
+    - $CXX -o test/test_$SOURCE.{out,cc}
+    - ./test/test_$SOURCE.out
+
+data.cc:
+  variables:
+    <<: *global-variables
+    SOURCE: data
+  stage: cpptest
+  image: gcc:10
+  script:
+    - apt update && apt install -y libtbb-dev
+    - $CXX -o test/test_$SOURCE.{out,cc}
+    - ./test/test_$SOURCE.out
 
 wheelbuild:
   stage: build
