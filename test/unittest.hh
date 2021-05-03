@@ -79,7 +79,7 @@ namespace unittest {
   template<typename T> inline constexpr auto size(T&& v){ return v.size(); }
 
   template<typename T, std::size_t N>
-  inline constexpr auto size(const T[N]&){ return N; }
+  inline constexpr auto size(const T(&)[N]){ return N; }
 
   template<typename T>
   inline constexpr auto to_string(T&& v){
