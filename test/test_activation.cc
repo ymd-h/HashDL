@@ -8,7 +8,7 @@ int main(int argc, char** argv){
   auto test = Test{};
 
   test.Add([](){
-    auto L = Linear{};
+    auto L = Linear<float>{};
 
     AssertEqual(L.call(0),0);
     AssertEqual(L.call(10), 10);
@@ -18,7 +18,7 @@ int main(int argc, char** argv){
   },"Linear call");
 
   test.Add([](){
-    auto L = Linear{};
+    auto L = Linear<float>{};
 
     AssertEqual(L.back(0, 0), 1);
     AssertEqual(L.back(0, 10), 1);
@@ -26,7 +26,7 @@ int main(int argc, char** argv){
   }, "Linear back");
 
   test.Add([](){
-    auto R = ReLU{};
+    auto R = ReLU<float>{};
 
     AssertEqual(R.call(10), 10);
     AssertEqual(R.call(0.5), 0.5);
@@ -37,7 +37,7 @@ int main(int argc, char** argv){
   }, "ReLU call");
 
   test.Add([](){
-    auto R = ReLU{};
+    auto R = ReLU<float>{};
 
     AssertEqual(R.back(0.5, 0.5), 1);
     AssertEqual(R.back(10, 7), 1);
