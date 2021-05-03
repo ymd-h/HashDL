@@ -16,5 +16,5 @@ activation.cc:
   stage: cpptest
   image: gcc:10
   script:
-    - $CXX -o test/activation.{out,cc}
-    - ./test/activation.out
+    - $CXX -o test/test_activation.{out,cc}
+    - ./test/test_activation.out
