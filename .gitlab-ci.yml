@@ -16,6 +16,7 @@ activation.cc:
   stage: cpptest
   image: gcc:10
   script:
+    - apt update && apt install -y libtbb-dev
     - $CXX -o test/test_activation.{out,cc}
     - ./test/test_activation.out
 
