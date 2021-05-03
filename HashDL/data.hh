@@ -1,7 +1,9 @@
 #ifndef DATA_HH
 #define DATA_HH
 
+#include <algorithm>
 #include <vector>
+#include <iterator>
 
 namespace HashDL {
   using hashcode_t = std::uint64_t;
