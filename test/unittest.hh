@@ -126,6 +126,7 @@ inline constexpr void AssertEqual(L&& lhs, R&& rhs){
 
   if(not_equal){
     using std::to_string;
+    using unittest::to_string;
     throw std::runtime_error(to_string(lhs) + " != " + to_string(rhs));
   }
 }
