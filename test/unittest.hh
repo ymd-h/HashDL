@@ -105,8 +105,21 @@ namespace unittest {
 template<typename L, typename R>
 inline constexpr void AssertEqual(L&& lhs, R&& rhs){
   using namespace unittest;
+  using LL = std::remove_reference_t<L>;
+  using RR = std::remove_reference_t<R>;
 
-  if(lhs != rhs){
+  bool not_equal = true;
+
+  if constexpr (std::is_floating_point_v<LL> || std::is_floating_point_v<RR>){
+    using LR = std::common_type_t<LL, RR>;
+    constexpr auto eps = std::numeric_limits<std::common_type_t<LL, RR>>;
+
+    not_equal = std::abs(lhs - rhs) <= std::numeric_limits<LR>::epsilon();
+  } else {
+    not_equal = (lhs != rhs);
+  }
+
+  if(not_equal){
     using std::to_string;
     throw std::runtime_error(to_string(lhs) + " != " + to_string(rhs));
   }
