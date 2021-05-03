@@ -39,7 +39,7 @@ public:
 
   explicit operator bool() const { return success; }
   void describe() const {
-    std::cout << "Fail: " << name << "\n" << msg << std::endl;
+    std::cout << "Fail: " << name << "\n" << msg << "\n" << std::endl;
   }
 };
 
