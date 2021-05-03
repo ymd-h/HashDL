@@ -30,9 +30,10 @@ public:
     try {
       test();
       success = true;
+    } catch (std::exception& e) {
+      msg = e.what();
     } catch (...) {
-      auto e = std::current_exception();
-      msg = e ? e->what() : "No description."
+      msg = "No description.";
     }
   }
 
