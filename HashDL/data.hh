@@ -1,6 +1,8 @@
 #ifndef DATA_HH
 #define DATA_HH
 
+#include <vector>
+
 namespace HashDL {
   using hashcode_t = std::uint64_t;
   using idx_t = std::vector<std::size_t>;
