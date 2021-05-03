@@ -1,5 +1,7 @@
 #include "unittest.hh"
 
+#include <activation.hh>
+
 using namespace HashDL;
 
 int main(int argc, char** argv){
