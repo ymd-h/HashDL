@@ -1,0 +1,20 @@
+variables: &global-variables
+  CXX: "g++ -std=c++20 -O3 -march=native -Wall -Wextra -IHashDL -ltbb"
+  CC: "g++ -std=c++20 -O3 -march=native -Wall -Wextra -IHashDL -ltbb"
+  COVERAGE_RCFILE: .coveragerc
+  DOCKER_BUILDKIT: 1
+  GIT_DEPTH: 1
+  PIP_CACHE_DIR: "$CI_PROJECT_DIR/.pip"
+
+stages:
+  - cpptest
+  - build
+  - pytest
+
+
+activation.cc:
+  stage: cpptest
+  image: gcc:10
+  script:
+    - $CXX -o test/activation.{out,cc}
+    - ./test/activation.out
