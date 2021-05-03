@@ -81,7 +81,7 @@ inline constexpr void AssertEqual(L&& lhs, R&& rhs){
     if(lhs.size() != rhs.size()){ throw std::runtime_error(); }
 
     std::for_each(begin(lhs), end(lhs),
-		  [it=begin(rhs)](auto& v) mutable { AssertEqual(v, *it); });
+		  [it=begin(rhs)](auto& v) mutable { AssertEqual(v, *(it++)); });
   } catch (...){
     throw std::runtime_error();
   }
