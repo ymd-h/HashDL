@@ -74,18 +74,7 @@ public:
   }
 };
 
-
-template<typename L, typename R>
-inline constexpr void AssertEqual(L&& lhs, R&& rhs){
-  using namespace assert;
-
-  if(lhs != rhs){
-    using std::to_string;
-    throw std::runtime_error(to_string(lhs) + " != " + to_string(rhs));
-  }
-}
-
-namespace assert {
+namespace unittest {
   template<typename T> inline constexpr auto size(T&& v){ return v.size(); }
 
   template<typename T, std::size_t N>
@@ -110,7 +99,16 @@ namespace assert {
 
     return !std::equal(begin(lhs), end(lhs), begin(rhs), end(rhs));
   }
+}
 
+template<typename L, typename R>
+inline constexpr void AssertEqual(L&& lhs, R&& rhs){
+  using namespace unittest;
+
+  if(lhs != rhs){
+    using std::to_string;
+    throw std::runtime_error(to_string(lhs) + " != " + to_string(rhs));
+  }
 }
 
 #endif
