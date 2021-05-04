@@ -94,11 +94,16 @@ namespace unittest {
   }
 
   template<typename L, typename R>
-  inline constexpr auto operator!=(L&& lhs, R&& rhs){
+  inline constexpr auto Equal(L&& lhs, R&& rhs){
     using std::begin;
     using std::end;
 
-    return !std::equal(begin(lhs), end(lhs), begin(rhs), end(rhs));
+    return std::equal(begin(lhs), end(lhs), begin(rhs), end(rhs));
+  }
+
+  template<typename L, typename R>
+  inline constexpr auto Equal(L&& lhs, R&& rhs, ...){
+    return lhs == rhs;
   }
 }
 
@@ -121,7 +126,7 @@ inline constexpr void AssertEqual(L&& lhs, R&& rhs){
 
     not_equal = !(abs(lhs - rhs) <= eps * std::max<LR>(abs(lhs), abs(rhs)));
   } else {
-    not_equal = (lhs != rhs);
+    not_equal = !Equal(lhs, rhs);
   }
 
   if(not_equal){
