@@ -76,6 +76,24 @@ public:
 };
 
 namespace unittest {
+  template<typename T, char N> struct is_iteratable {
+    static constexpr const bool value = false;
+  };
+
+  template<typename T, int N> struct is_iteratable {
+    static constexpr const
+    std::enable_if_t<std::is_same_v<decltype(begin(std::declval<T>{})),
+				    decltype(end  (std::declval<T>{}))>,
+		     bool> value = true;
+  };
+
+  template<typename T, int N> struct is_iteratable {
+    static constexpr const
+    std::enable_if_t<std::is_same_v<decltype(std::begin(std::declval<T>{})),
+				    decltype(std::end  (std::declval<T>{}))>,
+		     bool> value = true;
+  };
+
   template<typename T> inline constexpr auto size(T&& v){ return v.size(); }
 
   template<typename T, std::size_t N>
@@ -96,16 +114,20 @@ namespace unittest {
   }
 
   template<typename L, typename R>
-  inline constexpr auto Equal(L&& lhs, R&& rhs, int){
-    using std::begin;
-    using std::end;
+  inline constexpr bool Equal(L&& lhs, R&& rhs){
+    constexpr const auto isL = is_iteratable<L,0>::value;
+    constexpr const auto isR = is_iteratable<R,0>::value;
 
-    return std::equal(begin(lhs), end(lhs), begin(rhs), end(rhs));
-  }
+    if constexpr (isL && isR){
+      using std::begin;
+      using std::end;
 
-  template<typename L, typename R>
-  inline constexpr auto Equal(L&& lhs, R&& rhs, char){
-    return lhs == rhs;
+      return std::equal(begin(lhs), end(lhs), begin(rhs), end(rhs));
+    } else if constexpr ((!isL) && (!isR)) {
+      return lhs == rhs;
+    } else {
+      static_assert(std::false_v<L>, "Cannot compare iterable and non-iterable");
+    }
   }
 }
 
@@ -137,7 +159,7 @@ inline constexpr void AssertEqual(L&& lhs, R&& rhs){
     // Literal 0 is considered as int first, then as char.
     // 1st: Equal(L&&, R&&, int)  for iterable (fail for non-iterable)
     // 2nd: Equal(L&&, R&&, char) for non-iterable
-    not_equal = !Equal(lhs, rhs, 0);
+    not_equal = !Equal(lhs, rhs);
   }
 
   if(not_equal){
