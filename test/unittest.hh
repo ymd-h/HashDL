@@ -130,6 +130,8 @@ inline constexpr void AssertEqual(L&& lhs, R&& rhs){
     not_equal = !(abs(lhs - rhs) <= eps * std::max<LR>({1.0, abs(lhs), abs(rhs)}));
   } else {
     // Literal 0 is considered as int first, then as char.
+    // 1st: Equal(L&&, R&&, int)  for iterable (fail for non-iterable)
+    // 2nd: Equal(L&&, R&&, char) for non-iterable
     not_equal = !Equal(lhs, rhs, 0);
   }
 
