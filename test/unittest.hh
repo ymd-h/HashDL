@@ -105,6 +105,8 @@ namespace unittest {
   template<typename T>
   inline constexpr auto to_string(T&& v){
     using std::to_string;
+    using std::begin;
+    using std::end;
 
     std::string msg = "[";
     for(auto& vi : v){
