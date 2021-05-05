@@ -94,7 +94,7 @@ namespace unittest {
   }
 
   template<typename L, typename R>
-  inline constexpr auto Equal(L&& lhs, R&& rhs){
+  inline constexpr auto Equal(L&& lhs, R&& rhs, int){
     using std::begin;
     using std::end;
 
@@ -108,7 +108,7 @@ namespace unittest {
 }
 
 template<typename L, typename R>
-inline constexpr void AssertEqual(L&& lhs, R&& rhs, int){
+inline constexpr void AssertEqual(L&& lhs, R&& rhs){
   using namespace unittest;
   using LL = std::remove_reference_t<L>;
   using RR = std::remove_reference_t<R>;
