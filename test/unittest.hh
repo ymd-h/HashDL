@@ -91,6 +91,8 @@ namespace unittest {
       msg += ",";
     }
     msg += "]";
+
+    return msg;
   }
 
   template<typename L, typename R>
