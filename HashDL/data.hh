@@ -52,6 +52,8 @@ namespace HashDL {
 
   template<typename T> inline auto begin(Data<T>& d){ return d.begin(); }
   template<typename T> inline auto end(Data<T>& d){ return d.end(); }
+  template<typename T> inline auto begin(const Data<T>& d){ return d.begin(); }
+  template<typename T> inline auto end(const Data<T>& d){ return d.end(); }
 
 
   template<typename T> class BatchData {
