@@ -33,6 +33,7 @@ int main(int argc, char** argv){
     auto sgd = SGD<float>{rl};
 
     auto c = sgd.client();
+    AssertTrue(c);
 
     AssertEqual(c->diff(0), c->diff(0));
     AssertEqual(c->diff(0.5) * 2, c->diff(1.0));
@@ -53,6 +54,7 @@ int main(int argc, char** argv){
     auto sgd = SGD<float>{rl, decay};
 
     auto c = sgd.client();
+    AssertTrue(c);
 
     auto y = 0.7;
     auto z = 0.9;
