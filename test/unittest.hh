@@ -77,15 +77,15 @@ public:
 
 namespace unittest {
   template<typename T> inline constexpr auto has_ADL(T&&) noexcept
-    -> decltype(begin(std::declval<std::remove_reference_t<T>>{}),
-		end  (std::declval<std::remove_reference_t<T>>{}), true) {
+    -> decltype(begin(std::declval<std::remove_reference_t<T>>()),
+		end  (std::declval<std::remove_reference_t<T>>()), true) {
     return true;
   }
   inline constexpr auto has_ADL(...) noexcept { return false; }
 
   template<typename T> inline constexpr auto has_STD(T&&) noexcept
-    -> decltype(std::begin(std::declval<std::remove_reference_t<T>>{}),
-		std::end  (std::declval<std::remove_reference_t<T>>{}), true) {
+    -> decltype(std::begin(std::declval<std::remove_reference_t<T>>()),
+		std::end  (std::declval<std::remove_reference_t<T>>()), true) {
     return true;
   }
   inline constexpr auto has_STD(...) noexcept { return false; }
