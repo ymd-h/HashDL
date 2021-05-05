@@ -118,8 +118,8 @@ namespace unittest {
 
   template<typename L, typename R>
   inline constexpr bool Equal(L&& lhs, R&& rhs){
-    constexpr const auto L_iterable = is_iteratable<L>::value;
-    constexpr const auto R_iterable = is_iteratable<R>::value;
+    constexpr const auto L_iterable = is_iterable<L>::value;
+    constexpr const auto R_iterable = is_iterable<R>::value;
 
     if constexpr (L_iterable && R_iterable) {
       using std::begin;
