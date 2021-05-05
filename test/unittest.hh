@@ -93,7 +93,7 @@ namespace unittest {
     static constexpr std::false_type STD(...);
   public:
     static constexpr bool value = (decltype(ADL(std::declval<T>()))::type::value ||
-				   decltype(STD(std::declval<T>()))::type::value)
+				   decltype(STD(std::declval<T>()))::type::value);
   };
 
 
