@@ -76,23 +76,23 @@ public:
 };
 
 namespace unittest {
-  template<typename T, char N> struct is_iteratable {
-    static constexpr const bool value = false;
-  };
+  template<typename T> inline constexpr auto has_ADL(T&&) noexcept
+    -> decltype(begin(std::declval<std::remove_reference_t<T>>{}),
+		end  (std::declval<std::remove_reference_t<T>>{}), true) {
+    return true;
+  }
+  inline constexpr auto has_ADL(...) noexcept { return false; }
 
-  template<typename T, int N> struct is_iteratable {
-    static constexpr const
-    std::enable_if_t<std::is_same_v<decltype(begin(std::declval<T>{})),
-				    decltype(end  (std::declval<T>{}))>,
-		     bool> value = true;
-  };
+  template<typename T> inline constexpr auto has_STD(T&&) noexcept
+    -> decltype(std::begin(std::declval<std::remove_reference_t<T>>{}),
+		std::end  (std::declval<std::remove_reference_t<T>>{}), true) {
+    return true;
+  }
+  inline constexpr auto has_STD(...) noexcept { return false; }
 
-  template<typename T, int N> struct is_iteratable {
-    static constexpr const
-    std::enable_if_t<std::is_same_v<decltype(std::begin(std::declval<T>{})),
-				    decltype(std::end  (std::declval<T>{}))>,
-		     bool> value = true;
-  };
+  template<typename T> inline constexpr auto is_iteratable(T&& v) noexcept {
+    return has_ADL(v) || has_STD(v);
+  }
 
   template<typename T> inline constexpr auto size(T&& v){ return v.size(); }
 
@@ -115,15 +115,14 @@ namespace unittest {
 
   template<typename L, typename R>
   inline constexpr bool Equal(L&& lhs, R&& rhs){
-    constexpr const auto isL = is_iteratable<L,0>::value;
-    constexpr const auto isR = is_iteratable<R,0>::value;
+    constexpr const auto L_iterable = is_iteratable(lhs);
+    constexpr const auto R_iterable = is_iteratable(rhs);
 
-    if constexpr (isL && isR){
+    if constexpr (L_iterable && R_iterable) {
       using std::begin;
       using std::end;
-
       return std::equal(begin(lhs), end(lhs), begin(rhs), end(rhs));
-    } else if constexpr ((!isL) && (!isR)) {
+    } else if constexpr ((!L_iterable) && (!R_iterable)){
       return lhs == rhs;
     } else {
       static_assert(std::false_v<L>, "Cannot compare iterable and non-iterable");
