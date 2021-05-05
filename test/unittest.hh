@@ -125,7 +125,8 @@ namespace unittest {
     } else if constexpr ((!L_iterable) && (!R_iterable)){
       return lhs == rhs;
     } else {
-      static_assert(std::false_v<L>, "Cannot compare iterable and non-iterable");
+      static_assert(L_iterable == R_iterable,
+		    "Cannot compare iterable and non-iterable");
     }
   }
 }
