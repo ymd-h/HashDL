@@ -102,13 +102,13 @@ namespace unittest {
   }
 
   template<typename L, typename R>
-  inline constexpr auto Equal(L&& lhs, R&& rhs, ...){
+  inline constexpr auto Equal(L&& lhs, R&& rhs, char){
     return lhs == rhs;
   }
 }
 
 template<typename L, typename R>
-inline constexpr void AssertEqual(L&& lhs, R&& rhs){
+inline constexpr void AssertEqual(L&& lhs, R&& rhs, int){
   using namespace unittest;
   using LL = std::remove_reference_t<L>;
   using RR = std::remove_reference_t<R>;
@@ -126,7 +126,8 @@ inline constexpr void AssertEqual(L&& lhs, R&& rhs){
 
     not_equal = !(abs(lhs - rhs) <= eps * std::max<LR>(1.0, abs(lhs), abs(rhs)));
   } else {
-    not_equal = !Equal(lhs, rhs);
+    // Literal 0 is considered as int first, then as char.
+    not_equal = !Equal(lhs, rhs, 0);
   }
 
   if(not_equal){
