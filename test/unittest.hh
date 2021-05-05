@@ -174,6 +174,7 @@ inline constexpr void AssertEqual(L&& lhs, R&& rhs){
 
 template<typename Cond>
 inline constexpr void AssertTrue(Cond&& c){
+  using namespace unittest;
   if constexpr (is_iterable<Cond>::value){
     for(auto& ci : c){ AssertTrue(ci); }
   } else {
@@ -183,6 +184,7 @@ inline constexpr void AssertTrue(Cond&& c){
 
 template<typename Cond>
 inline constexpr void AssertFalse(Cond&& c){
+  using namespace unittest;
   if constexpr (is_iterable<Cond>::value){
     for(auto& ci : c){ AssertFalse(ci); }
   } else {
