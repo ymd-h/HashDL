@@ -176,6 +176,8 @@ template<typename Cond>
 inline constexpr void AssertTrue(Cond&& c){
   using namespace unittest;
   if constexpr (is_iterable<Cond>::value){
+    using std::begin;
+    using std::end;
     for(auto& ci : c){ AssertTrue(ci); }
   } else {
     if(!bool(c)){ throw std::runtime_error(to_string(c) + " != true"); }
@@ -186,6 +188,8 @@ template<typename Cond>
 inline constexpr void AssertFalse(Cond&& c){
   using namespace unittest;
   if constexpr (is_iterable<Cond>::value){
+    using std::begin;
+    using std::end;
     for(auto& ci : c){ AssertFalse(ci); }
   } else {
     if(bool(c)){ throw std::runtime_error(to_string(c) + " != false"); }
