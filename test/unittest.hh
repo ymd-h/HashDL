@@ -174,18 +174,20 @@ inline constexpr void AssertEqual(L&& lhs, R&& rhs){
 
 template<typename Cond>
 inline constexpr void AssertTrue(Cond&& c){
-  if(!bool(c)){
-    throw std::runtime_error(to_string(c) + " != true");
+  if constexpr (is_iterable<Cond>::value){
+    for(auto& ci : c){ AssertTrue(ci); }
+  } else {
+    if(!bool(c)){ throw std::runtime_error(to_string(c) + " != true"); }
   }
 }
 
 template<typename Cond>
 inline constexpr void AssertFalse(Cond&& c){
-  if(bool(c)){
-    throw std::runtime_error(to_string(c) + " != false");
+  if constexpr (is_iterable<Cond>::value){
+    for(auto& ci : c){ AssertFalse(ci); }
+  } else {
+    if(bool(c)){ throw std::runtime_error(to_string(c) + " != false"); }
   }
 }
-
-
 
 #endif
