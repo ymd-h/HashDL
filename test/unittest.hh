@@ -124,7 +124,7 @@ inline constexpr void AssertEqual(L&& lhs, R&& rhs){
 				      (std::is_floating_point_v<RR> ?
 				       std::numeric_limits<RR>::epsilon() : RR{0}));
 
-    not_equal = !(abs(lhs - rhs) <= eps * std::max<LR>(1.0, abs(lhs), abs(rhs)));
+    not_equal = !(abs(lhs - rhs) <= eps * std::max({1.0, abs(lhs), abs(rhs)}));
   } else {
     // Literal 0 is considered as int first, then as char.
     not_equal = !Equal(lhs, rhs, 0);
