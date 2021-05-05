@@ -76,23 +76,26 @@ public:
 };
 
 namespace unittest {
-  template<typename T> inline constexpr auto has_ADL(T&&) noexcept
-    -> decltype(begin(std::declval<std::remove_reference_t<T>>()),
-		end  (std::declval<std::remove_reference_t<T>>()), true) {
-    return true;
-  }
-  inline constexpr auto has_ADL(...) noexcept { return false; }
+  template<typename T> struct is_iterable {
+  private:
+    template<typename U>
+    static constexpr auto ADL(U&& v)
+      -> decltype(begin(std::declval<std::remove_reference_t<T>>()),
+		  end  (std::declval<std::remove_reference_t<T>>()),
+		  std::true_type());
+    static constexpr std::false_type ADL(...);
 
-  template<typename T> inline constexpr auto has_STD(T&&) noexcept
-    -> decltype(std::begin(std::declval<std::remove_reference_t<T>>()),
-		std::end  (std::declval<std::remove_reference_t<T>>()), true) {
-    return true;
-  }
-  inline constexpr auto has_STD(...) noexcept { return false; }
+    template<typename U>
+    static constexpr auto STD(U&& v)
+      -> decltype(std::begin(std::declval<std::remove_reference_t<T>>()),
+		  std::end  (std::declval<std::remove_reference_t<T>>()),
+		  std::true_type());
+    static constexpr std::false_type STD(...);
+  public:
+    static constexpr bool value = (decltype(ADL(std::declval<T>()))::type::value ||
+				   decltype(STD(std::declval<T>()))::type::value)
+  };
 
-  template<typename T> inline constexpr auto is_iteratable(T&& v) noexcept {
-    return has_ADL(v) || has_STD(v);
-  }
 
   template<typename T> inline constexpr auto size(T&& v){ return v.size(); }
 
@@ -115,8 +118,8 @@ namespace unittest {
 
   template<typename L, typename R>
   inline constexpr bool Equal(L&& lhs, R&& rhs){
-    constexpr const auto L_iterable = is_iteratable(lhs);
-    constexpr const auto R_iterable = is_iteratable(rhs);
+    constexpr const auto L_iterable = is_iteratable<L>::value;
+    constexpr const auto R_iterable = is_iteratable<R>::value;
 
     if constexpr (L_iterable && R_iterable) {
       using std::begin;
