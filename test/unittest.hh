@@ -119,6 +119,9 @@ inline constexpr void AssertEqual(L&& lhs, R&& rhs){
   if constexpr (std::is_floating_point_v<LR>){
     using std::abs;
 
+    // When float and double, float has larger error (epsilon).
+    // However, float is promoted to double.
+    // Without taking care, large error would be compared with smaller threshold.
     constexpr auto eps = std::max<LR>((std::is_floating_point_v<LL> ?
 				       std::numeric_limits<LL>::epsilon() : LL{0}),
 				      (std::is_floating_point_v<RR> ?
