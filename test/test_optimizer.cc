@@ -54,13 +54,16 @@ int main(int argc, char** argv){
 
     auto c = sgd.client();
 
-    AssertEqual(c->diff(0.7), c->diff(0.7));
-    AssertEqual(c->diff(0.9), - rl * 0.9);
+    auto y = 0.7;
+    auto z = 0.9;
+    AssertEqual(c->diff(y), c->diff(y));
+    AssertEqual(c->diff(z), - rl * z);
 
-    auto eta = c->diff(2.3);
+    auto x = 2.3;
+    auto eta = c->diff(x);
     sgd.step();
 
-    AssertEqual(c->diff(9.9), eta * decay);
+    AssertEqual(c->diff(x), eta * decay);
 
     if(c){
       delete c;
