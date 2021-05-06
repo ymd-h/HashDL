@@ -87,6 +87,7 @@ namespace unittest {
     static constexpr auto STD(U&& v)
       -> decltype(std::begin(v), std::end(v), std::true_type());
     static constexpr std::false_type STD(...);
+
     template<typename U>
     static constexpr auto Member(U&& v)
       -> decltype(v.begin(), v.end(), std::true_type());
