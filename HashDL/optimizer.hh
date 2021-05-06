@@ -50,7 +50,7 @@ namespace HashDL {
     }
 
     std::string to_string() const override {
-      std::to_string msg = "Client of " + sgd->to_string();
+      std::string msg = "Client of " + sgd->to_string();
       return msg;
     }
   };
