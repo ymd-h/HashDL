@@ -149,7 +149,7 @@ namespace HashDL {
     std::string to_string() const override {
       std::string msg = "Adam<T>(eps=" + std::to_string(_eps)
 	+ " ,eta=" + std::to_string(_eta)
-	+ " ,beta1=" + std::string(_beta1)
+	+ " ,beta1=" + std::to_string(_beta1)
 	+ " ,beta2=" + std::to_string(_beta2) + ")";
       return msg;
     }
