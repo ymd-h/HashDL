@@ -106,10 +106,9 @@ namespace unittest {
 
       if constexpr (decltype(Member(std::declval<U_t>()))::value){
 	return v.begin();
-      } else if constexpr (decltype(ADL(std::declval<U_t>()))::value){
+      } else {
+	using std::begin;
 	return begin(std::forward<U>(v));
-      } else if constexpr (decltype(STD(std::declval<U_t>()))::value){
-	return std::begin(std::forward<U>(v));
       }
     }
 
@@ -123,10 +122,9 @@ namespace unittest {
 
       if constexpr (decltype(Member(std::declval<U_t>()))::value){
 	return v.end();
-      } else if constexpr (decltype(ADL(std::declval<U_t>()))::value){
+      } else {
+	using std::end;
 	return end(std::forward<U>(v));
-      } else if constexpr (decltype(STD(std::declval<U_t>()))::value){
-	return std::end(std::forward<U>(v));
       }
     }
   };
