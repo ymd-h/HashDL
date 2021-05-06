@@ -116,7 +116,7 @@ namespace unittest {
     static auto end(U&& v){
       static_assert(std::is_same_v<std::remove_reference_t<U>, T>);
       static_assert(value,
-		    "is_iterable<T>::begin() is called with non-iterable type.");
+		    "is_iterable<T>::end() is called with non-iterable type.");
 
       using U_t = std::remove_reference_t<U>;
       if constexpr (decltype(Member(std::declval<U_t>()))::value){
