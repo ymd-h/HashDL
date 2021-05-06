@@ -98,11 +98,11 @@ namespace unittest {
 				   decltype(Member(std::declval<T>()))::value);
     template<typename U>
     static auto begin(U&& v){
-      static_assert(std::is_same_v<std::remove_reference_t<U>, T>);
+      using U_t = std::remove_reference_t<U>;
+      static_assert(std::is_same_v<U_t, std::remove_reference_t<T>>);
       static_assert(value,
 		    "is_iterable<T>::begin() is called with non-iterable type.");
 
-      using U_t = std::remove_reference_t<U>;
       if constexpr (decltype(Member(std::declval<U_t>()))::value){
 	return v.begin();
       } else if constexpr (decltype(ADL(std::declval<U_t>()))::value){
