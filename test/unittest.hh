@@ -105,8 +105,6 @@ namespace unittest {
   template<typename T>
   inline constexpr auto to_string(T&& v){
     using std::to_string;
-    using std::begin;
-    using std::end;
 
     std::string msg = "";
     if constexpr (is_iterable<T>::value) {
@@ -189,8 +187,6 @@ template<typename Cond>
 inline constexpr void AssertTrue(Cond&& c){
   using namespace unittest;
   if constexpr (is_iterable<Cond>::value){
-    using std::begin;
-    using std::end;
     for(auto& ci : c){ AssertTrue(ci); }
   } else {
     using std::to_string;
@@ -202,8 +198,6 @@ template<typename Cond>
 inline constexpr void AssertFalse(Cond&& c){
   using namespace unittest;
   if constexpr (is_iterable<Cond>::value){
-    using std::begin;
-    using std::end;
     for(auto& ci : c){ AssertFalse(ci); }
   } else {
     using std::string;
