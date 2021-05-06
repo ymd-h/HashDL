@@ -108,12 +108,23 @@ namespace unittest {
     using std::begin;
     using std::end;
 
-    std::string msg = "[";
-    for(auto& vi : v){
-      msg += to_string(vi);
-      msg += ",";
+    std::string msg = "";
+    if constexpr (is_iterable<T>::value) {
+      msg += "[";
+      for(auto& vi : v){
+	msg += to_string(vi);
+	msg += ",";
+      }
+      msg += "]";
+    } else if constexpr (std::is_pointer_v<std::remove_reference_t<T>>) {
+      if(v){
+	msg += "&(" + to_string(*v) + ")";
+      }else{
+	msg += "nullptr";
+      }
+    } else {
+      static_assert(is_iterable<T>::avlue, "Cannot convert to std::string.");
     }
-    msg += "]";
 
     return msg;
   }
