@@ -93,9 +93,9 @@ namespace unittest {
       -> decltype(v.begin(), v.end(), std::true_type());
     static constexpr std::false_type Member(...);
   public:
-    static constexpr bool value = (decltype(ADL(std::declval<T>()))::type::value ||
-				   decltype(STD(std::declval<T>()))::type::value ||
-				   decltype(Member(std::declval<T>()))::type::value);
+    static constexpr bool value = (decltype(ADL(std::declval<T>())) ||
+				   decltype(STD(std::declval<T>())) ||
+				   decltype(Member(std::declval<T>())));
   };
 
 
