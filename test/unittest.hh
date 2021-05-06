@@ -207,4 +207,22 @@ inline constexpr void AssertFalse(Cond&& c){
   }
 }
 
+template<typename E> struct AssertRaises{
+  template<typename F>
+  AssertRaises(F&& f, const std::string& msg){
+    auto correct_error = false;
+    try {
+      f();
+    } catch (const E& e){
+      correct_error = true;
+    } catch (...){
+      throw std::runtime_error(msg + " throws wrong exception");
+    }
+
+    if(!correct_error){
+      throw std::runtime_error(msg + " doesn't throw exception");
+    }
+  }
+};
+
 #endif
