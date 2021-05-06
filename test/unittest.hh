@@ -182,6 +182,7 @@ inline constexpr void AssertTrue(Cond&& c){
     using std::end;
     for(auto& ci : c){ AssertTrue(ci); }
   } else {
+    using std::to_string;
     if(!c){ throw std::runtime_error(to_string(c) + " != true"); }
   }
 }
@@ -194,6 +195,7 @@ inline constexpr void AssertFalse(Cond&& c){
     using std::end;
     for(auto& ci : c){ AssertFalse(ci); }
   } else {
+    using std::string;
     if(!!c){ throw std::runtime_error(to_string(c) + " != false"); }
   }
 }
