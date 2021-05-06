@@ -102,7 +102,7 @@ namespace unittest {
       static_assert(std::is_same_v<U_t, std::remove_reference_t<T>>,
 		    "Call is_iterable<T>::begin() with wrong type argument");
       static_assert(value,
-		    "is_iterable<T>::begin() is called with non-iterable type.");
+		    "is_iterable<T>::begin() is called for non-iterable type.");
 
       if constexpr (decltype(Member(std::declval<U_t>()))::value){
 	return v.begin();
@@ -119,7 +119,7 @@ namespace unittest {
       static_assert(std::is_same_v<U_t, std::remove_reference_t<T>>,
 		    "Call is_iterable<T>::end() with wron type argument");
       static_assert(value,
-		    "is_iterable<T>::end() is called with non-iterable type.");
+		    "is_iterable<T>::end() is called for non-iterable type.");
 
       if constexpr (decltype(Member(std::declval<U_t>()))::value){
 	return v.end();
