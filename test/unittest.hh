@@ -91,9 +91,14 @@ namespace unittest {
 		  std::end  (std::declval<std::remove_reference_t<U>>()),
 		  std::true_type());
     static constexpr std::false_type STD(...);
+    template<typename U>
+    static constexpr auto Member(U&& v)
+      -> decltype(v.begin(), v.end(), std::true_type());
+    static constexpr std::false_type Member(...);
   public:
     static constexpr bool value = (decltype(ADL(std::declval<T>()))::type::value ||
-				   decltype(STD(std::declval<T>()))::type::value);
+				   decltype(STD(std::declval<T>()))::type::value ||
+				   decltype(Member(std::declval<T>()))::type::value);
   };
 
 
