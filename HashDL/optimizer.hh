@@ -2,6 +2,7 @@
 #define OPTIMIZER_HH
 
 #include <cmath>
+#include <string>
 
 namespace HashDL {
   template<typename T> class OptimizerClient {
@@ -14,6 +15,7 @@ namespace HashDL {
     virtual ~OptimizerClient() = default;
 
     virtual T diff(T grad) = 0;
+    virtual std::string to_string() const = 0;
   };
 
   template<typename T> class Optimizer {
@@ -27,6 +29,7 @@ namespace HashDL {
 
     virtual OptimizerClient<T>* client() const = 0;
     virtual void step(){}
+    virtual std::string to_string() const = 0;
   };
 
   template<typename T> class SGD;
@@ -44,6 +47,11 @@ namespace HashDL {
 
     virtual T diff(T grad){
       return - sgd->eta() * grad;
+    }
+
+    std::string to_string() const override {
+      std::to_string msg = "Client of " + sgd->to_string();
+      return msg;
     }
   };
 
@@ -65,6 +73,12 @@ namespace HashDL {
     }
     void step() override { _eta *= decay; }
     const auto eta() const { return _eta; }
+
+    std::string to_string() const override {
+      std::string msg = "SGD<T>(eta=" + std::to_string(_eta) +
+	", decay=" + std::to_string(decay) + ")";
+      return msg;
+    }
   };
 
   template<typename T> class Adam;
@@ -93,6 +107,11 @@ namespace HashDL {
       const auto v_hat = v / (1 - adam->beta2t());
 
       return - adam->eta() * m_hat / (std::sqrt(v_hat) + adam->eps());
+    }
+
+    std::string to_string() const override {
+      std::string msg = "Client of " + adam->to_string();
+      return msg;
     }
   };
 
@@ -126,7 +145,25 @@ namespace HashDL {
     const auto beta1t() const noexcept { return _beta1t; }
     const auto beta2() const noexcept { return _beta2; }
     const auto beta2t() const noexcept { return _beta2t; }
+
+    std::string to_string() const override {
+      std::string msg = "Adam<T>(eps=" + std::to_string(_eps)
+	+ " ,eta=" + std::to_string(_eta)
+	+ " ,beta1=" + std::string(_beta1)
+	+ " ,beta2=" + std::to_string(_beta2) + ")";
+      return msg;
+    }
   };
+
+
+  template<typename T> inline auto to_string(const OptimizerClient<T>& c){
+    const auto p = &c;
+    return p->to_string();
+  }
+  template<typename T> inline auto to_string(const Optimizer<T>& c){
+    const auto p = &c;
+    return p->to_string();
+  }
 }
 
 #endif
