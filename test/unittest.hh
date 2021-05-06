@@ -80,16 +80,12 @@ namespace unittest {
   private:
     template<typename U>
     static constexpr auto ADL(U&& v)
-      -> decltype(begin(std::declval<std::remove_reference_t<U>>()),
-		  end  (std::declval<std::remove_reference_t<U>>()),
-		  std::true_type());
+      -> decltype(begin(v), end(v), std::true_type());
     static constexpr std::false_type ADL(...);
 
     template<typename U>
     static constexpr auto STD(U&& v)
-      -> decltype(std::begin(std::declval<std::remove_reference_t<U>>()),
-		  std::end  (std::declval<std::remove_reference_t<U>>()),
-		  std::true_type());
+      -> decltype(std::begin(v), std::end(v), std::true_type());
     static constexpr std::false_type STD(...);
     template<typename U>
     static constexpr auto Member(U&& v)
