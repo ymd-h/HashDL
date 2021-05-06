@@ -166,9 +166,8 @@ namespace unittest {
     constexpr const auto R_iterable = is_iterable<R>::value;
 
     if constexpr (L_iterable && R_iterable) {
-      using std::begin;
-      using std::end;
-      return std::equal(begin(lhs), end(lhs), begin(rhs), end(rhs));
+      return std::equal(is_iterable<L>::begin(lhs), is_iterable<L>::end(lhs),
+			is_iterable<R>::begin(rhs), is_iterable<R>::end(rhs));
     } else if constexpr ((!L_iterable) && (!R_iterable)){
       return lhs == rhs;
     } else {
