@@ -99,7 +99,8 @@ namespace unittest {
     template<typename U>
     static auto begin(U&& v){
       using U_t = std::remove_reference_t<U>;
-      static_assert(std::is_same_v<U_t, std::remove_reference_t<T>>);
+      static_assert(std::is_same_v<U_t, std::remove_reference_t<T>>,
+		    "Call is_iterable<T>::begin() with wrong type argument");
       static_assert(value,
 		    "is_iterable<T>::begin() is called with non-iterable type.");
 
@@ -115,7 +116,8 @@ namespace unittest {
     template<typename U>
     static auto end(U&& v){
       using U_t = std::remove_reference_t<U>;
-      static_assert(std::is_same_v<U_t, std::remove_reference_t<T>>);
+      static_assert(std::is_same_v<U_t, std::remove_reference_t<T>>,
+		    "Call is_iterable<T>::end() with wron type argument");
       static_assert(value,
 		    "is_iterable<T>::end() is called with non-iterable type.");
 
