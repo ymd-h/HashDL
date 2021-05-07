@@ -73,5 +73,25 @@ int main(int argc, char** argv){
     }
   }, "SGD Client with decay");
 
+  test.Add([](){
+    auto adam = Adam<float>{};
+
+    AssertEqual(adam.eta(), 1e-3);
+    AssertEqual(adam.eps(), 1e-8);
+    AssertEqual(adam.beta1(), 0.9);
+    AssertEqual(adam.beta2(), 0.999);
+
+    AssertEqual(adam.beta1t(), 1);
+    AssertEqual(adam.beta2t(), 1);
+
+    adam.step();
+    AssertEqual(adam.beta1t(), std::pow(adam.beta1(), 1));
+    AssertEqual(adam.beta2t(), std::pow(adam.beta2(), 1));
+
+    adam.step();
+    AssertEqual(adam.beta1t(), std::pow(adam.beta1(), 2));
+    AssertEqual(adam.beta2t(), std::pow(adam.beta2(), 2));
+  }, "Adam");
+
   return test.Run();
 }
