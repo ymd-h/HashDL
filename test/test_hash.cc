@@ -29,7 +29,7 @@ int main(int argc, char** argv){
   }, "WTA error");
 
   test.Add([](){
-    auto dwta = DWTA{};
+    auto dwta = DWTA<float>{};
     auto d = Data<float>{16};
 
     AssertEqual(dwta.encode(d), dwta.encode(d));
