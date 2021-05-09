@@ -169,9 +169,31 @@ namespace unittest {
 
     if constexpr (L_iterable && R_iterable) {
       return std::equal(is_iterable<L>::begin(lhs), is_iterable<L>::end(lhs),
-			is_iterable<R>::begin(rhs), is_iterable<R>::end(rhs));
+			is_iterable<R>::begin(rhs), is_iterable<R>::end(rhs),
+			[](auto& l, auto& r){ return Equal(l,r); });
     } else if constexpr ((!L_iterable) && (!R_iterable)){
-      return lhs == rhs;
+      using LL = std::remove_reference_t<L>;
+      using RR = std::remove_reference_t<R>;
+      using LR = std::common_type_t<LL, RR>;
+
+      if constexpr (std::is_floating_point_v<LR>){
+	using std::abs;
+
+	// When float and double, float has larger error (epsilon).
+	// However, float is promoted to double.
+	// Without taking care, large error would be compared with smaller threshold.
+	constexpr auto eps = std::max<LR>(std::is_floating_point_v<LL> ?
+					  std::numeric_limits<LL>::epsilon() : LL{0},
+					  std::is_floating_point_v<RR> ?
+					  std::numeric_limits<RR>::epsilon() : RR{0});
+
+	// epsilon is the difference between 1.0 and the next value.
+	// Relative comparison (|X-Y| < eps      ) is preferred for large value.
+	// Absolute comparison (|X-Y| < eps * |X|) is preferred for small value.
+	return (abs(lhs - rhs) <= eps * std::max<LR>({1.0, abs(lhs), abs(rhs)}));
+      } else {
+	return lhs == rhs;
+      }
     } else {
       static_assert(L_iterable == R_iterable,
 		    "Cannot compare iterable and non-iterable");
@@ -182,32 +204,7 @@ namespace unittest {
 template<typename L, typename R>
 inline constexpr void AssertEqual(L&& lhs, R&& rhs){
   using namespace unittest;
-  using LL = std::remove_reference_t<L>;
-  using RR = std::remove_reference_t<R>;
-  using LR = std::common_type_t<LL, RR>;
-
-  bool not_equal = true;
-
-  if constexpr (std::is_floating_point_v<LR>){
-    using std::abs;
-
-    // When float and double, float has larger error (epsilon).
-    // However, float is promoted to double.
-    // Without taking care, large error would be compared with smaller threshold.
-    constexpr auto eps = std::max<LR>((std::is_floating_point_v<LL> ?
-				       std::numeric_limits<LL>::epsilon() : LL{0}),
-				      (std::is_floating_point_v<RR> ?
-				       std::numeric_limits<RR>::epsilon() : RR{0}));
-
-    // epsilon is the difference between 1.0 and the next value.
-    // Relative comparison (|X-Y| < eps      ) is preferred for large value.
-    // Absolute comparison (|X-Y| < eps * |X|) is preferred for small value.
-    not_equal = !(abs(lhs - rhs) <= eps * std::max<LR>({1.0, abs(lhs), abs(rhs)}));
-  } else {
-    not_equal = !Equal(lhs, rhs);
-  }
-
-  if(not_equal){
+  if(!Equal(lhs, rhs)){
     using std::to_string;
     using unittest::to_string;
     throw std::runtime_error(to_string(lhs) + " != " + to_string(rhs));
