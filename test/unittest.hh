@@ -154,7 +154,7 @@ namespace unittest {
 	msg += "nullptr";
       }
     } else {
-      static_assert(is_iterable<T>::avlue, "Cannot convert to std::string.");
+      static_assert(is_iterable<T>::vlue, "Cannot convert to std::string.");
     }
 
     return msg;
