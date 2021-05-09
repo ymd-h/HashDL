@@ -127,7 +127,7 @@ namespace HashDL {
     Adam(): Adam{1e-3} {}
     Adam(T rl): Adam{rl, 0.9, 0.999} {}
     Adam(T rl, T b1, T b2, T e=1e-8)
-      : _eps{e}, _eta{rl}, _beta1{b1}, _beta1t{1}, _beta2{b2}, _beta2t{1} {}
+      : _eps{e}, _eta{rl}, _beta1{b1}, _beta1t{b1}, _beta2{b2}, _beta2t{b2} {}
     Adam(const Adam&) = default;
     Adam(Adam&&) = default;
     Adam& operator=(const Adam&) = default;
