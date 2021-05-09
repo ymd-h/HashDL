@@ -156,5 +156,25 @@ int main(int argc, char** argv){
     }
   }, "Adam 0-beta");
 
+  test.Add([](){
+    auto adam = Adam<float>{};
+
+    auto c = adam.client();
+    auto d = adam.client();
+
+    auto x = 0.8;
+    AssertEqual(c->diff(x), d->diff(x));
+    AssertEqual(c->diff(x), d->diff(x));
+
+    if(c){
+      delete c;
+      c = nullptr;
+    }
+    if(d){
+      delete d;
+      d = nullptr;
+    }
+  }, "Adam multi client");
+
   return test.Run();
 }
