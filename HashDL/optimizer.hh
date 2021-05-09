@@ -61,7 +61,7 @@ namespace HashDL {
     T decay;
   public:
     SGD(): SGD{0.001} {}
-    SGD(T rl, T decay=1.0): _eta{rl}, decay{decay} {}
+    SGD(T lr, T decay=1.0): _eta{lr}, decay{decay} {}
     SGD(const SGD&) = default;
     SGD(SGD&&) = default;
     SGD& operator=(const SGD&) = default;
@@ -125,9 +125,9 @@ namespace HashDL {
     T _beta2t;
   public:
     Adam(): Adam{1e-3} {}
-    Adam(T rl): Adam{rl, 0.9, 0.999} {}
-    Adam(T rl, T b1, T b2, T e=1e-8)
-      : _eps{e}, _eta{rl}, _beta1{b1}, _beta1t{b1}, _beta2{b2}, _beta2t{b2} {}
+    Adam(T lr): Adam{lr, 0.9, 0.999} {}
+    Adam(T lr, T b1, T b2, T e=1e-8)
+      : _eps{e}, _eta{lr}, _beta1{b1}, _beta1t{b1}, _beta2{b2}, _beta2t{b2} {}
     Adam(const Adam&) = default;
     Adam(Adam&&) = default;
     Adam& operator=(const Adam&) = default;

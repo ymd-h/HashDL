@@ -29,8 +29,8 @@ int main(int argc, char** argv){
   }, "SGD with decay");
 
   test.Add([](){
-    auto rl = 0.1;
-    auto sgd = SGD<float>{rl};
+    auto lr = 0.1;
+    auto sgd = SGD<float>{lr};
 
     auto c = sgd.client();
     AssertTrue(c);
@@ -40,7 +40,7 @@ int main(int argc, char** argv){
 
     AssertEqual(c->diff(2.0), (sgd.step(), c->diff(2.0)));
 
-    AssertEqual(c->diff(0.5), - rl * 0.5);
+    AssertEqual(c->diff(0.5), - lr * 0.5);
 
     if(c){
       delete c;
@@ -49,9 +49,9 @@ int main(int argc, char** argv){
   }, "SGD Client");
 
   test.Add([](){
-    auto rl = 0.1;
+    auto lr = 0.1;
     auto decay = 0.01;
-    auto sgd = SGD<float>{rl, decay};
+    auto sgd = SGD<float>{lr, decay};
 
     auto c = sgd.client();
     AssertTrue(c);
@@ -59,7 +59,7 @@ int main(int argc, char** argv){
     auto y = 0.7;
     auto z = 0.9;
     AssertEqual(c->diff(y), c->diff(y));
-    AssertEqual(c->diff(z), - rl * z);
+    AssertEqual(c->diff(z), - lr * z);
 
     auto x = 2.3;
     auto eta = c->diff(x);
@@ -94,12 +94,12 @@ int main(int argc, char** argv){
   }, "Adam");
 
   test.Add([](){
-    auto rl = 1e-5;
+    auto lr = 1e-5;
     auto beta1 = 0.95;
     auto beta2 = 0.995;
-    auto adam = Adam<float>{rl, beta1, beta2};
+    auto adam = Adam<float>{lr, beta1, beta2};
 
-    AssertEqual(adam.eta(), rl);
+    AssertEqual(adam.eta(), lr);
     AssertEqual(adam.eps(), 1e-8);
     AssertEqual(adam.beta1(), beta1);
     AssertEqual(adam.beta2(), beta2);
@@ -117,10 +117,10 @@ int main(int argc, char** argv){
   }, "Adam with hyperparameter");
 
   test.Add([](){
-    auto rl = 1e-4;
+    auto lr = 1e-4;
     auto beta1 = 0.9;
     auto beta2 = 0.99;
-    auto adam = Adam<float>{rl, beta1, beta2};
+    auto adam = Adam<float>{lr, beta1, beta2};
 
     auto c = adam.client();
     AssertTrue(c);
@@ -139,16 +139,16 @@ int main(int argc, char** argv){
   }, "Adam Client");
 
   test.Add([](){
-    auto rl = 1e-5;
+    auto lr = 1e-5;
     auto beta1 = 0;
     auto beta2 = 0;
     auto eps = 0;
-    auto adam = Adam<float>{rl, beta1, beta2, eps};
+    auto adam = Adam<float>{lr, beta1, beta2, eps};
 
     auto c = adam.client();
 
     auto x = 0.5;
-    AssertEqual(c->diff(x), -rl * x);
+    AssertEqual(c->diff(x), -lr * x);
 
     if(c){
       delete c;
