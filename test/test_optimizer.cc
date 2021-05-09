@@ -128,7 +128,7 @@ int main(int argc, char** argv){
     auto x = 0.7;
     AssertRaises<std::runtime_error>([=](){ c->diff(x); });
 
-    c->step();
+    adam.step();
     AssertEqual(c->diff(x), c->diff(x));
 
     if(c){
