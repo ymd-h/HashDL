@@ -138,5 +138,23 @@ int main(int argc, char** argv){
     }
   }, "Adam Client");
 
+  test.Add([](){
+    auto rl = 1e-5;
+    auto beta1 = 0;
+    auto beta2 = 0;
+    auto eps = 0;
+    auto adam = Adam<float>{rl, beta1, beta2, eps};
+
+    auto c = adam.client();
+
+    auto x = 0.5;
+    AssertEqual(c->diff(x), -rl * x);
+
+    if(c){
+      delete c;
+      c = nullptr;
+    }
+  }, "Adam 0-beta");
+
   return test.Run();
 }
