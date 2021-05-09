@@ -148,7 +148,7 @@ int main(int argc, char** argv){
     auto c = adam.client();
 
     auto x = 0.5;
-    AssertEqual(c->diff(x), -lr * x);
+    AssertEqual(c->diff(x), -lr);
 
     if(c){
       delete c;
