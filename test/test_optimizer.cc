@@ -116,5 +116,26 @@ int main(int argc, char** argv){
     AssertEqual(adam.beta2t(), std::pow(adam.beta2(), 2));
   }, "Adam with hyperparameter");
 
+  test.Add([](){
+    auto rl = 1e-4;
+    auto beta1 = 0.9;
+    auto beta2 = 0.99;
+    auto adam = Adam<float>{rl, beta1, beta2};
+
+    auto c = adam.client();
+    AssertTrue(c);
+
+    auto x = 0.7;
+    AssertRaises<std::runtime_error>{[=](){ c->diff(x); }};
+
+    c->step();
+    AssertEqual(c->diff(x), c->diff(x));
+
+    if(c){
+      delete c;
+      c = nullptr;
+    }
+  }, "Adam Client");
+
   return test.Run();
 }
