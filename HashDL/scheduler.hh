@@ -17,7 +17,7 @@ namespace HashDL {
     std::uintmax_t N;
   public:
     ConstantFrequency(): ConstantFrequency{1} {}
-    ConstantFrequency(std::size_t N): counter{0}, N{N} {}
+    ConstantFrequency(std::size_t n): counter{0}, N{n} {}
     ConstantFrequency(const ConstantFrequency&) = default;
     ConstantFrequency(ConstantFrequency&&) = default;
     ConstantFrequency& operator=(const ConstantFrequency&) = default;
@@ -40,8 +40,8 @@ namespace HashDL {
     T exp_decay;
   public:
     ExponentialDecay(): ExponentialDecay{1, 1.0} {}
-    ExponentialDecay(std::size_t N, T decay):
-      counter{0}, N{N}, exp_decay{} {
+    ExponentialDecay(std::size_t n, T decay):
+      counter{0}, N{n}, exp_decay{} {
       constexpr const auto max_decay =
 	std::log(std::numeric_limits<std::uintmax_t>::max());
       if(decay > max_decay){
