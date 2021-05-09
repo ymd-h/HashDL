@@ -153,7 +153,7 @@ namespace unittest {
       }else{
 	msg += "nullptr";
       }
-    } else if constexpr (std::is_arithmetic_v<T>) {
+    } else if constexpr (std::is_arithmetic_v<std::remove_reference_t<T>>) {
       msg += std::to_string(v);
     } else {
       static_assert(is_iterable<T>::value, "Cannot convert to std::string.");
