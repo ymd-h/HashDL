@@ -24,7 +24,7 @@ namespace HashDL {
     virtual ~ConstantFrequency() = default;
 
     bool operator()() override {
-      auto fulfilled = counter++ >= N;
+      auto fulfilled = ++counter >= N;
 
       if(fulfilled){ counter = 0; }
 
@@ -48,7 +48,7 @@ namespace HashDL {
     ~ExponentialDecay() = default;
 
     bool operator()() override {
-      auto fulfilled = counter++ >= N;
+      auto fulfilled = ++counter >= N;
 
       if(fulfilled){
 	counter = 0;
