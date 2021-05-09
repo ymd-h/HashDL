@@ -79,7 +79,7 @@ int main(int argc, char** argv){
     AssertEqual(adam.eta(), 1e-3);
     AssertEqual(adam.eps(), 1e-8);
     AssertEqual(adam.beta1(), 0.9);
-    AssertEqual(adam.beta2(), 0.999);
+    AssertEqual(adam.beta2(), 0.99);
 
     AssertEqual(adam.beta1t(), 0.9);
     AssertEqual(adam.beta2t(), 0.99);
