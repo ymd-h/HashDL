@@ -23,6 +23,7 @@ int main(int argc, char** argv){
     AssertRaises<std::runtime_error>([=](){
       auto wta = WTA_t{8, 8, 4};
       auto d = Data<float>{10};
+      wta.encode(d);
     }, "Mis mutch data size");
   }, "WTA error");
 
