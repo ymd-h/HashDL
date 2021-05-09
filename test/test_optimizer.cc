@@ -93,5 +93,28 @@ int main(int argc, char** argv){
     AssertEqual(adam.beta2t(), std::pow(adam.beta2(), 2));
   }, "Adam");
 
+  test.Add([](){
+    auto rl = 1e-5;
+    auto beta1 = 0.95;
+    auto beta2 = 0.995;
+    auto adam = Adam<float>{rl, beta1, beta2};
+
+    AssertEqual(adam.eta(), rl);
+    AssertEqual(adam.eps(), 1e-8);
+    AssertEqual(adam.beta1(), beta1);
+    AssertEqual(adam.beta2(), beta2);
+
+    AssertEqual(adam.beta1t(), 1);
+    AssertEqual(adam.beta2t(), 1);
+
+    adam.step();
+    AssertEqual(adam.beta1t(), std::pow(adam.beta1(), 1));
+    AssertEqual(adam.beta2t(), std::pow(adam.beta2(), 1));
+
+    adam.step();
+    AssertEqual(adam.beta1t(), std::pow(adam.beta1(), 2));
+    AssertEqual(adam.beta2t(), std::pow(adam.beta2(), 2));
+  }, "Adam with hyperparameter");
+
   return test.Run();
 }
