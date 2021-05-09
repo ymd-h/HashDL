@@ -26,5 +26,5 @@ int main(int argc, char** argv){
     }, "Mis mutch data size");
   }, "WTA error");
 
-  return test.Run():
+  return test.Run();
 }
