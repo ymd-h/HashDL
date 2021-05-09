@@ -18,7 +18,7 @@ int main(int argc, char** argv){
     using WTA_t = WTA<float>;
     AssertRaises<std::runtime_error>([](){ WTA_t{8, 2, 10}; },
 				     "data size < sample size");
-    AssertRaises<std::runtime_error>([](){ WTA_t{64, 16, 2}; },
+    AssertRaises<std::runtime_error>([](){ WTA_t{64, 16, 8}; },
 				     "bin size * sample bits > 64");
     AssertRaises<std::runtime_error>([=](){
       auto wta = WTA_t{8, 8, 4};
