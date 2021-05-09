@@ -40,7 +40,17 @@ namespace HashDL {
   public:
     ExponentialDecay(): ExponentialDecay{1, 1.0} {}
     ExponentialDecay(std::size_t N, T decay):
-      counter{0}, N{N}, exp_decay{std::exp(decay)} {}
+      counter{0}, N{N}, exp_decay{} {
+      constexpr const auto max_decay =
+	std::log(std::numeric_limits<std::size_t>::max());
+      if(decay > max_decay){
+	std::cerr << "WARNING: decay is too large. Use "
+		  << std::to_string(max_decay) << " instead." << std::endl;
+	exp_decay = std::numeric_limits<std::size_t>::max();
+      } else {
+	exp_decay = std::exp(decay);
+      }
+    }
     ExponentialDecay(const ExponentialDecay&) = default;
     ExponentialDecay(ExponentialDecay&&) = default;
     ExponentialDecay& operator=(const ExponentialDecay&) = default;
