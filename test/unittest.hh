@@ -211,6 +211,16 @@ inline constexpr void AssertEqual(L&& lhs, R&& rhs){
   }
 }
 
+template<typename L, typename R>
+inline constexpr void AssertNotEqual(L&& lhs, R&& rhs){
+  using namespace unittest;
+  if(!!Equal(lhs, rhs)){
+    using std::to_string;
+    using unittest::to_string;
+    throw std::runtime_error(to_string(lhs) + " == " + to_string(rhs));
+  }
+}
+
 template<typename Cond>
 inline constexpr void AssertTrue(Cond&& c){
   using namespace unittest;
