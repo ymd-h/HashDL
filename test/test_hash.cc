@@ -12,6 +12,7 @@ int main(int argc, char** argv){
 
     auto d = Data<float>{16};
     AssertEqual(wta.encode(d), wta.encode(d));
+    AssertEqual(wta.encode(d), hashcode_t{0});
   }, "WTA");
 
   test.Add([](){
