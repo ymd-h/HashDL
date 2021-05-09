@@ -130,7 +130,7 @@ int main(int argc, char** argv){
 
     adam.step();
     AssertTrue(std::isfinite(c->diff(x)));
-    AssertFalse(c->diff(x) == c->diff(x));
+    AssertNotEqual(c->diff(x), c->diff(x));
 
     if(c){
       delete c;
