@@ -81,16 +81,16 @@ int main(int argc, char** argv){
     AssertEqual(adam.beta1(), 0.9);
     AssertEqual(adam.beta2(), 0.999);
 
-    AssertEqual(adam.beta1t(), 1);
-    AssertEqual(adam.beta2t(), 1);
-
-    adam.step();
-    AssertEqual(adam.beta1t(), std::pow(adam.beta1(), 1));
-    AssertEqual(adam.beta2t(), std::pow(adam.beta2(), 1));
+    AssertEqual(adam.beta1t(), 0.9);
+    AssertEqual(adam.beta2t(), 0.99);
 
     adam.step();
     AssertEqual(adam.beta1t(), std::pow(adam.beta1(), 2));
     AssertEqual(adam.beta2t(), std::pow(adam.beta2(), 2));
+
+    adam.step();
+    AssertEqual(adam.beta1t(), std::pow(adam.beta1(), 3));
+    AssertEqual(adam.beta2t(), std::pow(adam.beta2(), 3));
   }, "Adam");
 
   test.Add([](){
@@ -104,16 +104,16 @@ int main(int argc, char** argv){
     AssertEqual(adam.beta1(), beta1);
     AssertEqual(adam.beta2(), beta2);
 
-    AssertEqual(adam.beta1t(), 1);
-    AssertEqual(adam.beta2t(), 1);
-
-    adam.step();
-    AssertEqual(adam.beta1t(), std::pow(adam.beta1(), 1));
-    AssertEqual(adam.beta2t(), std::pow(adam.beta2(), 1));
+    AssertEqual(adam.beta1t(), beta1);
+    AssertEqual(adam.beta2t(), beta2);
 
     adam.step();
     AssertEqual(adam.beta1t(), std::pow(adam.beta1(), 2));
     AssertEqual(adam.beta2t(), std::pow(adam.beta2(), 2));
+
+    adam.step();
+    AssertEqual(adam.beta1t(), std::pow(adam.beta1(), 3));
+    AssertEqual(adam.beta2t(), std::pow(adam.beta2(), 3));
   }, "Adam with hyperparameter");
 
   test.Add([](){
@@ -126,7 +126,7 @@ int main(int argc, char** argv){
     AssertTrue(c);
 
     auto x = 0.7;
-    AssertFalse(std::isfinite(c->diff(x)));
+    AssertTrue(std::isfinite(c->diff(x)));
 
     adam.step();
     AssertTrue(std::isfinite(c->diff(x)));
