@@ -153,7 +153,7 @@ namespace unittest {
       }else{
 	msg += "nullptr";
       }
-    } else if constexpr (std::is_integral_v<T> || std::is_floating_point_v<T>) {
+    } else if constexpr (std::is_arithmetic_v<T>) {
       msg += std::to_string(v);
     } else {
       static_assert(is_iterable<T>::value, "Cannot convert to std::string.");
