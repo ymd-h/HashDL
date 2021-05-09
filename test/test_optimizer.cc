@@ -126,10 +126,10 @@ int main(int argc, char** argv){
     AssertTrue(c);
 
     auto x = 0.7;
-    AssertTrue(std::isinf(c->diff(x)));
+    AssertFalse(std::isfinite(c->diff(x)));
 
     adam.step();
-    AssertFalse(std::isinf(c->diff(x)));
+    AssertTrue(std::finite(c->diff(x)));
     AssertEqual(c->diff(x), c->diff(x));
 
     if(c){
