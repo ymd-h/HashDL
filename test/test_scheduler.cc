@@ -34,7 +34,7 @@ int main(int argc, char** argv){
   }, "Exp 0-decay");
 
   test.Add([](){
-    auto exp = ExponentialDecay<float>{1, 100};
+    auto exp = ExponentialDecay<float>{1, 10};
 
     AssertTrue(exp());
     AssertFalse(exp());
