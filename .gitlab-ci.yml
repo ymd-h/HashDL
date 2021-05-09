@@ -45,6 +45,17 @@ optimizer.cc:
     - $CXX -o test/test_$SOURCE.{out,cc}
     - ./test/test_$SOURCE.out
 
+scheduler.cc:
+  variables:
+    <<: *global-variables
+    SOURCE: scheduler
+  stage: cpptest
+  image: gcc:10
+  script:
+    - apt update && apt install -y libtbb-dev
+    - $CXX -o test/test_$SOURCE.{out,cc}
+    - ./test/test_$SOURCE.out
+
 wheelbuild:
   stage: build
   image: gcc:10
