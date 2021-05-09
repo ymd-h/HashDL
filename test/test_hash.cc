@@ -28,5 +28,13 @@ int main(int argc, char** argv){
     }, "Mis mutch data size");
   }, "WTA error");
 
+  test.Add([](){
+    auto dwta = DWTA{};
+    auto d = Data<float>{16};
+
+    AssertEqual(dwta.encode(d), dwta.encode(d));
+    AssertEqual(dwta.encode(d), hashcode_t{0});
+  }, "DWTA");
+
   return test.Run();
 }
