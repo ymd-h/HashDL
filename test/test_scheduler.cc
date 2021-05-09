@@ -52,5 +52,5 @@ int main(int argc, char** argv){
     AssertTrue(exp());
   }, "Exp 1-decay");
 
-  return Test.Run();
+  return test.Run();
 }
