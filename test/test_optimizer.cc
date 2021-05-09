@@ -139,7 +139,7 @@ int main(int argc, char** argv){
   }, "Adam Client");
 
   test.Add([](){
-    auto lr = 1e-5;
+    auto lr = 1;
     auto beta1 = 0;
     auto beta2 = 0;
     auto eps = 0;
