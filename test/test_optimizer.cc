@@ -129,6 +129,7 @@ int main(int argc, char** argv){
     AssertTrue(std::isinf(c->diff(x)));
 
     adam.step();
+    AssertFalse(std::isinf(c->diff(x)));
     AssertEqual(c->diff(x), c->diff(x));
 
     if(c){
