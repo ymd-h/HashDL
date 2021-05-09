@@ -2,6 +2,7 @@
 #define SCHEDULER_HH
 
 #include <cmath>
+#include <cstdint>
 
 namespace HashDL {
 
@@ -12,8 +13,8 @@ namespace HashDL {
 
   class ConstantFrequency : public Scheduler {
   private:
-    std::size_t counter;
-    std::size_t N;
+    std::uintmax_t counter;
+    std::uintmax_t N;
   public:
     ConstantFrequency(): ConstantFrequency{1} {}
     ConstantFrequency(std::size_t N): counter{0}, N{N} {}
@@ -34,19 +35,19 @@ namespace HashDL {
 
   template<typename T> class ExponentialDecay : public Scheduler {
   private:
-    std::size_t counter;
-    std::size_t N;
+    std::uintmax_t counter;
+    std::uintmax_t N;
     T exp_decay;
   public:
     ExponentialDecay(): ExponentialDecay{1, 1.0} {}
     ExponentialDecay(std::size_t N, T decay):
       counter{0}, N{N}, exp_decay{} {
       constexpr const auto max_decay =
-	std::log(std::numeric_limits<std::size_t>::max());
+	std::log(std::numeric_limits<std::uintmax_t>::max());
       if(decay > max_decay){
 	std::cerr << "WARNING: decay is too large. Use "
 		  << std::to_string(max_decay) << " instead." << std::endl;
-	exp_decay = std::numeric_limits<std::size_t>::max();
+	exp_decay = std::numeric_limits<std::uintmax_t>::max();
       } else {
 	exp_decay = std::exp(decay);
       }
@@ -62,7 +63,7 @@ namespace HashDL {
 
       if(fulfilled){
 	counter = 0;
-	N = static_cast<std::size_t>(std::ceil(N * exp_decay));
+	N = static_cast<std::uintmax_t>(std::ceil(N * exp_decay));
       }
 
       return fulfilled;
