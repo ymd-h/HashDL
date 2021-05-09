@@ -48,7 +48,6 @@ int main(int argc, char** argv){
     AssertTrue(exp());
     AssertFalse(exp());
     AssertFalse(exp());
-    AssertFalse(exp());
     AssertTrue(exp());
   }, "Exp 1-decay");
 
