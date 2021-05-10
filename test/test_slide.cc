@@ -33,6 +33,16 @@ int main(int argc, char** argv){
     AssertEqual(p(), 0);
   }, "Param with initialization");
 
+  test.Add([](){
+    auto opt = std::unique_ptr<Optimizer<float>>{new SGD{1}};
+    auto w = Weight<float>{1, o};
+
+    AssertEqual(w.weight(), std::vector<float>{0.0});
+    AssertEqual(w.weight(0), 0);
+    AssertEqual(w.bias(), 0);
+    AssertEqual(w.affine(Data<float>{1}, std::vector<std::size_t>{0}), 0);
+    AssertEqual(w.affine(Data<float>{1}, std::vector<std::size_t>{}), 0);
+  }, "Weight");
 
   return test.Run();
 }
