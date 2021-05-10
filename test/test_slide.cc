@@ -6,9 +6,9 @@ int main(int argc, char** argv){
   using namespace HashDL;
 
   auto test = Test{};
+  auto opt = std::unique_ptr<Optimizer<float>>(new SGD<float>{1});
 
-  test.Add([](){
-    auto opt = std::unique_ptr<Optimizer<float>>(new SGD<float>{1});
+  test.Add([&](){
     auto p = Param<float>{opt};
 
     AssertEqual(p(), 0);
@@ -20,8 +20,7 @@ int main(int argc, char** argv){
     AssertEqual(p(), -0.5);
   }, "Param");
 
-  test.Add([](){
-    auto opt = std::unique_ptr<Optimizer<float>>(new SGD<float>{1});
+  test.Add([&](){
     auto p = Param<float>{opt, 0.5};
 
     AssertEqual(p(), 0.5);
@@ -33,8 +32,7 @@ int main(int argc, char** argv){
     AssertEqual(p(), 0);
   }, "Param with initialization");
 
-  test.Add([](){
-    auto opt = std::unique_ptr<Optimizer<float>>{new SGD<float>{1}};
+  test.Add([&](){
     auto w = Weight<float>{1, o};
 
     AssertEqual(w.weight(), std::vector<float>{0.0});
