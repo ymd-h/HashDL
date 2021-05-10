@@ -17,7 +17,7 @@ namespace HashDL {
     std::atomic<T> grad;
     std::unique_ptr<OptimizerClient<T>> opt;
   public:
-    Param() = default;
+    Param() = delete;
     Param(const std::unique_ptr<Optimizer<T>>& o)
       : value{}, grad{}, opt{o->client()} {}
     Param(const Param&) = delete;
