@@ -20,5 +20,19 @@ int main(int argc, char** argv){
     AssertEqual(p(), -0.5);
   }, "Param");
 
+  test.Add([](){
+    auto opt = std::unique_ptr<Optimizer<float>>(new SGD<float>{1});
+    auto p = Param<float>{opt, 0.5};
+
+    AssertEqual(p(), 0.5);
+
+    p.add_grad(0.5);
+    AssertEqual(p(), 0.5);
+
+    p.update();
+    AssertEqual(p(), 0);
+  }, "Param");
+
+
   return test.Run();
 }
