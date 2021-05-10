@@ -33,7 +33,17 @@ int main(int argc, char** argv){
   }, "Param with initialization");
 
   test.Add([&](){
-    auto w = Weight<float>{1, o};
+    auto w = Weight<float>{1, opt};
+
+    AssertEqual(w.weight(), std::vector<float>{0.0});
+    AssertEqual(w.weight(0), 0);
+    AssertEqual(w.bias(), 0);
+    AssertEqual(w.affine(Data<float>{1}, std::vector<std::size_t>{0}), 0);
+    AssertEqual(w.affine(Data<float>{1}, std::vector<std::size_t>{}), 0);
+  }, "Weight");
+
+  test.Add([&](){
+    auto w = Weight<float>{1, opt};
 
     AssertEqual(w.weight(), std::vector<float>{0.0});
     AssertEqual(w.weight(0), 0);
