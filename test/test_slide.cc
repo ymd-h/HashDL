@@ -31,7 +31,7 @@ int main(int argc, char** argv){
 
     p.update();
     AssertEqual(p(), 0);
-  }, "Param");
+  }, "Param with initialization");
 
 
   return test.Run();
