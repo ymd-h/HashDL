@@ -34,7 +34,7 @@ int main(int argc, char** argv){
   }, "Param with initialization");
 
   test.Add([](){
-    auto opt = std::unique_ptr<Optimizer<float>>{new SGD{1}};
+    auto opt = std::unique_ptr<Optimizer<float>>{new SGD<float>{1}};
     auto w = Weight<float>{1, o};
 
     AssertEqual(w.weight(), std::vector<float>{0.0});
