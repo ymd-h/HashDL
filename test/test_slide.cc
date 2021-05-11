@@ -71,5 +71,16 @@ int main(int argc, char** argv){
 			 std::vector<std::size_t>{}), -0.2);
   }, "Weight update");
 
+  test.Add([&](){
+    auto w Weight<float>{2, opt};
+
+    AssertEqual(w.weight(), std::vector<float>{0.0, 0.0});
+    AssertEqual(w.weight(0), 0);
+    AssertEqual(w.weight(1), 0);
+    AssertEqual(w.bias(), 0);
+    AssertEqual(w.affine(Data<float>{2}, std::vector<std::size_t>{0, 1}), 0);
+    AssertEqual(w.affine(Data<float>{2}, std::vector<std::size_t>{}), 0);
+  }, "Multi dimension");
+
   return test.Run();
 }
