@@ -50,7 +50,26 @@ int main(int argc, char** argv){
     AssertEqual(w.bias(), 0);
     AssertEqual(w.affine(Data<float>{1}, std::vector<std::size_t>{0}), 0);
     AssertEqual(w.affine(Data<float>{1}, std::vector<std::size_t>{}), 0);
-  }, "Weight");
+
+    w.add_weight_grad(0, 0.5);
+    w.add_bias_grad(0.2);
+    AssertEqual(w.weight(), std::vector<float>{0.0});
+    AssertEqual(w.weight(0), 0);
+    AssertEqual(w.bias(), 0);
+    AssertEqual(w.affine(Data<float>{1}, std::vector<std::size_t>{0}), 0);
+    AssertEqual(w.affine(Data<float>{1}, std::vector<std::size_t>{}), 0);
+
+    w.update();
+    AssertEqual(w.weight(), std::vector<float>{-0.5});
+    AssertEqual(w.weight(0), -0.5);
+    AssertEqual(w.bias(), -0.2);
+    AssertEqual(w.affine(Data<float>{1}, std::vector<std::size_t>{0}), -0.2);
+    AssertEqual(w.affine(Data<float>{1}, std::vector<std::size_t>{}), -0.2);
+    AssertEqual(w.affine(Data<float>{std::vector<float>{1}},
+			 std::vector<std::size_t>{0}), -0.7);
+    AssertEqual(w.affine(Data<float>{std::vector<float>{1}},
+			 std::vector<std::size_t>{}), -0.2);
+  }, "Weight update");
 
   return test.Run();
 }
