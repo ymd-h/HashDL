@@ -72,7 +72,7 @@ int main(int argc, char** argv){
   }, "Weight update");
 
   test.Add([&](){
-    auto w Weight<float>{2, opt};
+    auto w = Weight<float>{2, opt};
 
     AssertEqual(w.weight(), std::vector<float>{0.0, 0.0});
     AssertEqual(w.weight(0), 0);
