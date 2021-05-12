@@ -82,5 +82,13 @@ int main(int argc, char** argv){
     AssertEqual(w.affine(Data<float>{2}, std::vector<std::size_t>{}), 0);
   }, "Multi dimension");
 
+  test.Add([&](){
+    auto w = Weight<float>{1, oppt, [](){ return 0.5; }};
+
+    AssertEqual(w.weight(), std::vector<float>{0.5});
+    AssertEqual(w.weight(0), 0.5);
+    AssertEqual(w.bias(), 0);
+  }, "Weight initialization");
+
   return test.Run();
 }
