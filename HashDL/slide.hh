@@ -47,6 +47,14 @@ namespace HashDL {
       std::generate_n(std::back_inserter(w), N,
 		      [&](){ return Param_t{new Param<T>{o}}; });
     }
+    Weight(std::size_t N, const std::unique_ptr<Optimizer<T>>& o,
+	   std::function<T(void)> f)
+          : w{}, b{new Param<T>{o}}
+    {
+      w.reserve(N);
+      std::generate_n(std::back_inserter(w), N,
+		      [&](){ return Param_t{new Param<T>{o, f()}}; });
+    }
     Weight(const Weight&) = default;
     Weight(Weight&&) = default;
     Weight& operator=(const Weight&) = default;
