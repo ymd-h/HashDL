@@ -83,7 +83,7 @@ int main(int argc, char** argv){
   }, "Multi dimension");
 
   test.Add([&](){
-    auto w = Weight<float>{1, oppt, [](){ return 0.5; }};
+    auto w = Weight<float>{1, opt, [](){ return 0.5; }};
 
     AssertEqual(w.weight(), std::vector<float>{0.5});
     AssertEqual(w.weight(0), 0.5);
