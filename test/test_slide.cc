@@ -90,5 +90,9 @@ int main(int argc, char** argv){
     AssertEqual(w.bias(), 0);
   }, "Weight initialization");
 
+  test.Add([&](){
+    auto N = Neuron<float>{1, opt};
+  }, "Neuron");
+
   return test.Run();
 }
