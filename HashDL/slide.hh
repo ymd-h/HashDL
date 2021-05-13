@@ -93,7 +93,7 @@ namespace HashDL {
     Neuron(std::size_t prev_units,
 	   const std::unique_ptr<Optimizer<T>>& optimizer,
 	   std::function<T()> weight_initializer = [](){ return 0; })
-      : weight{prev_units, optimizer} {}
+      : weight{prev_units, optimizer, weight_initializer} {}
     Neuron(const Neuron&) = default;
     Neuron(Neuron&&) = default;
     Neuron& operator=(const Neuron&) = default;
