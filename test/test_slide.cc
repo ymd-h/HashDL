@@ -94,8 +94,7 @@ int main(int argc, char** argv){
     auto N = Neuron<float>{1, opt};
     auto a = std::unique_ptr<Activation<float>>{new Linear<float>{}};
 
-    AssertEqual(N.forward(Data<float>{1}, std::vector<std::size_t>{}, a), 0);
-    AssertEqual(N.forward(Data<float>{1}, std::vector<std::size_t>{1}, a), 0);
+    AssertEqual(N.w(), Data<float>{1});
   }, "Neuron");
 
   return test.Run();
