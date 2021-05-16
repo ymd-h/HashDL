@@ -130,7 +130,7 @@ int main(int, char**){
     auto N = Neuron<float>{1, opt};
     auto a = std::unique_ptr<Activation<float>>{new Linear<float>{}};
 
-    auto x = Data<float>{std::vector<float>{1.0}}
+    auto x = Data<float>{std::vector<float>{1.0}};
     AssertEqual(N.w(), Data<float>{1});
     AssertEqual(N.forward(x, std::vector<std::size_t>{} , a), 0);
     AssertEqual(N.forward(x, std::vector<std::size_t>{0}, a), 0);
