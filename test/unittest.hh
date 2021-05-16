@@ -193,7 +193,7 @@ namespace unittest {
 	// Absolute comparison (|X-Y| < eps * |X|) is preferred for small value.
 	return abs(lhs - rhs) <= eps * std::max<LR>({one,abs((LR)lhs),abs((LR)rhs)});
       } else {
-	return lhs == rhs;
+	return (LR)lhs == (LR)rhs;
       }
     } else {
       static_assert(L_iterable == R_iterable,
