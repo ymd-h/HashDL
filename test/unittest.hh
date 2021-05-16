@@ -186,11 +186,12 @@ namespace unittest {
 					  std::numeric_limits<LL>::epsilon() : LL{0},
 					  std::is_floating_point_v<RR> ?
 					  std::numeric_limits<RR>::epsilon() : RR{0});
+	constexpr const LR one = 1.0;
 
 	// epsilon is the difference between 1.0 and the next value.
 	// Relative comparison (|X-Y| < eps      ) is preferred for large value.
 	// Absolute comparison (|X-Y| < eps * |X|) is preferred for small value.
-	return (abs(lhs - rhs) <= eps * std::max<LR>({1.0, abs(lhs), abs(rhs)}));
+	return (abs(lhs - rhs) <= eps * std::max<LR>({one, abs(lhs), abs(rhs)}));
       } else {
 	return lhs == rhs;
       }
