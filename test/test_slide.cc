@@ -159,5 +159,24 @@ int main(int, char**){
     }
   }, "LSH");
 
+  test.Add([&](){
+    auto L = 50;
+    auto d = 2;
+    auto func = new WTAFunc<float>{8, 1};
+    auto lsh = LSH<float>{L, d, func};
+    auto N = std::vector<Neuron<float>>{};
+    N.emplace_back(d, opt);
+    lsh.add(N);
+
+    lsh.reset();
+    lsh.add(N);
+
+    if(func){
+      delete func;
+      func = nullptr;
+    }
+
+  }, "LSH reset");
+
   return test.Run();
 }
