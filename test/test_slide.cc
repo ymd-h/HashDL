@@ -146,6 +146,13 @@ int main(int, char**){
     AssertEqual(N.forward(x, std::vector<std::size_t>{0}, a), -2.0);
   }, "Neuron backward with weight");
 
+  test.Add([&](){
+    auto L = 50;
+    auto lsh = LSH<float>{L, 2, WTAFunc<float>{8, 1}};
+    auto N = std::vector<Neuron<float>>{Neuron<float>{1, opt}};
+
+    lsh.add(N);
+  }, "LSH");
 
   return test.Run();
 }
