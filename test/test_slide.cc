@@ -7,6 +7,7 @@ int main(int, char**){
 
   auto test = Test{};
   auto opt = std::unique_ptr<Optimizer<float>>(new SGD<float>{1});
+  auto a = std::unique_ptr<Activation<float>>{new Linear<float>{}};
 
   test.Add([&](){
     auto p = Param<float>{opt};
@@ -92,7 +93,6 @@ int main(int, char**){
 
   test.Add([&](){
     auto N = Neuron<float>{1, opt};
-    auto a = std::unique_ptr<Activation<float>>{new Linear<float>{}};
 
     AssertEqual(N.w(), Data<float>{1});
     AssertEqual(N.forward(Data<float>{1}, std::vector<std::size_t>{} , a), 0);
@@ -101,7 +101,6 @@ int main(int, char**){
 
   test.Add([&](){
     auto N = Neuron<float>{3, opt};
-    auto a = std::unique_ptr<Activation<float>>{new Linear<float>{}};
 
     AssertEqual(N.w(), Data<float>{3});
     AssertEqual(N.forward(Data<float>{1}, std::vector<std::size_t>{} , a), 0);
@@ -110,7 +109,6 @@ int main(int, char**){
 
   test.Add([&](){
     auto N = Neuron<float>{1, opt};
-    auto a = std::unique_ptr<Activation<float>>{new Linear<float>{}};
 
     AssertEqual(N.w(), Data<float>{1});
     AssertEqual(N.forward(Data<float>{1}, std::vector<std::size_t>{} , a), 0);
@@ -128,7 +126,6 @@ int main(int, char**){
 
   test.Add([&](){
     auto N = Neuron<float>{1, opt};
-    auto a = std::unique_ptr<Activation<float>>{new Linear<float>{}};
 
     auto x = Data<float>{std::vector<float>{1.0}};
     AssertEqual(N.w(), Data<float>{1});
