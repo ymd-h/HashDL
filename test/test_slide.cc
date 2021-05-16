@@ -148,10 +148,11 @@ int main(int, char**){
 
   test.Add([&](){
     auto L = 50;
+    auto d = 2;
     auto func = new WTAFunc<float>{8, 1};
-    auto lsh = LSH<float>{L, 2, func};
+    auto lsh = LSH<float>{L, d, func};
     auto N = std::vector<Neuron<float>>{};
-    N.emplace_back(1, opt);
+    N.emplace_back(d, opt);
 
     lsh.add(N);
 
