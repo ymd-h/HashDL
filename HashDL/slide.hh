@@ -352,8 +352,8 @@ namespace HashDL {
 					     hash, this->opt});
 	prev_units = u;
 	auto last = layer.size() -1;
-	layer[last].set_prev(& layer[last-1]);
-	layer[last-1].set_next(& layer[last]);
+	layer[last]->set_prev(layer[last-1].get());
+	layer[last-1]->set_next(layer[last].get());
       }
       layer.emplace_back(new OutputLayer<T>{prev_units});
     }
