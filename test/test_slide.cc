@@ -126,5 +126,26 @@ int main(int, char**){
     AssertEqual(N.forward(Data<float>{1}, std::vector<std::size_t>{0}, a), -1.0);
   }, "Neuron backward");
 
+  test.Add([&](){
+    auto N = Neuron<float>{1, opt};
+    auto a = std::unique_ptr<Activation<float>>{new Linear<float>{}};
+
+    auto x = Data<float>{std::vector<float>{1.0}}
+    AssertEqual(N.w(), Data<float>{1});
+    AssertEqual(N.forward(x, std::vector<std::size_t>{} , a), 0);
+    AssertEqual(N.forward(x, std::vector<std::size_t>{0}, a), 0);
+
+    auto dL_dx = Data<float>{1};
+    auto dL_dy = 1.0;
+    N.backward(x, 0, dL_dy, dL_dx, std::vector<std::size_t>{0}, a);
+    AssertEqual(N.forward(x, std::vector<std::size_t>{0}, a), 0);
+    AssertEqual(dL_dx, std::vector<float>{0.0});
+    N.update();
+    AssertEqual(N.w(), std::vector<float>{-1.0});
+    AssertEqual(N.forward(Data<float>{1}, std::vector<std::size_t>{0}, a), -1.0);
+    AssertEqual(N.forward(x, std::vector<std::size_t>{0}, a), -2.0);
+  }, "Neuron backward with weight");
+
+
   return test.Run();
 }
