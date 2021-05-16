@@ -4,7 +4,7 @@
 
 using namespace HashDL;
 
-int main(int argc, char** argv){
+int main(int, char**){
   auto test = Test{};
 
   test.Add([](){
