@@ -191,7 +191,7 @@ namespace unittest {
 	// epsilon is the difference between 1.0 and the next value.
 	// Relative comparison (|X-Y| < eps      ) is preferred for large value.
 	// Absolute comparison (|X-Y| < eps * |X|) is preferred for small value.
-	return (abs(lhs - rhs) <= eps * std::max<LR>({one, abs(lhs), abs(rhs)}));
+	return abs(lhs - rhs) <= eps * std::max<LR>({one, abs(lhs), abs(rhs)});
       } else {
 	return lhs == rhs;
       }
