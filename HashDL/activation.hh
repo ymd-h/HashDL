@@ -20,7 +20,7 @@ namespace HashDL {
   template<typename T> class Linear : public Activation<T> {
   public:
     T call(T x) const override { return x; }
-    T back(T y, T dL_dy) const override { return dL_dy; }
+    T back(T /* y */, T dL_dy) const override { return dL_dy; }
   };
 
   template<typename T> class ReLU : public Activation<T> {
