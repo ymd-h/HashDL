@@ -116,7 +116,8 @@ int main(int argc, char** argv){
     AssertEqual(N.forward(Data<float>{1}, std::vector<std::size_t>{} , a), 0);
     AssertEqual(N.forward(Data<float>{1}, std::vector<std::size_t>{0}, a), 0);
 
-    N.backward(Data<float>{1}, 0, 0.0, Data<float>{std::vector<float>{1.0}},
+    auto dL_dy = Data<float>{std::vector<float>{1.0}};
+    N.backward(Data<float>{1}, 0, 0.0, dL_dy,
 	       std::vector<std::size_t>{0}, a);
     AssertEqual(N.forward(Data<float>{1}, std::vector<std::size_t>{0}, a), 0);
     N.update();
