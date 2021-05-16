@@ -99,5 +99,14 @@ int main(int argc, char** argv){
     AssertEqual(N.forward(Data<float>{1}, std::vector<std::size_t>{0}, a), 0);
   }, "Neuron");
 
+  test.Add([&](){
+    auto N = Neuron<float>{3, opt};
+    auto a = std::unique_ptr<Activation<float>>{new Linear<float>{}};
+
+    AssertEqual(N.w(), Data<float>{3});
+    AssertEqual(N.forward(Data<float>{1}, std::vector<std::size_t>{} , a), 0);
+    AssertEqual(N.forward(Data<float>{1}, std::vector<std::size_t>{0, 1}, a), 0);
+  }, "Neuron multi prev");
+
   return test.Run();
 }
