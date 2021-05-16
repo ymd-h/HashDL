@@ -178,5 +178,28 @@ int main(int, char**){
 
   }, "LSH reset");
 
+  test.Add([&](){
+    auto L = 50;
+    auto d = 2;
+    auto func = new WTAFunc<float>{8, 1};
+    auto lsh = LSH<float>{L, d, func};
+    auto N = std::vector<Neuron<float>>{};
+    N.emplace_back(d, opt);
+    lsh.add(N);
+
+    auto x = Data<float>{d};
+    AssertEqual(lsh.retrieve(x), lsh.retrieve(x));
+
+    lsh.reset();
+    lsh.add(N);
+
+    AssertEqual(lsh.retrieve(x), lsh.retrieve(x));
+
+    if(func){
+      delete func;
+      func = nullptr;
+    }
+  }, "LSH retrieve");
+
   return test.Run();
 }
