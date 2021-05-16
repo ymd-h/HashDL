@@ -30,9 +30,9 @@ namespace HashDL {
     Data(const std::vector<T>& data): _size{data.size()}, data{data} {}
     Data(std::vector<T>&& data): _size{data.size()}, data{data} {}
     template<typename I> Data(I&& begin, I&& end)
-      : _size{std::distance(begin, end)}, data{begin, end} {}
+      : _size{(std::size_t)std::distance(begin, end)}, data{begin, end} {}
     template<typename I, typename F> Data<T>(I&& begin, I&& end, F&& f)
-      : _size{std::distance(begin, end)}, data{}
+      : _size{(std::size_t)std::distance(begin, end)}, data{}
     {
       data.reserve(_size);
       std::transform(begin, end, std::back_inserter(data), f);
