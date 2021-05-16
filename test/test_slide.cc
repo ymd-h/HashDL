@@ -148,7 +148,7 @@ int main(int, char**){
 
   test.Add([&](){
     auto L = 50;
-    auto lsh = LSH<float>{L, 2, WTAFunc<float>{8, 1}};
+    auto lsh = LSH<float>{L, 2,new WTAFunc<float>{8, 1}};
     auto N = std::vector<Neuron<float>>{Neuron<float>{1, opt}};
 
     lsh.add(N);
