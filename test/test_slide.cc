@@ -121,7 +121,7 @@ int main(int argc, char** argv){
 	       std::vector<std::size_t>{0}, a);
     AssertEqual(N.forward(Data<float>{1}, std::vector<std::size_t>{0}, a), 0);
     N.update();
-    AssertEqual(N.w(), Data<float>{std::vector<float>{-1.0}});
+    AssertEqual(N.w(), Data<float>{std::vector<float>{0}});
     AssertEqual(N.forward(Data<float>{1}, std::vector<std::size_t>{0}, a), -1.0);
   }, "Neuron backward");
 
