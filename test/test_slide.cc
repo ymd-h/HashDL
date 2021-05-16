@@ -150,7 +150,8 @@ int main(int, char**){
     auto L = 50;
     auto func = new WTAFunc<float>{8, 1};
     auto lsh = LSH<float>{L, 2, func};
-    auto N = std::vector<Neuron<float>>{Neuron<float>{1, opt}};
+    auto N = std::vector<Neuron<float>>{};
+    N.emplace_back(1, opt);
 
     lsh.add(N);
 
