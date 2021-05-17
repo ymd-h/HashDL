@@ -210,7 +210,7 @@ int main(int, char**){
     output->set_prev(input);
 
     auto x = Data<float>{dsize};
-    AssertEqual(input->forward(x), x);
+    AssertEqual(input->forward(0, x), x);
   }, "Layers");
 
   return test.Run();
