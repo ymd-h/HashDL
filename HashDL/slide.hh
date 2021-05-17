@@ -195,8 +195,8 @@ namespace HashDL {
   protected:
     std::vector<Data<T>> Y;
   public:
-    auto next() const noexcept { return _next; }
-    auto prev() const noexcept { return _prev; }
+    auto& next() const noexcept { return _next; }
+    auto& prev() const noexcept { return _prev; }
     void set_next(const std::shared_ptr<Layer<T>>& L){ _next = L; }
     void set_prev(const std::shared_ptr<Layer<T>>& L){ _prev = L; }
     const Data<T>& fx(std::size_t batch_i) const { return Y[batch_i]; }
