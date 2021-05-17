@@ -228,9 +228,9 @@ namespace HashDL {
       return this->next()->forward(batch_i, X);
     }
 
-    void backward(std::size_t batch_i, const Data<T>& dL_dy) override {}
+    void backward(std::size_t /* batch_i */, const Data<T>& /* dL_dy */) override {}
 
-    const idx_t& active_id(std::size_t batch_i) const override { return idx; }
+    const idx_t& active_id(std::size_t /* batch_i */) const override { return idx; }
   };
 
 
