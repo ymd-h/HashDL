@@ -190,15 +190,15 @@ namespace HashDL {
 
   template<typename T> class Layer {
   private:
-    Layer<T>* _next;
-    Layer<T>* _prev;
+    std::weak_ptr<Layer<T>> _next;
+    std::weak_ptr<Layer<T>> _prev;
   protected:
     std::vector<Data<T>> Y;
   public:
     auto next() const noexcept { return _next; }
     auto prev() const noexcept { return _prev; }
-    void set_next(Layer<T>* L){ _next = L; }
-    void set_prev(Layer<T>* L){ _prev = L; }
+    void set_next(const std::shared_ptr<Layer<T>>& L){ _next = L; }
+    void set_prev(const std::shared_ptr<Layer<T>>& L){ _prev = L; }
     const Data<T>& fx(std::size_t batch_i) const { return Y[batch_i]; }
     virtual Data<T> forward(std::size_t, const Data<T>&) = 0;
     virtual void backward(std::size_t, const Data<T>&) = 0;
@@ -333,7 +333,7 @@ namespace HashDL {
   template<typename T> class Network {
   private:
     std::size_t output_dim;
-    std::vector<std::unique_ptr<Layer<T>>> layer;
+    std::vector<std::shared_ptr<Layer<T>>> layer;
     std::unique_ptr<Optimizer<T>> opt;
     std::unique_ptr<Scheduler> update_freq;
   public:
@@ -352,8 +352,8 @@ namespace HashDL {
 					     hash, this->opt});
 	prev_units = u;
 	auto last = layer.size() -1;
-	layer[last]->set_prev(layer[last-1].get());
-	layer[last-1]->set_next(layer[last].get());
+	layer[last]->set_prev(layer[last-1]);
+	layer[last-1]->set_next(layer[last]);
       }
       layer.emplace_back(new OutputLayer<T>{prev_units});
     }
