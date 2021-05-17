@@ -201,5 +201,17 @@ int main(int, char**){
     }
   }, "LSH retrieve");
 
+  test.Add([&](){
+    auto dsize = 1;
+    auto input = InputLayer<float>{dsize};
+    auto output = OutputLayer<float>{dsize};
+
+    input.set_next(output);
+    output.set_prev(input);
+
+    auto x = Data<float>{dsize};
+    AssertEqual(input.forward(x), x);
+  }, "Layers");
+
   return test.Run();
 }
