@@ -255,7 +255,7 @@ namespace HashDL {
       this->prev()->backward(batch_i, dL_dy);
     }
 
-    const idx_t& active_id(std::size_t batch_i) const override { return idx; }
+    const idx_t& active_id(std::size_t /* batch_i */) const override { return idx; }
   };
 
 
