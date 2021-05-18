@@ -240,8 +240,8 @@ int main(int, char**){
     input->reset(x.size());
     output->reset(x.size());
 
-    AssertEqual(input.active_id(0), std::vector<std::size_t>{0});
-    AssertEqual(output.active_id(0), std::vector<std::size_t>{0});
+    AssertEqual(input->active_id(0), std::vector<std::size_t>{0});
+    AssertEqual(output->active_id(0), std::vector<std::size_t>{0});
   }, "Layer active index");
 
   return test.Run();
