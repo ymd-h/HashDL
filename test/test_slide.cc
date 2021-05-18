@@ -209,6 +209,18 @@ int main(int, char**){
     input->set_next(output);
     output->set_prev(input);
 
+    AssertEqual(input.next(), output);
+    AssertEqual(output.prev(), input);
+  }, "Layers set");
+
+  test.Add([&](){
+    auto dsize = 1;
+    auto input = std::make_shared<InputLayer<float>>(dsize);
+    auto output = std::make_shared<OutputLayer<float>>(dsize);
+
+    input->set_next(output);
+    output->set_prev(input);
+
     auto x = Data<float>{dsize};
     input->reset(x.size());
     output->reset(x.size());
