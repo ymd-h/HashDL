@@ -294,7 +294,8 @@ namespace HashDL {
       active_idx[batch_i] = hash.retrieve(X);
 
       for(auto n : active_idx[batch_i]){
-	this->Y[batch_i][n] = neuron[n].forward(X, this->prev()->active_id(batch_i), activation);
+	this->Y[batch_i][n] = neuron[n].forward(X, this->prev()->active_id(batch_i),
+						activation);
       }
 
       return this->next()->forward(batch_i, this->Y[batch_i]);
