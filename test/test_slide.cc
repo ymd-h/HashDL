@@ -231,5 +231,18 @@ int main(int, char**){
     output->backward(0, x);
   }, "Layers backward");
 
+  test.Add([&](){
+    auto dsize = 1;
+    auto input = std::make_shared<InputLayer<float>>(dsize);
+    auto output = std::make_shared<OutputLayer<float>>(dsize);
+
+    auto x = Data<float>{dsize};
+    input->reset(x.size());
+    output->reset(x.size());
+
+    AssertEqual(input.active_id(0), std::vector<std::size_t>{0});
+    AssertEqual(output.active_id(0), std::vector<std::size_t>{0});
+  }, "Layer active index");
+
   return test.Run();
 }
