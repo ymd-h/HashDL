@@ -210,6 +210,8 @@ int main(int, char**){
     output->set_prev(input);
 
     auto x = Data<float>{dsize};
+    input->reset(x.size());
+    output->reset(x.size());
     AssertEqual(output->forward(0, x), x);
   }, "Layers");
 
