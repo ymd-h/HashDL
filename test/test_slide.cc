@@ -214,7 +214,7 @@ int main(int, char**){
     output->reset(x.size());
     AssertEqual(output->forward(0, x), x);
     AssertEqual(input->forward(0, x), x);
-  }, "Layers");
+  }, "Layers forward");
 
   test.Add([&](){
     auto dsize = 1;
