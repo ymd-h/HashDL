@@ -228,6 +228,7 @@ int main(int, char**){
     input->reset(x.size());
     output->reset(x.size());
     input->backward(0, x);
+    output->backward(0, x);
   }, "Layers backward");
 
   return test.Run();
