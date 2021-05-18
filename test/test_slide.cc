@@ -216,5 +216,19 @@ int main(int, char**){
     AssertEqual(input->forward(0, x), x);
   }, "Layers");
 
+  test.Add([&](){
+    auto dsize = 1;
+    auto input = std::make_shared<InputLayer<float>>(dsize);
+    auto output = std::make_shared<OutputLayer<float>>(dsize);
+
+    input->set_next(output);
+    output->set_prev(input);
+
+    auto x = Data<float>{dsize};
+    input->reset(x.size());
+    output->reset(x.size());
+    input->backward(0, x);
+  }, "Layers backward");
+
   return test.Run();
 }
