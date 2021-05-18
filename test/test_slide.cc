@@ -213,6 +213,7 @@ int main(int, char**){
     input->reset(x.size());
     output->reset(x.size());
     AssertEqual(output->forward(0, x), x);
+    AssertEqual(input->forward(0, x), x);
   }, "Layers");
 
   return test.Run();
