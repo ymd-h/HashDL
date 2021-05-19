@@ -135,6 +135,10 @@ namespace unittest {
   template<typename T, std::size_t N>
   inline constexpr auto size(const T(&)[N]){ return N; }
 
+  template<typename T> struct is_smart_pointer: std::false_type {};
+  template<typename T> struct is_smart_pointer<std::unique_ptr<T>>: std::true_type {};
+  template<typename T> struct is_smart_pointer<std::shared_ptr<T>>: std::true_type {};
+
   template<typename T>
   inline constexpr auto to_string(T&& v){
     using std::to_string;
