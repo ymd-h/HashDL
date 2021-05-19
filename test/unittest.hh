@@ -151,7 +151,8 @@ namespace unittest {
 	msg += ",";
       }
       msg += "]";
-    } else if constexpr (std::is_pointer_v<std::remove_reference_t<T>>) {
+    } else if constexpr (std::is_pointer_v<std::remove_reference_t<T>> ||
+			 is_smart_pointer<std::remove_reference_t<T>>::value) {
       if(v){
 	msg += "&(" + to_string(*v) + ")";
       }else{
