@@ -209,8 +209,8 @@ int main(int, char**){
     input->set_next(output);
     output->set_prev(input);
 
-    AssertEqual(input.next(), output);
-    AssertEqual(output.prev(), input);
+    AssertEqual(input->next(), output);
+    AssertEqual(output->prev(), input);
   }, "Layers set");
 
   test.Add([&](){
