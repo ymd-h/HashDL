@@ -102,14 +102,14 @@ namespace HashDL {
 
     const auto forward(const Data<T>& X,
 		       const idx_t& prev_active,
-		       const std::unique_ptr<Activation<T>>& f){
+		       const std::shared_ptr<Activation<T>>& f){
       return f->call(weight.affine(X, prev_active));
     }
 
     const auto backward(const Data<T>& X, T y,
 			T dL_dy, Data<T>& dL_dx,
 			const idx_t& prev_active,
-			const std::unique_ptr<Activation<T>>& f){
+			const std::shared_ptr<Activation<T>>& f){
       dL_dy = f->back(y, dL_dy);
 
       for(auto i : prev_active){
@@ -273,7 +273,7 @@ namespace HashDL {
     std::shared_ptr<Activation<T>> activation;
   public:
     DenseLayer()
-      : DenseLayer{30, new ReLU<T>{}, 50, new WTAFunc<T>{}, std::unique_ptr<Optimizer<T>>{new Adam<T>{}}}{}
+      : DenseLayer{30, new ReLU<T>{}, 50, new WTAFunc<T>{}, std::shared_ptr<Optimizer<T>>{new Adam<T>{}}}{}
     DenseLayer(std::size_t prev_units, std::size_t units,
 	       std::shared_ptr<Activation<T>> f,
 	       std::size_t L, HashFunc<T>* hash_factory,
