@@ -266,7 +266,7 @@ int main(int, char**){
 
     auto x = Data<float>{dsize};
     input->reset(x.size());
-    hidden->reset(x.size);
+    hidden->reset(x.size());
     output->reset(x.size());
   }, "");
 
