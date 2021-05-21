@@ -213,7 +213,7 @@ namespace HashDL {
     }
   };
 
-  template<typename T> inline auto to_string(Layer&& layer){
+  template<typename T> inline auto to_string(const Layer<T>& layer){
     return (&layer)->to_string();
   }
 
