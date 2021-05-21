@@ -208,8 +208,14 @@ namespace HashDL {
       Y.resize(batch_size);
     }
     virtual void update(bool){}
+    virtual auto to_string() const {
+      return to_string(Y);
+    }
   };
 
+  template<typename T> inline auto to_string(Layer&& layer){
+    return (&layer)->to_string();
+  }
 
   template<typename T> class InputLayer : public Layer<T> {
   private:
