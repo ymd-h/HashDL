@@ -209,7 +209,7 @@ namespace HashDL {
     }
     virtual void update(bool){}
     virtual std::string to_string() const {
-      return to_string(Y);
+      return "Layer";
     }
   };
 
