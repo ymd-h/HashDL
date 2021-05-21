@@ -208,7 +208,7 @@ namespace HashDL {
       Y.resize(batch_size);
     }
     virtual void update(bool){}
-    virtual auto to_string() const {
+    virtual std::string to_string() const {
       return to_string(Y);
     }
   };
