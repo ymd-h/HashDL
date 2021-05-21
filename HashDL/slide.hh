@@ -270,11 +270,12 @@ namespace HashDL {
     std::vector<Neuron<T>> neuron;
     std::vector<idx_t> active_idx;
     LSH<T> hash;
-    std::unique_ptr<Activation<T>> activation;
+    std::shared_ptr<Activation<T>> activation;
   public:
     DenseLayer()
       : DenseLayer{30, new ReLU<T>{}, 50, new WTAFunc<T>{}, std::unique_ptr<Optimizer<T>>{new Adam<T>{}}}{}
-    DenseLayer(std::size_t prev_units, std::size_t units, Activation<T>* f,
+    DenseLayer(std::size_t prev_units, std::size_t units,
+	       std::shared_ptr<Activation<T>> f,
 	       std::size_t L, HashFunc<T>* hash_factory,
 	       const std::unique_ptr<Optimizer<T>>& optimizer)
       : neuron{}, active_idx{}, hash{L, prev_units, hash_factory}, activation{f}

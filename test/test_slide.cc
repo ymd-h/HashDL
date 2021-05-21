@@ -7,7 +7,7 @@ int main(int, char**){
 
   auto test = Test{};
   auto opt = std::unique_ptr<Optimizer<float>>(new SGD<float>{1});
-  auto a = std::unique_ptr<Activation<float>>{new Linear<float>{}};
+  auto a = std::shared_ptr<Activation<float>>{new Linear<float>{}};
   auto wta = WTAFunc<float>{8, 1};
 
   test.Add([&](){
