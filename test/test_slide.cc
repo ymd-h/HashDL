@@ -8,6 +8,7 @@ int main(int, char**){
   auto test = Test{};
   auto opt = std::unique_ptr<Optimizer<float>>(new SGD<float>{1});
   auto a = std::unique_ptr<Activation<float>>{new Linear<float>{}};
+  auto wta = WTAFunc{8, 1};
 
   test.Add([&](){
     auto p = Param<float>{opt};
@@ -258,8 +259,9 @@ int main(int, char**){
 
   test.Add([&](){
     auto dsize = 1;
+    auto L = 5;
     auto input = std::shared_ptr<Layer<float>>{new InputLayer<float>{dsize}};
-    auto hidden = std::shared_ptr<Layer<float>>{new DenseLayer<float>{dsize, dsize}};
+    auto hidden = std::shared_ptr<Layer<float>>{new DenseLayer<float>{dsize, dsize, a, L, &wta}};
     auto output = std::shared_ptr<Layer<float>>{new OutputLayer<float>{dsize}};
 
     auto x = Data<float>{dsize};
