@@ -356,8 +356,9 @@ namespace HashDL {
       layer.emplace_back(new InputLayer<T>{input_size});
       auto prev_units = input_size;
       for(auto& u : units){
-	layer.emplace_back(new DenseLayer<T>{prev_units, u, new ReLU<T>{}, L,
-					     hash, this->opt});
+	layer.emplace_back(new DenseLayer<T>{prev_units, u,
+					     std::shared_ptr<Activation<T>>{new ReLU<T>{}},
+					     L, hash, this->opt});
 	prev_units = u;
 	auto last = layer.size() -1;
 	layer[last]->set_prev(layer[last-1]);
