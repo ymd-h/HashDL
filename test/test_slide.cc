@@ -261,7 +261,7 @@ int main(int, char**){
     auto dsize = 1;
     auto L = 5;
     auto input = std::shared_ptr<Layer<float>>{new InputLayer<float>{dsize}};
-    auto hidden = std::shared_ptr<Layer<float>>{new DenseLayer<float>{dsize, dsize, a, L, &wta}};
+    auto hidden = std::shared_ptr<Layer<float>>{new DenseLayer<float>{dsize, dsize, a, L, &wta, opt}};
     auto output = std::shared_ptr<Layer<float>>{new OutputLayer<float>{dsize}};
 
     auto x = Data<float>{dsize};
