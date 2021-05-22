@@ -268,7 +268,7 @@ int main(int, char**){
     input->reset(x.size());
     hidden->reset(x.size());
     output->reset(x.size());
-  }, "");
+  }, "Dense Layer");
 
   return test.Run();
 }
