@@ -349,11 +349,13 @@ namespace HashDL {
     Network(std::size_t input_size, std::vector<std::size_t> units, std::size_t L,
 	    HashFunc<T>* hash, std::shared_ptr<Optimizer<T>> opt,
 	    std::shared_ptr<Scheduler> update_freq,
-	    std::shared_ptr<Activation<T>> act = std::shared_ptr<Activation<T>>{new ReLU<T>{}})
+	    std::shared_ptr<Activation<T>> act = std::shared_ptr<Activation<T>>{})
       : output_dim{units.size() > 0 ? units.back(): input_size}, layer{},
 	opt{opt}, update_freq{update_freq}
     {
       layer.reserve(units.size() + 2);
+
+      if(!act){ act.reset(new ReLU<T>{}); }
 
       layer.emplace_back(new InputLayer<T>{input_size});
       auto prev_units = input_size;
