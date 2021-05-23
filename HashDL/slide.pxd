@@ -30,6 +30,14 @@ cdef extern from "slide.hh" namespace "HashDL":
     cdef cppclass ExponentialDecay[T]:
         ExponentialDecay() except +
         ExponentialDecay(size_t, T) except +
+    cdef cppclass Activation[T]:
+        Activation() except +
+    cdef cppclass Linear[T]:
+        Linear() except +
+    cdef cppclass ReLU[T]:
+        ReLU() except +
+    cdef cppclass Sigmoid[T]:
+        Sigmoid() except +
     cdef cppclass Network[T]:
         Network(size_t, vector[size_t], size_t, HashFunc[T]*,
                 shared_ptr[Optimizer[T]], shared_ptr[Scheduler]) except +
