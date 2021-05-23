@@ -366,6 +366,9 @@ namespace HashDL {
 	layer[last-1]->set_next(layer[last]);
       }
       layer.emplace_back(new OutputLayer<T>{prev_units});
+      auto last = layer.size() - 1;
+      layer[last]->set_prev(layer[last-1]);
+      layer[last-1]->set_next(layer[last]);
     }
     Network(const Network&) = default;
     Network(Network&&) = default;
