@@ -67,6 +67,17 @@ hash.cc:
     - $CXX -o test/test_$SOURCE.{out,cc}
     - ./test/test_$SOURCE.out
 
+initializer.cc:
+  variables:
+    <<: *global-variables
+    SOURCE: initializer
+  stage: cpptest
+  image: gcc:10
+  script:
+    - apt update && apt install -y libtbb-dev
+    - $CXX -o test/test_$SOURCE.{out,cc}
+    - ./test/test_$SOURCE.out
+
 slide.cc:
   variables:
     <<: *global-variables
