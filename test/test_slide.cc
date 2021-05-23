@@ -8,7 +8,7 @@ int main(int, char**){
   auto test = Test{};
   auto opt = std::shared_ptr<Optimizer<float>>(new SGD<float>{1});
   auto a = std::shared_ptr<Activation<float>>{new Linear<float>{}};
-  auto wta = std::shared_ptr<HashFunc>{new WTAFunc<float>{8, 1}};
+  auto wta = std::shared_ptr<HashFunc<float>>{new WTAFunc<float>{8, 1}};
   auto sch = std::shared_ptr<Scheduler>{new ConstantFrequency{1}};
 
   test.Add([&](){
@@ -148,7 +148,7 @@ int main(int, char**){
   test.Add([&](){
     auto L = 50;
     auto d = 2;
-    auto func = std::shared_ptr<HashFunc>{new WTAFunc<float>{8, 1}};
+    auto func = std::shared_ptr<HashFunc<float>>{new WTAFunc<float>{8, 1}};
     auto lsh = LSH<float>{L, d, func};
     auto N = std::vector<Neuron<float>>{};
     N.emplace_back(d, opt);
@@ -159,7 +159,7 @@ int main(int, char**){
   test.Add([&](){
     auto L = 50;
     auto d = 2;
-    auto func = std::shared_ptr<HashFunc>{new WTAFunc<float>{8, 1}};
+    auto func = std::shared_ptr<HashFunc<float>>{new WTAFunc<float>{8, 1}};
     auto lsh = LSH<float>{L, d, func};
     auto N = std::vector<Neuron<float>>{};
     N.emplace_back(d, opt);
@@ -172,7 +172,7 @@ int main(int, char**){
   test.Add([&](){
     auto L = 50;
     auto d = 2;
-    auto func = std::shared_ptr<HashFunc>{new WTAFunc<float>{8, 1}};
+    auto func = std::shared_ptr<HashFunc<float>>{new WTAFunc<float>{8, 1}};
     auto lsh = LSH<float>{L, d, func};
     auto N = std::vector<Neuron<float>>{};
     N.emplace_back(d, opt);
