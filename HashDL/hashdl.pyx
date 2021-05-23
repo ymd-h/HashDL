@@ -12,7 +12,7 @@ import numpy as np
 from . cimport slide
 
 cdef class Optimizer:
-    cdef share_ptr[slide.Optimizer[float]] opt
+    cdef shared_ptr[slide.Optimizer[float]] opt
 
     cdef shared_ptr[slide.Optimizer[float]] ptr(self):
         return self.opt
