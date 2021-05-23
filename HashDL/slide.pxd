@@ -32,7 +32,9 @@ cdef extern from "slide.hh" namespace "HashDL":
         ExponentialDecay(size_t, T) except +
     cdef cppclass Network[T]:
         Network(size_t, vector[size_t], size_t, HashFunc[T]*,
+                shared_ptr[Optimizer[T]], shared_ptr[Scheduler]) except +
+        Network(size_t, vector[size_t], size_t, HashFunc[T]*,
                 shared_ptr[Optimizer[T]], shared_ptr[Scheduler],
-                shared_ptr[Activation[T]] a=*) except +
+                shared_ptr[Activation[T]]) except +
         BatchData[T] operator()(const BatchView[T]&) except +
         void backward(const BatchView[T]&) except +
