@@ -138,7 +138,7 @@ cdef class Network:
                                             h.ptr(), opt.ptr(), sch.ptr())
 
     def __call__(self, X):
-        X = np.array(X, ndmin=2, copy=False, dtype=np.single)
+        X = np.array(X, ndmin=2, copy=False, dtype=np.single, order="C")
 
         cdef float[:,:] x = X
         cdef slide.BatchView[float] *view = new slide.BatchView[float](x.shape[1],
@@ -151,7 +151,7 @@ cdef class Network:
         return np.asarray(self.y)
 
     def backward(self, dL_dy):
-        dL_dy = np.array(dL_dy, ndmin=2, copy=False, dtype=np.single)
+        dL_dy = np.array(dL_dy, ndmin=2, copy=False, dtype=np.single, order="C")
 
         cdef float[:,:] dl_dy = dL_dy
         cdef slide.BatchView[float] *view = new slide.BatchView[float](dl_dy.shape[1],
