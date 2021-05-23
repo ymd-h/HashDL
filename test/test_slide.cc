@@ -303,7 +303,6 @@ int main(int, char**){
     auto y = std::vector<float>{1};
     auto y1 = BatchView<float>{1, 1, y.data()};
     Net.backward(y1);
-    AssertEqual(Net(x1), std::vector<float>{-1});
   }, "Network backward");
 
   return test.Run();
