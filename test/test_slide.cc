@@ -6,7 +6,7 @@ int main(int, char**){
   using namespace HashDL;
 
   auto test = Test{};
-  auto opt = std::unique_ptr<Optimizer<float>>(new SGD<float>{1});
+  auto opt = std::shared_ptr<Optimizer<float>>(new SGD<float>{1});
   auto a = std::shared_ptr<Activation<float>>{new Linear<float>{}};
   auto wta = WTAFunc<float>{8, 1};
 

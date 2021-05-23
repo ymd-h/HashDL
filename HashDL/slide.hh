@@ -18,8 +18,8 @@ namespace HashDL {
     std::unique_ptr<OptimizerClient<T>> opt;
   public:
     Param() = delete;
-    Param(const std::unique_ptr<Optimizer<T>>& o) : Param{o, T{}} {}
-    Param(const std::unique_ptr<Optimizer<T>>& o, T v)
+    Param(const std::shared_ptr<Optimizer<T>>& o) : Param{o, T{}} {}
+    Param(const std::shared_ptr<Optimizer<T>>& o, T v)
       : value{v}, grad{}, opt{o->client()} {}
     Param(const Param&) = delete;
     Param(Param&&) = delete;
@@ -40,14 +40,14 @@ namespace HashDL {
     Param_t b;
   public:
     Weight() = delete;
-    Weight(std::size_t N, const std::unique_ptr<Optimizer<T>>& o)
+    Weight(std::size_t N, const std::shared_ptr<Optimizer<T>>& o)
       : w{}, b{new Param<T>{o}}
     {
       w.reserve(N);
       std::generate_n(std::back_inserter(w), N,
 		      [&](){ return Param_t{new Param<T>{o}}; });
     }
-    Weight(std::size_t N, const std::unique_ptr<Optimizer<T>>& o,
+    Weight(std::size_t N, const std::shared_ptr<Optimizer<T>>& o,
 	   std::function<T(void)> f)
           : w{}, b{new Param<T>{o}}
     {
@@ -91,7 +91,7 @@ namespace HashDL {
   public:
     Neuron(): Neuron{16, new Adam<T>{}} {}
     Neuron(std::size_t prev_units,
-	   const std::unique_ptr<Optimizer<T>>& optimizer,
+	   const std::shared_ptr<Optimizer<T>>& optimizer,
 	   std::function<T()> weight_initializer = [](){ return 0; })
       : weight{prev_units, optimizer, weight_initializer} {}
     Neuron(const Neuron&) = default;
@@ -277,7 +277,7 @@ namespace HashDL {
     DenseLayer(std::size_t prev_units, std::size_t units,
 	       std::shared_ptr<Activation<T>> f,
 	       std::size_t L, HashFunc<T>* hash_factory,
-	       const std::unique_ptr<Optimizer<T>>& optimizer)
+	       const std::shared_ptr<Optimizer<T>>& optimizer)
       : neuron{}, active_idx{}, hash{L, prev_units, hash_factory}, activation{f}
     {
       neuron.reserve(units);
