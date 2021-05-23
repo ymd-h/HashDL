@@ -39,9 +39,9 @@ cdef extern from "slide.hh" namespace "HashDL":
     cdef cppclass Sigmoid[T]:
         Sigmoid() except +
     cdef cppclass Network[T]:
-        Network(size_t, vector[size_t], size_t, HashFunc[T]*,
+        Network(size_t, vector[size_t], size_t, shared_ptr[HashFunc[T]],
                 shared_ptr[Optimizer[T]], shared_ptr[Scheduler]) except +
-        Network(size_t, vector[size_t], size_t, HashFunc[T]*,
+        Network(size_t, vector[size_t], size_t, shared_ptr[HashFunc[T]],
                 shared_ptr[Optimizer[T]], shared_ptr[Scheduler],
                 shared_ptr[Activation[T]]) except +
         BatchData[T] operator()(const BatchView[T]&) except +
