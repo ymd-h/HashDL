@@ -294,5 +294,17 @@ int main(int, char**){
     AssertEqual(Net(x2), x2);
   }, "Network");
 
+  test.Add([&](){
+    auto Net = Network<float>(1, std::vector<std::size_t>{1}, 10, &wta, opt, sch);
+    auto x = std::vector<float>{0};
+    auto x1 = BatchView<float>{1, 1, x.data()};
+    AssertEqual(Net(x1), x1);
+
+    auto y = std::vector<float>{1};
+    auto y1 = BatchView<float>{1, 1, y.data()};
+    Net.backward(y1);
+    AssertEqual(Net(x1), std::vector<float>{-1});
+  }, "Network backward");
+
   return test.Run();
 }
