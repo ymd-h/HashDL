@@ -8,7 +8,7 @@ int main(int, char**){
   auto test = Test{};
   auto opt = std::shared_ptr<Optimizer<float>>(new SGD<float>{1});
   auto a = std::shared_ptr<Activation<float>>{new Linear<float>{}};
-  auto wta = WTAFunc<float>{8, 1};
+  auto wta = std::shared_ptr<HashFunc>{new WTAFunc<float>{8, 1}};
   auto sch = std::shared_ptr<Scheduler>{new ConstantFrequency{1}};
 
   test.Add([&](){
@@ -148,23 +148,18 @@ int main(int, char**){
   test.Add([&](){
     auto L = 50;
     auto d = 2;
-    auto func = new WTAFunc<float>{8, 1};
+    auto func = std::shared_ptr<HashFunc>{new WTAFunc<float>{8, 1}};
     auto lsh = LSH<float>{L, d, func};
     auto N = std::vector<Neuron<float>>{};
     N.emplace_back(d, opt);
 
     lsh.add(N);
-
-    if(func){
-      delete func;
-      func = nullptr;
-    }
   }, "LSH");
 
   test.Add([&](){
     auto L = 50;
     auto d = 2;
-    auto func = new WTAFunc<float>{8, 1};
+    auto func = std::shared_ptr<HashFunc>{new WTAFunc<float>{8, 1}};
     auto lsh = LSH<float>{L, d, func};
     auto N = std::vector<Neuron<float>>{};
     N.emplace_back(d, opt);
@@ -172,18 +167,12 @@ int main(int, char**){
 
     lsh.reset();
     lsh.add(N);
-
-    if(func){
-      delete func;
-      func = nullptr;
-    }
-
   }, "LSH reset");
 
   test.Add([&](){
     auto L = 50;
     auto d = 2;
-    auto func = new WTAFunc<float>{8, 1};
+    auto func = std::shared_ptr<HashFunc>{new WTAFunc<float>{8, 1}};
     auto lsh = LSH<float>{L, d, func};
     auto N = std::vector<Neuron<float>>{};
     N.emplace_back(d, opt);
@@ -196,11 +185,6 @@ int main(int, char**){
     lsh.add(N);
 
     AssertEqual(lsh.retrieve(x), lsh.retrieve(x));
-
-    if(func){
-      delete func;
-      func = nullptr;
-    }
   }, "LSH retrieve");
 
   test.Add([&](){
@@ -262,7 +246,7 @@ int main(int, char**){
     auto dsize = 1;
     auto L = 5;
     auto input = std::shared_ptr<Layer<float>>{new InputLayer<float>{dsize}};
-    auto hidden = std::shared_ptr<Layer<float>>{new DenseLayer<float>{dsize, dsize, a, L, &wta, opt}};
+    auto hidden = std::shared_ptr<Layer<float>>{new DenseLayer<float>{dsize, dsize, a, L, wta, opt}};
     auto output = std::shared_ptr<Layer<float>>{new OutputLayer<float>{dsize}};
 
     input->set_next(hidden);
@@ -281,7 +265,7 @@ int main(int, char**){
   }, "Dense Layer");
 
   test.Add([&](){
-    auto Net = Network<float>(1, std::vector<std::size_t>{1}, 10, &wta, opt, sch);
+    auto Net = Network<float>(1, std::vector<std::size_t>{1}, 10, wta, opt, sch);
 
     auto x = std::vector<float>{0};
     auto x1 = BatchView<float>{1, 1, x.data()};
@@ -295,7 +279,7 @@ int main(int, char**){
   }, "Network");
 
   test.Add([&](){
-    auto Net = Network<float>(1, std::vector<std::size_t>{1}, 10, &wta, opt, sch);
+    auto Net = Network<float>(1, std::vector<std::size_t>{1}, 10, wta, opt, sch);
     auto x = std::vector<float>{0};
     auto x1 = BatchView<float>{1, 1, x.data()};
     AssertEqual(Net(x1), x1);
@@ -306,14 +290,14 @@ int main(int, char**){
   }, "Network backward");
 
   test.Add([&](){
-    auto Net = Network<float>(1, std::vector<std::size_t>{1}, 10, &wta, opt, sch, a);
+    auto Net = Network<float>(1, std::vector<std::size_t>{1}, 10, wta, opt, sch, a);
     auto x = std::vector<float>{0};
     auto x1 = BatchView<float>{1, 1, x.data()};
     AssertEqual(Net(x1), x1);
   }, "Network with activation");
 
   test.Add([&](){
-    auto Net = Network<float>(1, std::vector<std::size_t>{}, 10, &wta, opt, sch);
+    auto Net = Network<float>(1, std::vector<std::size_t>{}, 10, wta, opt, sch);
     auto x = std::vector<float>{0};
     auto x1 = BatchView<float>{1, 1, x.data()};
     AssertEqual(Net(x1), x1);
