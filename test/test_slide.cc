@@ -287,6 +287,11 @@ int main(int, char**){
     auto x1 = BatchView<float>{1, 1, x.data()};
     AssertEqual(x1, x1);
     AssertEqual(Net(x1), x1);
+
+    auto xx = std::vector<float>{0, 0};
+    auto x2 = BatchView<float>{1, 2, x.data()};
+    AssertEqual(x2, x2);
+    AssertEqual(Net(x2), x2);
   }, "Network");
 
   return test.Run();
