@@ -281,7 +281,7 @@ int main(int, char**){
   }, "Dense Layer");
 
   test.Add([&](){
-    auto Network(1, std::vector<std::size_t>{1}, 10, &wta, opt, sch);
+    auto Net = Network<float>(1, std::vector<std::size_t>{1}, 10, &wta, opt, sch);
   }, "Network");
 
   return test.Run();
