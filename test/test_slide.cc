@@ -264,6 +264,12 @@ int main(int, char**){
     auto hidden = std::shared_ptr<Layer<float>>{new DenseLayer<float>{dsize, dsize, a, L, &wta, opt}};
     auto output = std::shared_ptr<Layer<float>>{new OutputLayer<float>{dsize}};
 
+    input->set_next(hidden);
+    hidden->set_prev(input);
+
+    hidden->set_next(output);
+    output->set_prev(hidden);
+
     auto x = Data<float>{dsize};
     input->reset(x.size());
     hidden->reset(x.size());
