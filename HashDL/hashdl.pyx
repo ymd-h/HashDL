@@ -23,7 +23,7 @@ cdef class SGD(Optimizer):
         if rl < 0:
             raise ValueError(f"Learning Rate (rl) must be positive: {rl}")
 
-        self.opt = shared_ptr[slide.Optimizer[float](<slide.Optimizer[float]*> new slide.SGD[float](rl, decay))
+        self.opt = shared_ptr[slide.Optimizer[float]](<slide.Optimizer[float]*> new slide.SGD[float](rl, decay))
 
 
 cdef class Adam(Optimizer):
@@ -31,7 +31,7 @@ cdef class Adam(Optimizer):
         if rl < 0:
             raise ValueError(f"Learning Rate (rl) must be positive: {rl}")
 
-        self.opt = shared_ptr[slide.Optimizer[float](<slide.Optimizer[float]*> new slide.Adam[float](rl))
+        self.opt = shared_ptr[slide.Optimizer[float]](<slide.Optimizer[float]*> new slide.Adam[float](rl))
 
 
 cdef class Hash:
