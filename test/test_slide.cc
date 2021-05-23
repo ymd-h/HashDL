@@ -274,6 +274,8 @@ int main(int, char**){
     input->reset(x.size());
     hidden->reset(x.size());
     output->reset(x.size());
+
+    AssertEqual(input->forward(0, x), x);
   }, "Dense Layer");
 
   return test.Run();
