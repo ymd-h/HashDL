@@ -9,6 +9,7 @@ int main(int, char**){
   auto opt = std::shared_ptr<Optimizer<float>>(new SGD<float>{1});
   auto a = std::shared_ptr<Activation<float>>{new Linear<float>{}};
   auto wta = WTAFunc<float>{8, 1};
+  auto sch = std::shared_ptr<Scheduler>{new ConstantFrequency{1}};
 
   test.Add([&](){
     auto p = Param<float>{opt};
