@@ -35,20 +35,20 @@ cdef class Adam(Optimizer):
 
 
 cdef class Hash:
-    cdef slide.HashFunc[float] *hash
+    cdef shared_ptr[slide.HashFunc[float]] hash
 
-    cdef slide.HashFunc[float]* ptr(self):
+    cdef shared_ptr[slide.HashFunc[float]] ptr(self):
         return self.hash
 
 
 cdef class WTA(Hash):
     def __cinit__(self, bin_size, sample_size):
-        self.hash = <slide.HashFunc[float]*> new slide.WTAFunc[float](bin_size, sample_size)
+        self.hash = shared_ptr[slide.HashFunc[float]](<slide.HashFunc[float]*> new slide.WTAFunc[float](bin_size, sample_size))
 
 
 cdef class DWTA(Hash):
     def __cinit__(self, bin_size, sample_size, max_attempt=100):
-        self.hash = <slide.HashFunc[float]*> new slide.DWTAFunc[float](bin_size, sample_size, max_attempt)
+        self.hash = shared_ptr[slide.HashFunc[float]](<slide.HashFunc[float]*> new slide.DWTAFunc[float](bin_size, sample_size, max_attempt))
 
 
 cdef class Scheduler:
