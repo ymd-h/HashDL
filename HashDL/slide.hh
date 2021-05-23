@@ -9,6 +9,7 @@
 #include "optimizer.hh"
 #include "hash.hh"
 #include "scheduler.hh"
+#include "initializer.hh"
 
 namespace HashDL {
   template<typename T> class Param {
@@ -48,12 +49,12 @@ namespace HashDL {
 		      [&](){ return Param_t{new Param<T>{o}}; });
     }
     Weight(std::size_t N, const std::shared_ptr<Optimizer<T>>& o,
-	   std::function<T(void)> f)
+	   std::shared_ptr<Initializer<T>> f)
           : w{}, b{new Param<T>{o}}
     {
       w.reserve(N);
       std::generate_n(std::back_inserter(w), N,
-		      [&](){ return Param_t{new Param<T>{o, f()}}; });
+		      [&](){ return Param_t{new Param<T>{o, (*f)()}}; });
     }
     Weight(const Weight&) = default;
     Weight(Weight&&) = default;
@@ -92,7 +93,7 @@ namespace HashDL {
     Neuron(): Neuron{16, new Adam<T>{}} {}
     Neuron(std::size_t prev_units,
 	   const std::shared_ptr<Optimizer<T>>& optimizer,
-	   std::function<T()> weight_initializer = [](){ return 0; })
+	   std::shared_ptr<Initializer<T>> weight_initializer = std::shared_ptr<Initializer<T>>{new ConstantInitializer<T>{0}})
       : weight{prev_units, optimizer, weight_initializer} {}
     Neuron(const Neuron&) = default;
     Neuron(Neuron&&) = default;
@@ -278,7 +279,7 @@ namespace HashDL {
 	       std::shared_ptr<Activation<T>> f,
 	       std::size_t L, std::shared_ptr<HashFunc<T>> hash_factory,
 	       const std::shared_ptr<Optimizer<T>>& optimizer,
-	       std::function<T()> weight_initializer = [](){ return T{}; })
+	       std::shared_ptr<Initializer<T>> weight_initializer = std::shared_ptr<Initializer<T>>{new ConstantInitializer<T>{0}})
       : neuron{}, active_idx{}, hash{L, prev_units, hash_factory}, activation{f}
     {
       neuron.reserve(units);
@@ -350,18 +351,21 @@ namespace HashDL {
     Network(std::size_t input_size, std::vector<std::size_t> units, std::size_t L,
 	    std::shared_ptr<HashFunc<T>> hash, std::shared_ptr<Optimizer<T>> opt,
 	    std::shared_ptr<Scheduler> update_freq,
-	    std::shared_ptr<Activation<T>> act = std::shared_ptr<Activation<T>>{})
+	    std::shared_ptr<Activation<T>> act = std::shared_ptr<Activation<T>>{},
+	    std::shared_ptr<Initializer<T>> init = std::shared_ptr<Initializer<T>>{})
       : output_dim{units.size() > 0 ? units.back(): input_size}, layer{},
 	opt{opt}, update_freq{update_freq}
     {
       layer.reserve(units.size() + 2);
 
       if(!act){ act.reset(new ReLU<T>{}); }
+      if(!init){ init.reset(new ConstantInitializer<T>{0}); }
 
       layer.emplace_back(new InputLayer<T>{input_size});
       auto prev_units = input_size;
       for(auto& u : units){
-	layer.emplace_back(new DenseLayer<T>{prev_units, u, act, L, hash, this->opt});
+	layer.emplace_back(new DenseLayer<T>{prev_units, u, act, L, hash,
+					     this->opt, init});
 	prev_units = u;
 	auto last = layer.size() -1;
 	layer[last]->set_prev(layer[last-1]);
