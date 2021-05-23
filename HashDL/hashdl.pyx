@@ -52,16 +52,16 @@ cdef class DWTA(Hash):
 
 
 cdef class Scheduler:
-    cdef slide.Scheduler* ptr(self):
-        return <slide.Scheduler*> NULL
+    cdef shared_ptr[slide.Scheduler] ptr(self):
+        return shared_ptr[slide.Scheduler]()
 
 cdef class ConstantFrequency(Scheduler):
     cdef size_t N
     def __cinit__(self, N):
         self.N = N
 
-    cdef slide.Scheduler* ptr(self):
-        return <slide.Scheduler*> new slide.ConstantFrequency(self.N)
+    cdef shared_ptr[slide.Scheduler] ptr(self):
+        return shared_ptr[slide.Scheduler](<slide.Scheduler*> new slide.ConstantFrequency(self.N))
 
 cdef class ExponentialDecay(Scheduler):
     cdef size_t N
@@ -70,8 +70,8 @@ cdef class ExponentialDecay(Scheduler):
         self.N = N
         self.decay = decay
 
-    cdef slide.Scheduler* ptr(self):
-        return <slide.Scheduler*> new slide.ExponentialDecay[float](self.N,self.decay)
+    cdef shared_ptr[slide.Scheduler] ptr(self):
+        return shared_ptr[slide.Scheduler](<slide.Scheduler*> new slide.ExponentialDecay[float](self.N,self.decay))
 
 
 cdef class BatchWrapper:
