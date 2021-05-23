@@ -272,8 +272,7 @@ namespace HashDL {
     LSH<T> hash;
     std::shared_ptr<Activation<T>> activation;
   public:
-    DenseLayer()
-      : DenseLayer{30, new ReLU<T>{}, 50, new WTAFunc<T>{}, std::shared_ptr<Optimizer<T>>{new Adam<T>{}}}{}
+    DenseLayer() = delete;
     DenseLayer(std::size_t prev_units, std::size_t units,
 	       std::shared_ptr<Activation<T>> f,
 	       std::size_t L, HashFunc<T>* hash_factory,
