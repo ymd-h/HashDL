@@ -259,8 +259,8 @@ int main(int, char**){
   }, "Layer active index");
 
   test.Add([&](){
-    auto dsize = 1;
-    auto L = 5;
+    auto dsize = 1zu;
+    auto L = 5zu;
     auto input = std::shared_ptr<Layer<float>>{new InputLayer<float>{dsize}};
     auto hidden = std::shared_ptr<Layer<float>>{new DenseLayer<float>{dsize, dsize, a, L, &wta, opt}};
     auto output = std::shared_ptr<Layer<float>>{new OutputLayer<float>{dsize}};
