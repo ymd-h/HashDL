@@ -305,5 +305,12 @@ int main(int, char**){
     Net.backward(y1);
   }, "Network backward");
 
+  test.Add([&](){
+    auto Net = Network<float>(1, std::vector<std::size_t>{1}, 10, &wta, opt, sch, a);
+    auto x = std::vector<float>{0};
+    auto x1 = BatchView<float>{1, 1, x.data()};
+    AssertEqual(Net(x1), x1);
+  }, "Network with activation");
+
   return test.Run();
 }
