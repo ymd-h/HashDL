@@ -4,6 +4,7 @@
 from libc.stdlib cimport malloc, free
 from cython.operator cimport dereference
 from libcpp.vector cimport vector
+from libcpp.memory cimport shared_ptr
 
 cimport numpy as np
 import numpy as np
@@ -11,9 +12,9 @@ import numpy as np
 from . cimport slide
 
 cdef class Optimizer:
-    cdef slide.Optimizer[float] *opt
+    cdef share_ptr[slide.Optimizer[float]] opt
 
-    cdef slide.Optimizer[float]* ptr(self):
+    cdef shared_ptr[slide.Optimizer[float]] ptr(self):
         return self.opt
 
 
@@ -22,7 +23,7 @@ cdef class SGD(Optimizer):
         if rl < 0:
             raise ValueError(f"Learning Rate (rl) must be positive: {rl}")
 
-        self.opt = <slide.Optimizer[float]*> new slide.SGD[float](rl, decay)
+        self.opt = shared_ptr[slide.Optimizer[float](<slide.Optimizer[float]*> new slide.SGD[float](rl, decay))
 
 
 cdef class Adam(Optimizer):
@@ -30,7 +31,7 @@ cdef class Adam(Optimizer):
         if rl < 0:
             raise ValueError(f"Learning Rate (rl) must be positive: {rl}")
 
-        self.opt = <slide.Optimizer[float]*> new slide.Adam[float](rl)
+        self.opt = shared_ptr[slide.Optimizer[float](<slide.Optimizer[float]*> new slide.Adam[float](rl))
 
 
 cdef class Hash:
