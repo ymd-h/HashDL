@@ -1,4 +1,5 @@
 from libcpp.vector cimport vector
+from libcpp.memory cimport shared_ptr
 
 cdef extern from "slide.hh" namespace "HashDL":
     cdef cppclass BatchData[T]:
@@ -30,7 +31,8 @@ cdef extern from "slide.hh" namespace "HashDL":
         ExponentialDecay() except +
         ExponentialDecay(size_t, T) except +
     cdef cppclass Network[T]:
-        Network(size_t&, vector[size_t]&, size_t&,
-                HashFunc[T]*, Optimizer[T]*, Scheduler*) except +
+        Network(size_t, vector[size_t], size_t, HashFunc[T]*,
+                shared_ptr[Optimizer[T]], shared_ptr[Scheduler],
+                shared_ptr[Activation[T]] a=*) except +
         BatchData[T] operator()(const BatchView[T]&) except +
         void backward(const BatchView[T]&) except +
