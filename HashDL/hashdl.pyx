@@ -148,6 +148,7 @@ cdef class Network:
         self.Y = dereference(self.net)(dereference(view))
         self.y.set(&self.Y)
 
+        del view
         return np.asarray(self.y)
 
     def backward(self, dL_dy):
@@ -159,3 +160,4 @@ cdef class Network:
                                                                        &dl_dy[0,0])
 
         self.net.backward(dereference(view))
+        del view
