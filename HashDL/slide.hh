@@ -128,7 +128,7 @@ namespace HashDL {
   private:
     const std::size_t L;
     const std::size_t data_size;
-    HashFunc<T>* hash_factory;
+    std::shared_ptr<HashFunc<T>> hash_factory;
     using hash_ptr = std::unique_ptr<Hash<T>>;
     std::vector<hash_ptr> hash;
     std::vector<std::unordered_multimap<hashcode_t, std::size_t>> backet;
@@ -136,7 +136,8 @@ namespace HashDL {
     std::size_t neuron_size;
   public:
     LSH(): LSH(50, DWTAFunc<T>{8, 8}) {}
-    LSH(std::size_t L, std::size_t data_size, HashFunc<T>* hash_factory)
+    LSH(std::size_t L, std::size_t data_size,
+	std::shared_ptr<HashFunc<T>> hash_factory)
       : L{L}, data_size{data_size}, hash_factory{hash_factory}, hash{}, backet(L),
 	idx{index_vec(L)}, neuron_size{}
     {
@@ -275,7 +276,7 @@ namespace HashDL {
     DenseLayer() = delete;
     DenseLayer(std::size_t prev_units, std::size_t units,
 	       std::shared_ptr<Activation<T>> f,
-	       std::size_t L, HashFunc<T>* hash_factory,
+	       std::size_t L, std::shared_ptr<HashFunc<T>> hash_factory,
 	       const std::shared_ptr<Optimizer<T>>& optimizer)
       : neuron{}, active_idx{}, hash{L, prev_units, hash_factory}, activation{f}
     {
@@ -346,7 +347,7 @@ namespace HashDL {
   public:
     Network() = delete;
     Network(std::size_t input_size, std::vector<std::size_t> units, std::size_t L,
-	    HashFunc<T>* hash, std::shared_ptr<Optimizer<T>> opt,
+	    std::shared_ptr<HashFunc<T>> hash, std::shared_ptr<Optimizer<T>> opt,
 	    std::shared_ptr<Scheduler> update_freq,
 	    std::shared_ptr<Activation<T>> act = std::shared_ptr<Activation<T>>{})
       : output_dim{units.size() > 0 ? units.back(): input_size}, layer{},
