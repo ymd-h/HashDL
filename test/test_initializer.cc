@@ -3,6 +3,8 @@
 #include "unittest.hh"
 
 int main(int, char**){
+  using namespace HashDL;
+
   auto test = Test{};
 
   test.Add([](){
