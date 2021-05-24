@@ -17,5 +17,10 @@ int main(int, char**){
     AssertEqual(init(), 0.5);
   }, "Constant Initializer with non-zero");
 
+  test.Add([](){
+    auto init = GaussInitializer<float>{0, 1};
+    init();
+  }, "Gauss Initializer");
+
   return test.Run();
 }
