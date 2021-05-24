@@ -137,6 +137,9 @@ cdef class Network:
         self.net = new slide.Network[float](input_size, u, L,
                                             h.ptr(), opt.ptr(), sch.ptr())
 
+    def __del__(self):
+        del self.net
+
     def __call__(self, X):
         X = np.array(X, ndmin=2, copy=False, dtype=np.single, order="C")
 
