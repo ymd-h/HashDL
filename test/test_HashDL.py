@@ -163,7 +163,7 @@ class TestNetwork(unittest.TestCase):
 
         X = np.zeros((batch_size, data_size))
         Y = net(X)
-        self.assertIsInstance(Y, np.array)
+        self.assertIsInstance(Y, np.ndarray)
         self.assertEqual(Y.shape, (batch_size, 1))
 
     def test_backward(self):
