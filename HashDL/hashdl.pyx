@@ -52,73 +52,49 @@ cdef class DWTA(Hash):
 
 
 cdef class Scheduler:
+    cdef shared_ptr[slide.Scheduler] sch
+
     cdef shared_ptr[slide.Scheduler] ptr(self):
-        return shared_ptr[slide.Scheduler]()
+        return self.sch
 
 cdef class ConstantFrequency(Scheduler):
-    cdef size_t N
     def __cinit__(self, N):
-        self.N = N
-
-    cdef shared_ptr[slide.Scheduler] ptr(self):
-        return shared_ptr[slide.Scheduler](<slide.Scheduler*> new slide.ConstantFrequency(self.N))
+        self.sch = shared_ptr[slide.Scheduler](<slide.Scheduler*> new slide.ConstantFrequency(N))
 
 cdef class ExponentialDecay(Scheduler):
-    cdef size_t N
-    cdef float decay
     def __cinit__(self, N, decay):
-        self.N = N
-        self.decay = decay
-
-    cdef shared_ptr[slide.Scheduler] ptr(self):
-        return shared_ptr[slide.Scheduler](<slide.Scheduler*> new slide.ExponentialDecay[float](self.N,self.decay))
+        self.sch = shared_ptr[slide.Scheduler](<slide.Scheduler*> new slide.ExponentialDecay[float](N,decay))
 
 cdef class Activation:
+    cdef shared_ptr[slide.Activation[float]] act
     cdef shared_ptr[slide.Activation[float]] ptr(self):
-        return shared_ptr[slide.Activation[float]]()
+        return self.act
 
 cdef class Linear(Activation):
     def __cinit__(self):
-        pass
-
-    cdef shared_ptr[slide.Activation[float]] ptr(self):
-        return shared_ptr[slide.Activation[float]](<slide.Activation[float]*> new slide.Linear[float]())
+        self.act = shared_ptr[slide.Activation[float]](<slide.Activation[float]*> new slide.Linear[float]())
 
 cdef class ReLU(Activation):
     def __cinit__(self):
-        pass
-
-    cdef shared_ptr[slide.Activation[float]] ptr(self):
-        return shared_ptr[slide.Activation[float]](<slide.Activation[float]*> new slide.ReLU[float]())
+        self.act = shared_ptr[slide.Activation[float]](<slide.Activation[float]*> new slide.ReLU[float]())
 
 cdef class Sigmoid(Activation):
     def __cinit__(self):
-        pass
-
-    cdef shared_ptr[slide.Activation[float]] ptr(self):
-        return shared_ptr[slide.Activation[float]](<slide.Activation[float]*> new slide.Sigmoid[float]())
+        self.act = shared_ptr[slide.Activation[float]](<slide.Activation[float]*> new slide.Sigmoid[float]())
 
 cdef class Initializer:
+    cdef shared_ptr[slide.Initializer[float]] init
+
     cdef shared_ptr[slide.Initializer[float]](self):
-        return shared_ptr[slide.Initializer[float]]()
+        return self.init
 
 cdef class ConstantInitializer(Initializer):
-    cdef float v
     def __cinit__(self, v):
-        self.v = v
-
-    cdef shared_ptr[slide.Initializer[float]](self):
-        return shared_ptr[slide.Initializer[float]](<slide.Initializer[float]*> new slide.ConstantInitializer[float](self.v))
+        self.init = shared_ptr[slide.Initializer[float]](<slide.Initializer[float]*> new slide.ConstantInitializer[float](v))
 
 cdef class GaussInitializer(Initializer):
-    cdef float mu
-    cdef float sigma
     def __cinit__(self, mu, sigma):
-        self.mu = mu
-        self.sigma = sigma
-
-    cdef shared_ptr[slide.Initializer[float]](self):
-        return shared_ptr[slide.Initializer[float]](<slide.Initializer[float]*> new slide.GaussInitializer[float](self.mu, self.sigma))
+        self.init = shared_ptr[slide.Initializer[float]](<slide.Initializer[float]*> new slide.GaussInitializer[float](mu, sigma))
 
 cdef class BatchWrapper:
     cdef slide.BatchData[float]* ptr
