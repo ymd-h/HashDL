@@ -98,6 +98,27 @@ cdef class Sigmoid(Activation):
     cdef shared_ptr[slide.Activation[float]] ptr(self):
         return shared_ptr[slide.Activation[float]](<slide.Activation[float]*> new slide.Sigmoid[float]())
 
+cdef class Initializer:
+    cdef shared_ptr[slide.Initializer[float]](self):
+        return shared_ptr[slide.Initializer[float]]()
+
+cdef class ConstantInitializer(Initializer):
+    cdef float v
+    def __cinit__(self, v):
+        self.v = v
+
+    cdef shared_ptr[slide.Initializer[float]](self):
+        return shared_ptr[slide.Initializer[float]](<slide.Initializer[float]*> new slide.ConstantInitializer[float](self.v))
+
+cdef class GaussInitializer(Initializer):
+    cdef float mu
+    cdef float sigma
+    def __cinit__(self, mu, sigma):
+        self.mu = mu
+        self.sigma = sigma
+
+    cdef shared_ptr[slide.Initializer[float]](self):
+        return shared_ptr[slide.Initializer[float]](<slide.Initializer[float]*> new slide.GaussInitializer[float](self.mu, self.sigma))
 
 cdef class BatchWrapper:
     cdef slide.BatchData[float]* ptr
@@ -141,7 +162,8 @@ cdef class Network:
     cdef BatchWrapper y
 
     def __cinit__(self, input_size, units=(30, 30, 30), L = 50,
-                  hash = None, optimizer = None, scheduler = None, *args, **kwargs):
+                  hash = None, optimizer = None, scheduler = None,
+                  activation = None, initializer = None, *args, **kwargs):
 
         if input_size <= 0:
             raise ValueError(f"input_size must be positive: {input_size}")
