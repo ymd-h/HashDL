@@ -137,6 +137,8 @@ cdef class Network:
         self.net = new slide.Network[float](input_size, u, L,
                                             h.ptr(), opt.ptr(), sch.ptr())
 
+        self.y = BatchWrapper()
+
     def __del__(self):
         del self.net
 
