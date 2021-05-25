@@ -40,11 +40,20 @@ cdef extern from "slide.hh" namespace "HashDL":
         ReLU() except +
     cdef cppclass Sigmoid[T]:
         Sigmoid() except +
+    cdef cppclass Initializer[T]:
+        Initializer() except +
+    cdef cppclass ConstantInitializer[T]:
+        ConstantInitializer(size_t) except +
+    cdef cppclass GaussInitializer[T]:
+        GaussInitializer(T,T) except +
     cdef cppclass Network[T]:
         Network(size_t, vector[size_t], size_t, shared_ptr[HashFunc[T]],
                 shared_ptr[Optimizer[T]], shared_ptr[Scheduler]) except +
         Network(size_t, vector[size_t], size_t, shared_ptr[HashFunc[T]],
                 shared_ptr[Optimizer[T]], shared_ptr[Scheduler],
                 shared_ptr[Activation[T]]) except +
+        Network(size_t, vector[size_t], size_t, shared_ptr[HashFunc[T]],
+                shared_ptr[Optimizer[T]], shared_ptr[Scheduler],
+                shared_ptr[Activation[T]], share_ptr[Initializer[T]]) except +
         BatchData[T] operator()(const BatchView[T]&) except +
         void backward(const BatchView[T]&) except +
