@@ -166,5 +166,18 @@ class TestNetwork(unittest.TestCase):
         self.assertIsInstance(Y, np.array)
         self.assertEqual(Y.shape, (batch_size, 1))
 
+    def test_backward(self):
+        data_size = 2
+        batch_size = 1
+
+        net = HashDL.Network(data_size, units=(1,), L = 5,
+                             optimizer = HashDL.Adam(),
+                             scheduler = HashDL.ConstantFrequency(1),
+                             hash = HashDL.DWTA(8, 1))
+
+        X = np.zeros((batch_size, data_size))
+        Y = net(X)
+        net.backward(Y)
+
 if __name__ == "__main__":
     unittest.main()
