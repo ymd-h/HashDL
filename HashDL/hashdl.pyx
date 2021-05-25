@@ -94,6 +94,8 @@ cdef class BatchWrapper:
         self.strides[0] = self.ptr.get_data_size() * self.itemsize
         self.strides[1] = self.itemsize
 
+        buffer.buf = <char *> &dereference(self.ptr.begin())
+        buffer.format = 'f'
         buffer.len = (self.ptr.end() - self.ptr.begin()) * self.itemsize
         buffer.readonly = 0
         buffer.ndim = 2
