@@ -10,6 +10,8 @@ cdef extern from "slide.hh" namespace "HashDL":
         size_t get_data_size()
     cdef cppclass BatchView[T]:
         BatchView(size_t, size_t, T*) except +
+        size_t get_batch_size()
+        size_t get_data_size()
     cdef cppclass HashFunc[T]:
         HashFunc() except +
     cdef cppclass WTAFunc[T]:
