@@ -73,6 +73,31 @@ cdef class ExponentialDecay(Scheduler):
     cdef shared_ptr[slide.Scheduler] ptr(self):
         return shared_ptr[slide.Scheduler](<slide.Scheduler*> new slide.ExponentialDecay[float](self.N,self.decay))
 
+cdef class Activation:
+    cdef shared_ptr[slide.Activation[float]] ptr(self):
+        return shared_ptr[slide.Activation[float]]()
+
+cdef class Linear(Activation):
+    def __cinit__(self):
+        pass
+
+    cdef shared_ptr[slide.Activation[float]] ptr(self):
+        return shared_ptr[slide.Activation[float]](<slide.Activation[float]*> new slide.Linear[float]())
+
+cdef class ReLU(Activation):
+    def __cinit__(self):
+        pass
+
+    cdef shared_ptr[slide.Activation[float]] ptr(self):
+        return shared_ptr[slide.Activation[float]](<slide.Activation[float]*> new slide.ReLU[float]())
+
+cdef class Sigmoid(Activation):
+    def __cinit__(self):
+        pass
+
+    cdef shared_ptr[slide.Activation[float]] ptr(self):
+        return shared_ptr[slide.Activation[float]](<slide.Activation[float]*> new slide.Sigmoid[float]())
+
 
 cdef class BatchWrapper:
     cdef slide.BatchData[float]* ptr
