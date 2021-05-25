@@ -185,9 +185,16 @@ cdef class Network:
         cdef float decay = 1e-3
         cdef Scheduler sch = scheduler or ExponentialDecay(N, decay)
 
+        cdef Activation act = activation or ReLU()
+
+        cdef float mu = 0
+        cdef float sigma = 1.0
+        cdef Initializer init = initializer or GaussInitializer(mu, sigma)
+
         cdef vector[size_t] u = units
         self.net = new slide.Network[float](input_size, u, L,
-                                            h.ptr(), opt.ptr(), sch.ptr())
+                                            h.ptr(), opt.ptr(), sch.ptr(),
+                                            act.ptr(), init.ptr())
 
         self.y = BatchWrapper()
 
