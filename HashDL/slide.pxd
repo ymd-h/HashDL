@@ -34,6 +34,7 @@ cdef extern from "slide.hh" namespace "HashDL":
         ExponentialDecay(size_t, T) except +
     cdef cppclass Activation[T]:
         Activation() except +
+        T operator()(T) except +
     cdef cppclass Linear[T]:
         Linear() except +
     cdef cppclass ReLU[T]:
@@ -42,6 +43,7 @@ cdef extern from "slide.hh" namespace "HashDL":
         Sigmoid() except +
     cdef cppclass Initializer[T]:
         Initializer() except +
+        T operator()(T) except +
     cdef cppclass ConstantInitializer[T]:
         ConstantInitializer(size_t) except +
     cdef cppclass GaussInitializer[T]:
