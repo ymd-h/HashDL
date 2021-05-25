@@ -153,13 +153,13 @@ class TestNetwork(unittest.TestCase):
         net = HashDL.Network(16, scheduler=HashDL.ExponentialDecay(50, 1e-3))
 
     def test_call(self):
-        data_size = 16
-        batch_size = 32
+        data_size = 2
+        batch_size = 1
 
-        net = HashDL.Network(data_size, units=(30, 30), L = 50,
+        net = HashDL.Network(data_size, units=(1,), L = 5,
                              optimizer = HashDL.Adam(),
-                             scheduler = HashDL.ExponentialDecay(50, 1e-3),
-                             hash = HashDL.DWTA(8, 8))
+                             scheduler = HashDL.ConstantFrequency(1),
+                             hash = HashDL.DWTA(8, 1))
 
         X = np.zeros((batch_size, data_size))
         Y = net(X)
