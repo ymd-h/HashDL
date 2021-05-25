@@ -72,7 +72,7 @@ cdef class Activation:
 
     def __call__(self, x):
         cdef float _x = x
-        return self.act.call(_x)
+        return dereference(self.act).call(_x)
 
 cdef class Linear(Activation):
     def __cinit__(self):
