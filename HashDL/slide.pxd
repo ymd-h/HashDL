@@ -43,7 +43,7 @@ cdef extern from "slide.hh" namespace "HashDL":
         Sigmoid() except +
     cdef cppclass Initializer[T]:
         Initializer() except +
-        T operator()(T) except +
+        T operator()() except +
     cdef cppclass ConstantInitializer[T]:
         ConstantInitializer(size_t) except +
     cdef cppclass GaussInitializer[T]:
