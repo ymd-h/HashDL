@@ -89,7 +89,7 @@ cdef class Sigmoid(Activation):
 cdef class Initializer:
     cdef shared_ptr[slide.Initializer[float]] init
 
-    cdef shared_ptr[slide.Initializer[float]](self):
+    cdef shared_ptr[slide.Initializer[float]] ptr(self):
         return self.init
 
     def __call__(self):
