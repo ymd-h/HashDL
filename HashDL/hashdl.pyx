@@ -174,7 +174,10 @@ cdef class Network:
         if L <= 0:
             raise ValueError(f"L must be positive: {L}")
 
-        cdef Hash h = hash or DWTA(8, 8)
+        cdef size_t bin_size = 8
+        cdef size_t sample_size = min(8, input_size)
+        cdef Hash h = hash or DWTA(bin_size, input_size)
+
         cdef float rl = 1e-4
         cdef Optimizer opt = optimizer or Adam(rl)
 
