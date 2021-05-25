@@ -70,6 +70,10 @@ cdef class Activation:
     cdef shared_ptr[slide.Activation[float]] ptr(self):
         return self.act
 
+    def __call__(self, x):
+        cdef float _x = x
+        return dereference(self.act)(_x)
+
 cdef class Linear(Activation):
     def __cinit__(self):
         self.act = shared_ptr[slide.Activation[float]](<slide.Activation[float]*> new slide.Linear[float]())
@@ -87,6 +91,9 @@ cdef class Initializer:
 
     cdef shared_ptr[slide.Initializer[float]](self):
         return self.init
+
+    def __call__(self):
+        return dereference(self.init)()
 
 cdef class ConstantInitializer(Initializer):
     def __cinit__(self, v):
