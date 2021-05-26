@@ -126,6 +126,15 @@ class TestActivation(unittest.TestCase):
         act = HashDL.Sigmoid()
         self.assertEqual(act(0.0), 0.0)
 
+class TestInitializer(unittest.TestCase):
+    def test_ConstantInitializer(self):
+        init = HashDL.ConstantInitializer(5)
+        self.assertEqual(init(), 5)
+
+    def test_GaussianInitializer(self):
+        init = HashDL.GaussInitializer(0, 1.0)
+        init()
+
 class TestNetwork(unittest.TestCase):
     def test_default_network(self):
         net = HashDL.Network(16)
