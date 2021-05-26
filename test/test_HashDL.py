@@ -124,7 +124,7 @@ class TestActivation(unittest.TestCase):
 
     def test_Sigmoid(self):
         act = HashDL.Sigmoid()
-        self.assertEqual(act(0.0), 0.0)
+        self.assertEqual(act(0.0), 0.5)
 
 class TestInitializer(unittest.TestCase):
     def test_ConstantInitializer(self):
