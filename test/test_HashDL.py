@@ -109,6 +109,22 @@ class TestExponentialDecay(unittest.TestCase):
         with self.assertRaises(TypeError):
             ed = HashDL.ExponentialDecay(50, None)
 
+class TestActivation(unittest.TestCase):
+    def test_Linear(self):
+        act = HashDL.Linear()
+        self.assertEqual(act(0.0), 0.0)
+        self.assertEqual(act(1.0), 1.0)
+        self.assertEqual(act(-1.0), -1.0)
+
+    def test_ReLU(self):
+        act = HashDL.ReLU()
+        self.assertEqual(act(0.0), 0.0)
+        self.assertEqual(act(1.0), 1.0)
+        self.assertEqual(act(-1.0), 0.0)
+
+    def test_Sigmoid(self):
+        act = HashDL.Sigmoid()
+        self.assertEqual(act(0.0), 0.0)
 
 class TestNetwork(unittest.TestCase):
     def test_default_network(self):
