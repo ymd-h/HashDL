@@ -265,6 +265,28 @@ int main(int, char**){
   }, "Dense Layer");
 
   test.Add([&](){
+    auto dsize = 2;
+    auto L = 5;
+    auto input = std::shared_ptr<Layer<float>>{new InputLayer<float>{dsize}};
+    auto hidden = std::shared_ptr<Layer<float>>{new DenseLayer<float>{dsize, dsize, a, L, wta, opt}};
+    auto output = std::shared_ptr<Layer<float>>{new OutputLayer<float>{dsize}};
+
+    input->set_next(hidden);
+    hidden->set_prev(input);
+
+    hidden->set_next(output);
+    output->set_prev(hidden);
+
+    auto x = Data<float>{dsize};
+    input->reset(x.size());
+    hidden->reset(x.size());
+    output->reset(x.size());
+
+    AssertEqual(input->forward(0, x), x);
+    output->backward(0, x);
+  },"Multi unite Dense");
+
+  test.Add([&](){
     auto Net = Network<float>(1, std::vector<std::size_t>{1}, 10, wta, opt, sch);
 
     auto x = std::vector<float>{0};
