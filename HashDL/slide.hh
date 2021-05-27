@@ -269,6 +269,7 @@ namespace HashDL {
 
   template<typename T> class DenseLayer : public Layer<T> {
   private:
+    std::size_t prev_units;
     std::vector<Neuron<T>> neuron;
     std::vector<idx_t> active_idx;
     LSH<T> hash;
@@ -280,7 +281,8 @@ namespace HashDL {
 	       std::size_t L, std::shared_ptr<HashFunc<T>> hash_factory,
 	       const std::shared_ptr<Optimizer<T>>& optimizer,
 	       std::shared_ptr<Initializer<T>> weight_initializer = std::shared_ptr<Initializer<T>>{new ConstantInitializer<T>{0}})
-      : neuron{}, active_idx{}, hash{L, prev_units, hash_factory}, activation{f}
+      : prev_units{prev_units}, neuron{}, active_idx{},
+	hash{L, prev_units, hash_factory}, activation{f}
     {
       neuron.reserve(units);
       std::generate_n(std::back_inserter(neuron), units,
@@ -323,7 +325,11 @@ namespace HashDL {
     }
 
     void reset(std::size_t batch_size) override {
-      Layer<T>::reset(batch_size);
+      this->Y.clear();
+      this->Y.reserve(batch_size);
+      for(std::size_t n=0; n<batch_size; ++n){
+	this->Y.emplace_back(prev_units);
+      }
 
       active_idx.clear();
       active_idx.resize(batch_size);
