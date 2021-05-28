@@ -22,7 +22,7 @@ opt = HashDL.Adam()
 act = HashDL.ReLU()
 sch = HashDL.ExponentialDecay(5, 1e-3)
 init = HashDL.GaussInitializer(0.0, 1.0)
-hash = HashDL.DWTA(8, 1)
+hash = HashDL.DWTA(8, 5)
 net = HashDL.Network(input_size = d, units = (10, 10, d), L = 5,
                      optimizer = opt, activation = act,
                      scheduler = sch, initializer = init,
@@ -30,7 +30,7 @@ net = HashDL.Network(input_size = d, units = (10, 10, d), L = 5,
 
 
 batch_size = 32
-epoch = 100
+epoch = 1000
 
 idx = np.arange(N,dtype=int)
 
