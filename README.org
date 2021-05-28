@@ -22,7 +22,7 @@ We provide
 
 
 We don't provide
-- explicit CPU optimized code like AVX
+- Explicit CPU optimized code like AVX
   - We just rely on compiler optimization
 
 
