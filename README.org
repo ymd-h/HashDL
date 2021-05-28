@@ -18,7 +18,7 @@ This repository is non-official third-paty re-implementation of SLIDE[fn:1].
 We provide
 - Python package
 - Hash based Deep Learning
-- Parallel computing based on C++20 parallel STL
+- Parallel computing based on C++17 parallel STL
 
 
 We don't provide
