@@ -73,6 +73,7 @@ class LazyImportBuildExtCommand(build_ext):
 
 setup(name="HashDL",
       version="0.0.0",
+      author="YAMADA, Hiroyuki",
       install_requires=["numpy"],
       setup_requires=setup_requires,
       url="https://gitlab.com/ymd_h/hashdl",
