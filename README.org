@@ -26,6 +26,46 @@ We don't provide
   - We just rely on compiler optimization
 
 
+* Install
+
+There are two options, "Install from PyPI" and "Install from Source".
+For ordinary user, "Install from PyPI" is recommended.
+
+For both case, sufficient C++ compiler is neccessary.
+
+** Requirement
+- Recent C++ compiler with parallel STL algorithm support
+  - GCC 9.1 or newer together with Intel TBB
+- Python 3
+
+
+Requirements can be installed on Docker image [[https://hub.docker.com/_/gcc][gcc:10]].
+
+#+begin_src shell
+# On local machine
+docker run -it gcc:10 bash
+
+# On gcc:10 image
+apt update && apt install -y python3-pip libtbb-dev
+#+end_src
+
+
+** Install from PyPI
+
+#+begin_src shell
+pip install HashDL
+#+end_src
+
+
+** Install from Source
+
+#+begin_src shell
+git clone https://gitlab.com/ymd_h/hashdl.git HashDL
+cd HashDL
+pip install .
+#+end_src
+
+
 * Footnotes
 
-[fn:1] [[https://mlsys.org/Conferences/2020/Schedule?showEvent=1410][B. Chen /et al/., "SLIDE : In Defense of Smart Algorithms over Hardware Acceleration for Large-Scale Deep Learning Systems", MLSys 2020]] ([[https://arxiv.org/abs/1903.03129][arXiv]], [[https://github.com/keroro824/HashingDeepLearning][code]]) 
+[fn:1] [[https://mlsys.org/Conferences/2020/Schedule?showEvent=1410][B. Chen /et al/., "SLIDE : In Defense of Smart Algorithms over Hardware Acceleration for Large-Scale Deep Learning Systems", MLSys 2020]] ([[https://arxiv.org/abs/1903.03129][arXiv]], [[https://github.com/keroro824/HashingDeepLearning][code]])
