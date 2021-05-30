@@ -65,7 +65,32 @@ cd HashDL
 pip install .
 #+end_src
 
+* Features
+
+- Neural Network
+  - hash-based sparse dense layer
+- Activation
+  - ReLU
+  - linear (no activation)
+  - sigmoid
+- Optimizer
+  - SGD
+  - Adam[fn:3]
+- Weight Initializer
+  - constant
+  - Gauss distribution
+- Hash for similarity
+  - WTA
+  - DWTA[fn:2]
+- Scheduler for hash update
+  - constant
+  - exponential decay
+
+
+In the current architecture, CNN is impossible.
 
 * Footnotes
 
+[fn:3] [[https://iclr.cc/archive/www/doku.php%3Fid=iclr2015:main.html][D. P. Kingma and J. Ba, "Adam: A Method for Stochastic Optimization", ICLR (2015)]] ([[https://arxiv.org/abs/1412.6980][arXiv]])
+[fn:2] [[http://auai.org/uai2018/proceedings/papers/321.pdf][B. Chen /et al/., "Densified Winner Take All (WTA) Hashing for Sparse Datasets", Uncertainty in artificial intelligence (2018)]]
 [fn:1] [[https://mlsys.org/Conferences/2020/Schedule?showEvent=1410][B. Chen /et al/., "SLIDE : In Defense of Smart Algorithms over Hardware Acceleration for Large-Scale Deep Learning Systems", MLSys 2020]] ([[https://arxiv.org/abs/1903.03129][arXiv]], [[https://github.com/keroro824/HashingDeepLearning][code]])
