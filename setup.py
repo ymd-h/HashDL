@@ -70,10 +70,20 @@ class LazyImportBuildExtCommand(build_ext):
                                                       annotate=True)
         super().finalize_options()
 
+description = "Hash-based Deep Learning"
+README = os.path.join(os.path.abspath(os.path.dirname(__file__)),'README.md')
+if os.path.exists(README):
+    with open(README,encoding='utf-8') as f:
+        long_description = f.read()
+    long_description_content_type='text/markdown'
+else:
+    warnings.warn("No README.md")
+    long_description =  description
+    long_description_content_type='text/plain'
 
 setup(name="HashDL",
       version="1.0.0",
-      description="Hash-based Deep Learning",
+      description=description,
       author="YAMADA, Hiroyuki",
       install_requires=["numpy"],
       setup_requires=setup_requires,
@@ -91,4 +101,6 @@ setup(name="HashDL",
       cmdclass={'build_ext': LazyImportBuildExtCommand},
       ext_modules=ext_modules,
       include_dirs=["HashDL"],
-      packages=["HashDL"])
+      packages=["HashDL"]
+      long_description=long_description,
+      long_description_content_type=long_description_content_type)
