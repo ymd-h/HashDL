@@ -35,8 +35,8 @@ For both case, sufficient C++ compiler is neccessary.
 
 ** Requirement
 - Recent C++ compiler with parallel STL algorithm support
-  - GCC 9.1 or newer together with Intel TBB
-- Python 3
+  - [[https://gcc.gnu.org/][GCC]] 9.1 or newer together with [[https://github.com/oneapi-src/oneTBB][Intel TBB]]
+- [[https://www.python.org/][Python]] 3
 
 
 Requirements can be installed on Docker image [[https://hub.docker.com/_/gcc][gcc:10]].
