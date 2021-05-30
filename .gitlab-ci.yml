@@ -10,6 +10,7 @@ stages:
   - cpptest
   - build
   - pytest
+  - upload
 
 
 activation.cc:
@@ -106,3 +107,24 @@ unittest:
     - apt update && apt install -y python3-dev python3-pip libtbb-dev
     - pip3 install dist/HashDL-*.whl
     - python3 test/test_HashDL.py
+
+README_MD:
+  image: iquiw/alpine-emacs
+  stage: build
+  script:
+    - emacs --batch README.org --eval '(org-md-export-to-markdown)'
+  artifacts:
+    paths:
+      - README.md
+
+pypi:
+  image: gcc:10
+  stage: upload
+  script:
+    - apt update && apt install -y python3-dev python3-pip libtbb-dev
+    - python3 setup.py sdist
+    - twine upload dist/HashDL-*.tar.gz
+  only:
+    - tags
+  except:
+    - branches
