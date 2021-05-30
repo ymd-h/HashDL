@@ -101,6 +101,6 @@ setup(name="HashDL",
       cmdclass={'build_ext': LazyImportBuildExtCommand},
       ext_modules=ext_modules,
       include_dirs=["HashDL"],
-      packages=["HashDL"]
+      packages=["HashDL"],
       long_description=long_description,
       long_description_content_type=long_description_content_type)
