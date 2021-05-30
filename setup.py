@@ -73,6 +73,7 @@ class LazyImportBuildExtCommand(build_ext):
 
 setup(name="HashDL",
       version="1.0.0",
+      description="Hash-based Deep Learning",
       author="YAMADA, Hiroyuki",
       install_requires=["numpy"],
       setup_requires=setup_requires,
