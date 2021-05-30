@@ -1,5 +1,6 @@
 import os
 import platform
+import warnings
 
 from setuptools import Extension, setup, find_packages
 from setuptools.command.build_ext import build_ext
