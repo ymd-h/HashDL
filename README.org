@@ -22,8 +22,8 @@ We provide
 
 
 We don't provide
-- Explicit CPU optimized code like AVX
-  - We just rely on compiler optimization
+- Explicit CPU optimized code like AVX (We just rely on compiler optimization)
+- Compiled binary (You need to compile by yourself)
 
 
 * Install
