@@ -89,6 +89,29 @@ pip install .
 
 In the current architecture, CNN is impossible.
 
+* Implementation
+
+The [[https://github.com/keroro824/HashingDeepLearning][official reference implementation]] focused on performance and
+accepted some "dirtyness" like hard-coded magic number for algotihm
+selection and unmanaged memory allocation.
+
+We accept some (but hopefully small) overhead and improve
+maintenability in terms of software;
+
+- Polymorphism with inheritance and virtual function
+- RAII and smart pointer for memory management
+
+These archtecture allows us to construct and manage C++ class from
+Python without recompile.
+
+
+We also rely recent C++ standard and compiler optimization;
+
+- Parallel STL from C++17
+- Because of RVO (or at least move semantics), returning ~std::vector~
+  is not so much costful as it was.
+
+
 * Footnotes
 
 [fn:3] [[https://iclr.cc/archive/www/doku.php%3Fid=iclr2015:main.html][D. P. Kingma and J. Ba, "Adam: A Method for Stochastic Optimization", ICLR (2015)]] ([[https://arxiv.org/abs/1412.6980][arXiv]])
