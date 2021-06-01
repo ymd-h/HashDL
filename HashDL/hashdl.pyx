@@ -42,13 +42,13 @@ cdef class Hash:
 
 
 cdef class WTA(Hash):
-    def __cinit__(self, bin_size, sample_size):
-        self.hash = shared_ptr[slide.HashFunc[float]](<slide.HashFunc[float]*> new slide.WTAFunc[float](bin_size, sample_size))
+    def __cinit__(self, nbins, sample_size):
+        self.hash = shared_ptr[slide.HashFunc[float]](<slide.HashFunc[float]*> new slide.WTAFunc[float](nbins, sample_size))
 
 
 cdef class DWTA(Hash):
-    def __cinit__(self, bin_size, sample_size, max_attempt=100):
-        self.hash = shared_ptr[slide.HashFunc[float]](<slide.HashFunc[float]*> new slide.DWTAFunc[float](bin_size, sample_size, max_attempt))
+    def __cinit__(self, nbins, sample_size, max_attempt=100):
+        self.hash = shared_ptr[slide.HashFunc[float]](<slide.HashFunc[float]*> new slide.DWTAFunc[float](nbins, sample_size, max_attempt))
 
 
 cdef class Scheduler:
@@ -157,9 +157,9 @@ cdef class Network:
         if L <= 0:
             raise ValueError(f"L must be positive: {L}")
 
-        cdef size_t bin_size = 8
-        cdef size_t sample_size = min(8, input_size)
-        cdef Hash h = hash or DWTA(bin_size, input_size)
+        cdef size_t nbins = 8
+        cdef size_t sample_size = 8
+        cdef Hash h = hash or DWTA(nbins, input_size)
 
         cdef float rl = 1e-4
         cdef Optimizer opt = optimizer or Adam(rl)
