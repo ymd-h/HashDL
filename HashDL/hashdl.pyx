@@ -209,6 +209,35 @@ cdef class Network:
 
         self.y = BatchWrapper()
 
+    def __init__(self, input_size, units=(30, 30, 30), L = 50,
+                 hash = None, optimizer = None, scheduler = None,
+                 activation = None, initializer = None, *args, **kwargs):
+        """
+        Initialize SLIDE network
+
+        Parameters
+        ----------
+        input_size : int
+            Input data size. The input data must be flattened.
+        units : list of int, optional
+            Number of units at hidden layers. The default is `(30, 30, 30)`
+        L : int, optional
+            Number of hash tables in a single dense layer. The default is `50`
+        hash : HashDL.Hash, optional
+            Locality sensitive hash function. The default is `HashDL.DWTA(8, 8)`
+        optimizer : HashDL.Optimizer, optional
+            Neural network optimizer. The default `HashDL.Adam(1e-4)`
+        scheduler : HashDL.Scheduler, optional
+            Scheduler for re-hash. The default is `HashDL.ExponentialDecay(50, 1e-3)`
+        activation : HashDL.Activation, optional
+            Activation function for hidden layer.
+            The default is `HashDL.ReLU()`
+        initializer : HashDL.initializer, optional
+            Weight initializer for hidden layers.
+            The default is `HashDL.GaussInitializer(0, 1.0)`
+        """
+        pass
+
     def __del__(self):
         del self.net
 
