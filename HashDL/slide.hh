@@ -144,9 +144,7 @@ namespace HashDL {
     {
       hash.reserve(L);
       std::generate_n(std::back_inserter(hash), L,
-		      [&](){
-			return hash_ptr{hash_factory->GetHash(data_size)};
-		      });
+		      [&](){ return hash_ptr{hash_factory->GetHash(data_size)}; });
     }
     LSH(const LSH&) = default;
     LSH(LSH&&) = default;
