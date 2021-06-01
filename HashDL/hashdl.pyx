@@ -45,10 +45,38 @@ cdef class WTA(Hash):
     def __cinit__(self, nbins, sample_size):
         self.hash = shared_ptr[slide.HashFunc[float]](<slide.HashFunc[float]*> new slide.WTAFunc[float](nbins, sample_size))
 
+    def __init__(self, nbins, sample_size):
+        """Initialize WTA hash
+
+        Parameters
+        ----------
+        nbins : int
+            Number of LSH bin (aka. hash) in single table.
+        sample_size : int
+            Number of samples from input in single bin.
+            i.e. `permute(index)[:sample_size]` is checked.
+        """
+        pass
+
 
 cdef class DWTA(Hash):
     def __cinit__(self, nbins, sample_size, max_attempt=100):
         self.hash = shared_ptr[slide.HashFunc[float]](<slide.HashFunc[float]*> new slide.DWTAFunc[float](nbins, sample_size, max_attempt))
+
+    def __init__(self, nbins, sample_size, max_attempt=100):
+        """Initialize Densified WTA hash
+
+        Parameters
+        ----------
+        nbins : int
+            Number of LSH bin (aka. hash) in single table.
+        sample_size : int
+            Number of samples from input in single bin.
+            i.e. `permute(index)[:sample_size]` is checked.
+        max_attempt : int, optional
+           Number of attempt to densification trial
+        """
+        pass
 
 
 cdef class Scheduler:

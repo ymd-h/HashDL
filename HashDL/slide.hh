@@ -136,7 +136,7 @@ namespace HashDL {
     idx_t idx;
     std::size_t neuron_size;
   public:
-    LSH(): LSH(50, DWTAFunc<T>{8, 8}) {}
+    LSH(): LSH(50, 1, std::shared_ptr<HashFunc<T>>(new DWTAFunc<T>{8, 8})) {}
     LSH(std::size_t L, std::size_t data_size,
 	std::shared_ptr<HashFunc<T>> hash_factory)
       : L{L}, data_size{data_size}, hash_factory{hash_factory}, hash{}, backet(L),
@@ -144,9 +144,7 @@ namespace HashDL {
     {
       hash.reserve(L);
       std::generate_n(std::back_inserter(hash), L,
-		      [&](){
-			return hash_ptr{hash_factory->GetHash(data_size)};
-		      });
+		      [&](){ return hash_ptr{hash_factory->GetHash(data_size)}; });
     }
     LSH(const LSH&) = default;
     LSH(LSH&&) = default;
