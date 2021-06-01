@@ -238,7 +238,7 @@ namespace HashDL {
     WTAFunc& operator=(WTAFunc&&) = default;
     ~WTAFunc() = default;
 
-    virtual Hash<T>* GetHash(std::size_t data_size) override {
+    Hash<T>* GetHash(std::size_t data_size) override {
       return new WTA<T>{bin_size, data_size, std::min(sample_size, data_size)};
     }
   };
@@ -258,7 +258,7 @@ namespace HashDL {
     DWTAFunc& operator=(DWTAFunc&&) = default;
     ~DWTAFunc() = default;
 
-    virtual Hash<T>* GetHash(std::size_t data_size) override {
+    Hash<T>* GetHash(std::size_t data_size) override {
       return new DWTA<T>{bin_size, data_size, std::min(sample_size, data_size), max_attempt};
       }
     };
