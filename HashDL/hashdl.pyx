@@ -158,7 +158,7 @@ cdef class Network:
             raise ValueError(f"L must be positive: {L}")
 
         cdef size_t nbins = 8
-        cdef size_t sample_size = min(8, input_size)
+        cdef size_t sample_size = 8
         cdef Hash h = hash or DWTA(nbins, input_size)
 
         cdef float rl = 1e-4
