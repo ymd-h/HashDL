@@ -2,6 +2,7 @@
 #define HASH_HH
 
 #include <cstdint>
+#include <cmath>
 #include <algorithm>
 #include <functional>
 #include <iterator>
@@ -238,7 +239,7 @@ namespace HashDL {
     ~WTAFunc() = default;
 
     virtual Hash<T>* GetHash(std::size_t data_size) override {
-      return new WTA<T>{bin_size, data_size, sample_size};
+      return new WTA<T>{bin_size, data_size, std::min(sample_size, data_size)};
     }
   };
 
@@ -258,7 +259,7 @@ namespace HashDL {
     ~DWTAFunc() = default;
 
     virtual Hash<T>* GetHash(std::size_t data_size) override {
-	return new DWTA<T>{bin_size, data_size, sample_size, max_attempt};
+      return new DWTA<T>{bin_size, data_size, std::min(sample_size, data_size), max_attempt};
       }
     };
 }
