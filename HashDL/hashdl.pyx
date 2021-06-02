@@ -242,6 +242,19 @@ cdef class Network:
         del self.net
 
     def __call__(self, X):
+        """
+        Forward calculation over batch input
+
+        Parameters
+        ----------
+        X : array-like of float
+            Input batch data. The shape must be [batch_size, input_size]
+
+        Returns
+        -------
+        Y : np.ndarray
+            Output layer's value (aka. activated last hidden layer's value)
+        """
         X = np.array(X, ndmin=2, copy=False, dtype=np.single, order="C")
 
         cdef float[:,:] x = X
