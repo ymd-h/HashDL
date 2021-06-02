@@ -42,15 +42,15 @@ cdef class Hash:
 
 
 cdef class WTA(Hash):
-    def __cinit__(self, nbins, sample_size):
-        self.hash = shared_ptr[slide.HashFunc[float]](<slide.HashFunc[float]*> new slide.WTAFunc[float](nbins, sample_size))
+    def __cinit__(self, K_hashes, sample_size):
+        self.hash = shared_ptr[slide.HashFunc[float]](<slide.HashFunc[float]*> new slide.WTAFunc[float](K_hashes, sample_size))
 
-    def __init__(self, nbins, sample_size):
+    def __init__(self, K_hashes, sample_size):
         """Initialize WTA hash
 
         Parameters
         ----------
-        nbins : int
+        K_hashes : int
             Number of LSH bin (aka. hash) in single table.
         sample_size : int
             Number of samples from input in single bin.
@@ -60,15 +60,15 @@ cdef class WTA(Hash):
 
 
 cdef class DWTA(Hash):
-    def __cinit__(self, nbins, sample_size, max_attempt=100):
-        self.hash = shared_ptr[slide.HashFunc[float]](<slide.HashFunc[float]*> new slide.DWTAFunc[float](nbins, sample_size, max_attempt))
+    def __cinit__(self, K_hashes, sample_size, max_attempt=100):
+        self.hash = shared_ptr[slide.HashFunc[float]](<slide.HashFunc[float]*> new slide.DWTAFunc[float](K_hashes, sample_size, max_attempt))
 
-    def __init__(self, nbins, sample_size, max_attempt=100):
+    def __init__(self, K_hashes, sample_size, max_attempt=100):
         """Initialize Densified WTA hash
 
         Parameters
         ----------
-        nbins : int
+        K_hashes : int
             Number of LSH bin (aka. hash) in single table.
         sample_size : int
             Number of samples from input in single bin.
@@ -185,9 +185,9 @@ cdef class Network:
         if L_tables <= 0:
             raise ValueError(f"L must be positive: {L_tables}")
 
-        cdef size_t nbins = 8
+        cdef size_t K_hashes = 8
         cdef size_t sample_size = 8
-        cdef Hash h = hash or DWTA(nbins, input_size)
+        cdef Hash h = hash or DWTA(K_hashes, input_size)
 
         cdef float rl = 1e-4
         cdef Optimizer opt = optimizer or Adam(rl)
