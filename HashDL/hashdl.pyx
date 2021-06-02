@@ -268,18 +268,18 @@ cdef class Network:
         del view
         return np.asarray(self.y)
 
-    def backward(self, dL_dy):
+    def backward(self, dL_dY):
         """
         Backward propagation of gradient.
 
         Parameters
         ----------
-        dL_dy : array-like
+        dL_dY : array-like
             Gradient of Loss against network output.
         """
-        dL_dy = np.array(dL_dy, ndmin=2, copy=False, dtype=np.single, order="C")
+        dL_dY = np.array(dL_dY, ndmin=2, copy=False, dtype=np.single, order="C")
 
-        cdef float[:,:] dl_dy = dL_dy
+        cdef float[:,:] dl_dy = dL_dY
         cdef slide.BatchView[float] *view = new slide.BatchView[float](dl_dy.shape[1],
                                                                        dl_dy.shape[0],
                                                                        &dl_dy[0,0])
