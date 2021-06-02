@@ -18,6 +18,7 @@ cdef class Optimizer:
         return self.opt
 
 
+@cython.embedsignature(True)
 cdef class SGD(Optimizer):
     def __cinit__(self, rl=1e-4, decay=1.0, *args, **kwargs):
         if rl < 0:
@@ -26,6 +27,7 @@ cdef class SGD(Optimizer):
         self.opt = shared_ptr[slide.Optimizer[float]](<slide.Optimizer[float]*> new slide.SGD[float](rl, decay))
 
 
+@cython.embedsignature(True)
 cdef class Adam(Optimizer):
     def __cinit__(self, rl=1e-4, *args, **kwargs):
         if rl < 0:
@@ -41,6 +43,7 @@ cdef class Hash:
         return self.hash
 
 
+@cython.embedsignature(True)
 cdef class WTA(Hash):
     def __cinit__(self, K_hashes, sample_size):
         self.hash = shared_ptr[slide.HashFunc[float]](<slide.HashFunc[float]*> new slide.WTAFunc[float](K_hashes, sample_size))
@@ -59,6 +62,7 @@ cdef class WTA(Hash):
         pass
 
 
+@cython.embedsignature(True)
 cdef class DWTA(Hash):
     def __cinit__(self, K_hashes, sample_size, max_attempt=100):
         self.hash = shared_ptr[slide.HashFunc[float]](<slide.HashFunc[float]*> new slide.DWTAFunc[float](K_hashes, sample_size, max_attempt))
@@ -85,10 +89,12 @@ cdef class Scheduler:
     cdef shared_ptr[slide.Scheduler] ptr(self):
         return self.sch
 
+@cython.embedsignature(True)
 cdef class ConstantFrequency(Scheduler):
     def __cinit__(self, N):
         self.sch = shared_ptr[slide.Scheduler](<slide.Scheduler*> new slide.ConstantFrequency(N))
 
+@cython.embedsignature(True)
 cdef class ExponentialDecay(Scheduler):
     def __cinit__(self, N, decay):
         self.sch = shared_ptr[slide.Scheduler](<slide.Scheduler*> new slide.ExponentialDecay[float](N,decay))
@@ -102,14 +108,17 @@ cdef class Activation:
         cdef float _x = x
         return dereference(self.act).call(_x)
 
+@cython.embedsignature(True)
 cdef class Linear(Activation):
     def __cinit__(self):
         self.act = shared_ptr[slide.Activation[float]](<slide.Activation[float]*> new slide.Linear[float]())
 
+@cython.embedsignature(True)
 cdef class ReLU(Activation):
     def __cinit__(self):
         self.act = shared_ptr[slide.Activation[float]](<slide.Activation[float]*> new slide.ReLU[float]())
 
+@cython.embedsignature(True)
 cdef class Sigmoid(Activation):
     def __cinit__(self):
         self.act = shared_ptr[slide.Activation[float]](<slide.Activation[float]*> new slide.Sigmoid[float]())
@@ -123,14 +132,17 @@ cdef class Initializer:
     def __call__(self):
         return dereference(self.init)()
 
+@cython.embedsignature(True)
 cdef class ConstantInitializer(Initializer):
     def __cinit__(self, v):
         self.init = shared_ptr[slide.Initializer[float]](<slide.Initializer[float]*> new slide.ConstantInitializer[float](v))
 
+@cython.embedsignature(True)
 cdef class GaussInitializer(Initializer):
     def __cinit__(self, mu, sigma):
         self.init = shared_ptr[slide.Initializer[float]](<slide.Initializer[float]*> new slide.GaussInitializer[float](mu, sigma))
 
+@cython.embedsignature(True)
 cdef class BatchWrapper:
     cdef slide.BatchData[float]* ptr
     cdef size_t itemsize
@@ -167,6 +179,7 @@ cdef class BatchWrapper:
         free(self.shape)
         free(self.strides)
 
+@cython.embedsignature(True)
 cdef class Network:
     cdef slide.Network[float]* net
     cdef slide.BatchData[float] Y
