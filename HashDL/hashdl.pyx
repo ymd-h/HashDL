@@ -269,6 +269,14 @@ cdef class Network:
         return np.asarray(self.y)
 
     def backward(self, dL_dy):
+        """
+        Backward propagation of gradient.
+
+        Parameters
+        ----------
+        dL_dy : array-like
+            Gradient of Loss against network output.
+        """
         dL_dy = np.array(dL_dy, ndmin=2, copy=False, dtype=np.single, order="C")
 
         cdef float[:,:] dl_dy = dL_dy
