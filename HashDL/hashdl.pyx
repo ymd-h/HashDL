@@ -26,6 +26,18 @@ cdef class SGD(Optimizer):
 
         self.opt = shared_ptr[slide.Optimizer[float]](<slide.Optimizer[float]*> new slide.SGD[float](lr, decay))
 
+    def __init__(self, lr=1e-4, decay=1.0, *args, **kwargs):
+        """
+        Initialize Stochastic Gradient Decent
+
+        Parameters
+        ----------
+        lr : float, optional
+            Learning rate. The default is 1e-4
+        decay : float, optional
+            Decay rate of learning rate. The default is 1.0 (no decay)
+        """
+        pass
 
 @cython.embedsignature(True)
 cdef class Adam(Optimizer):
