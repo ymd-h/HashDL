@@ -172,7 +172,7 @@ cdef class Network:
     cdef slide.BatchData[float] Y
     cdef BatchWrapper y
 
-    def __cinit__(self, input_size, units=(30, 30, 30), L = 50,
+    def __cinit__(self, input_size, units=(30, 30, 30), L_tables = 50,
                   hash = None, optimizer = None, scheduler = None,
                   activation = None, initializer = None, *args, **kwargs):
 
@@ -182,8 +182,8 @@ cdef class Network:
         if (np.asarray(units) <= 0).any():
             raise ValueError(f"units must be positive: {units}")
 
-        if L <= 0:
-            raise ValueError(f"L must be positive: {L}")
+        if L_tables <= 0:
+            raise ValueError(f"L must be positive: {L_tables}")
 
         cdef size_t nbins = 8
         cdef size_t sample_size = 8
@@ -203,13 +203,13 @@ cdef class Network:
         cdef Initializer init = initializer or GaussInitializer(mu, sigma)
 
         cdef vector[size_t] u = units
-        self.net = new slide.Network[float](input_size, u, L,
+        self.net = new slide.Network[float](input_size, u, L_tables,
                                             h.ptr(), opt.ptr(), sch.ptr(),
                                             act.ptr(), init.ptr())
 
         self.y = BatchWrapper()
 
-    def __init__(self, input_size, units=(30, 30, 30), L = 50,
+    def __init__(self, input_size, units=(30, 30, 30), L_tables = 50,
                  hash = None, optimizer = None, scheduler = None,
                  activation = None, initializer = None, *args, **kwargs):
         """
@@ -221,8 +221,8 @@ cdef class Network:
             Input data size. The input data must be flattened.
         units : list of int, optional
             Number of units at hidden layers. The default is `(30, 30, 30)`
-        L : int, optional
-            Number of hash tables in a single dense layer. The default is `50`
+        L_tables : int, optional
+            Number of hash buckets in a single dense layer. The default is `50`
         hash : HashDL.Hash, optional
             Locality sensitive hash function. The default is `HashDL.DWTA(8, 8)`
         optimizer : HashDL.Optimizer, optional
