@@ -20,20 +20,20 @@ cdef class Optimizer:
 
 @cython.embedsignature(True)
 cdef class SGD(Optimizer):
-    def __cinit__(self, rl=1e-4, decay=1.0, *args, **kwargs):
-        if rl < 0:
-            raise ValueError(f"Learning Rate (rl) must be positive: {rl}")
+    def __cinit__(self, lr=1e-4, decay=1.0, *args, **kwargs):
+        if lr < 0:
+            raise ValueError(f"Learning Rate (lr) must be positive: {lr}")
 
-        self.opt = shared_ptr[slide.Optimizer[float]](<slide.Optimizer[float]*> new slide.SGD[float](rl, decay))
+        self.opt = shared_ptr[slide.Optimizer[float]](<slide.Optimizer[float]*> new slide.SGD[float](lr, decay))
 
 
 @cython.embedsignature(True)
 cdef class Adam(Optimizer):
-    def __cinit__(self, rl=1e-4, *args, **kwargs):
-        if rl < 0:
-            raise ValueError(f"Learning Rate (rl) must be positive: {rl}")
+    def __cinit__(self, lr=1e-4, *args, **kwargs):
+        if lr < 0:
+            raise ValueError(f"Learning Rate (lr) must be positive: {lr}")
 
-        self.opt = shared_ptr[slide.Optimizer[float]](<slide.Optimizer[float]*> new slide.Adam[float](rl))
+        self.opt = shared_ptr[slide.Optimizer[float]](<slide.Optimizer[float]*> new slide.Adam[float](lr))
 
 
 cdef class Hash:
@@ -202,8 +202,8 @@ cdef class Network:
         cdef size_t sample_size = 8
         cdef Hash h = hash or DWTA(K_hashes, input_size)
 
-        cdef float rl = 1e-4
-        cdef Optimizer opt = optimizer or Adam(rl)
+        cdef float lr = 1e-4
+        cdef Optimizer opt = optimizer or Adam(lr)
 
         cdef size_t N = 50
         cdef float decay = 1e-3
