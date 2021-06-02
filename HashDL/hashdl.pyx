@@ -47,6 +47,16 @@ cdef class Adam(Optimizer):
 
         self.opt = shared_ptr[slide.Optimizer[float]](<slide.Optimizer[float]*> new slide.Adam[float](lr))
 
+    def __init__(self, lr=1e-4, *args, **kwargs):
+        """
+        Initialize Adam
+
+        Parameters
+        ----------
+        lr : float, optional
+            Learning rate. The default is 1e-4
+        """
+        pass
 
 cdef class Hash:
     cdef shared_ptr[slide.HashFunc[float]] hash
