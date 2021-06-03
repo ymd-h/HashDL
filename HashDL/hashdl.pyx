@@ -117,6 +117,17 @@ cdef class ConstantFrequency(Scheduler):
     def __cinit__(self, N):
         self.sch = shared_ptr[slide.Scheduler](<slide.Scheduler*> new slide.ConstantFrequency(N))
 
+    def __init__(self, N):
+        """
+        Initialize ConstantFrequency
+
+        Parameters
+        ----------
+        N : int
+            Frequency to update hash
+        """
+        pass
+
 @cython.embedsignature(True)
 cdef class ExponentialDecay(Scheduler):
     def __cinit__(self, N, decay):
