@@ -1,6 +1,7 @@
 # distutils: language = c++
 # cython: linetrace=True
 
+import cython
 from libc.stdlib cimport malloc, free
 from cython.operator cimport dereference
 from libcpp.vector cimport vector
