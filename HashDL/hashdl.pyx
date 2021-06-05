@@ -219,6 +219,19 @@ cdef class GaussInitializer(Initializer):
     def __cinit__(self, mu, sigma):
         self.init = shared_ptr[slide.Initializer[float]](<slide.Initializer[float]*> new slide.GaussInitializer[float](mu, sigma))
 
+    def __init__(self, mu, sigma):
+        """
+        Initialize GaussInitializer
+
+        Parameters
+        ----------
+        mu : float
+            Mean of Gaussian
+        sigma : float
+            Standard deviation of Gaussian
+        """
+        pass
+
 @cython.embedsignature(True)
 cdef class BatchWrapper:
     cdef slide.BatchData[float]* ptr
