@@ -203,6 +203,17 @@ cdef class ConstantInitializer(Initializer):
     def __cinit__(self, v):
         self.init = shared_ptr[slide.Initializer[float]](<slide.Initializer[float]*> new slide.ConstantInitializer[float](v))
 
+    def __init__(self, v):
+        """
+        Initialize ConstantInitializer
+
+        Parameters
+        ----------
+        v : float
+            Constant value to initialize weight
+        """
+        pass
+
 @cython.embedsignature(True)
 cdef class GaussInitializer(Initializer):
     def __cinit__(self, mu, sigma):
