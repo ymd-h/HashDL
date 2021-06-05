@@ -133,6 +133,16 @@ cdef class ExponentialDecay(Scheduler):
     def __cinit__(self, N, decay):
         self.sch = shared_ptr[slide.Scheduler](<slide.Scheduler*> new slide.ExponentialDecay[float](N,decay))
 
+    def __init__(self, N, decay):
+        """Initialize ExponentialDecay
+
+        Parameters ---------- N : int Initial interval to update hash
+        decay : float Decay rate. `N(t+1) = N(t)exp(decay)`.  This
+        value is assumed to small positive value.
+
+        """
+        pass
+
 cdef class Activation:
     cdef shared_ptr[slide.Activation[float]] act
     cdef shared_ptr[slide.Activation[float]] ptr(self):
