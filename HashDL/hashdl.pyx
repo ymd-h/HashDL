@@ -134,12 +134,16 @@ cdef class ExponentialDecay(Scheduler):
         self.sch = shared_ptr[slide.Scheduler](<slide.Scheduler*> new slide.ExponentialDecay[float](N,decay))
 
     def __init__(self, N, decay):
-        """Initialize ExponentialDecay
+        """
+        Initialize ExponentialDecay
 
-        Parameters ---------- N : int Initial interval to update hash
-        decay : float Decay rate. `N(t+1) = N(t)exp(decay)`.  This
-        value is assumed to small positive value.
-
+        Parameters
+        ----------
+        N : int
+            Initial interval to update hash
+        decay : float
+            Decay rate. `N(t+1) = N(t)exp(decay)`.
+            This value is assumed to small positive value.
         """
         pass
 
@@ -157,15 +161,33 @@ cdef class Linear(Activation):
     def __cinit__(self):
         self.act = shared_ptr[slide.Activation[float]](<slide.Activation[float]*> new slide.Linear[float]())
 
+    def __init__(self):
+        """
+        Initialize Linear
+        """
+        pass
+
 @cython.embedsignature(True)
 cdef class ReLU(Activation):
     def __cinit__(self):
         self.act = shared_ptr[slide.Activation[float]](<slide.Activation[float]*> new slide.ReLU[float]())
 
+    def __init__(self):
+        """
+        Initialize ReLU
+        """
+        pass
+
 @cython.embedsignature(True)
 cdef class Sigmoid(Activation):
     def __cinit__(self):
         self.act = shared_ptr[slide.Activation[float]](<slide.Activation[float]*> new slide.Sigmoid[float]())
+
+    def __init__(self):
+        """
+        Initialize Sigmoid
+        """
+        pass
 
 cdef class Initializer:
     cdef shared_ptr[slide.Initializer[float]] init
