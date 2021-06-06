@@ -232,7 +232,6 @@ cdef class GaussInitializer(Initializer):
         """
         pass
 
-@cython.embedsignature(True)
 cdef class BatchWrapper:
     cdef slide.BatchData[float]* ptr
     cdef size_t itemsize
