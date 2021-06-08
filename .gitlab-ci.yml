@@ -108,7 +108,7 @@ tarbuild:
     - python3 setup.py sdist
     - pip3 install dist/HashDL-*.tar.gz
   artifacts:
-    path:
+    paths:
       - dist/HashDL-*.tar.gz
 
 unittest:
