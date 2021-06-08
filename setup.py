@@ -83,7 +83,7 @@ else:
     long_description_content_type='text/plain'
 
 setup(name="HashDL",
-      version="3.0.0",
+      version="3.0.1",
       description=description,
       author="YAMADA, Hiroyuki",
       install_requires=["numpy"],
