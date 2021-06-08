@@ -103,5 +103,6 @@ setup(name="HashDL",
       ext_modules=ext_modules,
       include_dirs=["HashDL"],
       packages=["HashDL"],
+      package_data={"HashDL": ["*.hh", "*.pyx", "*.pxd"]},
       long_description=long_description,
       long_description_content_type=long_description_content_type)

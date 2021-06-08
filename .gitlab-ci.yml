@@ -100,6 +100,17 @@ wheelbuild:
     paths:
       - dist/HashDL-*.whl
 
+tarbuild:
+  stage: build
+  image: gcc:10
+  script:
+    - apt update && apt install -y python3-dev python3-pip libtbb-dev
+    - python3 setup.py sdist
+    - pip3 install dist/HashDL-*.tar.gz
+  artifacts:
+    paths:
+      - dist/HashDL-*.tar.gz
+
 unittest:
   stage: pytest
   image: gcc:10
@@ -121,9 +132,8 @@ pypi:
   image: gcc:10
   stage: upload
   script:
-    - apt update && apt install -y python3-dev python3-pip libtbb-dev
+    - apt update && apt install -y python3-dev python3-pip
     - pip3 install twine wheel
-    - python3 setup.py sdist
     - twine upload dist/HashDL-*.tar.gz
   only:
     - tags
