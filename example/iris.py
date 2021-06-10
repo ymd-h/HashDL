@@ -31,6 +31,7 @@ def softmax_cross_entropy(y_true, y_pred):
 
     y_log_soft = y_norm - np.log(y_exp.sum(axis=1, keepdims=True))
 
+    assert y_true.shape == y_log_soft.shape
     return -(y_true * y_log_soft).sum(axis=1).mean()
 
 def grad_softmax_cross_entropy(y_true, y_pred):
@@ -40,6 +41,7 @@ def grad_softmax_cross_entropy(y_true, y_pred):
 
     y_soft = y_exp / y_exp.sum(axis=1, keepdims=True)
 
+    assert y_soft.shape == y_true.shape
     return y_soft - y_true
 
 
