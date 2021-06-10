@@ -45,6 +45,11 @@ def grad_softmax_cross_entropy(y_true, y_pred):
     return y_soft - y_true
 
 
+def accuracy(y_true, y_pred):
+    assert y_true.shape == y_pred.shape
+    return (y_true.argmax(axis=1) == y_pred.argmax(axis=1)).mean()
+
+
 idx = np.arange(x_train.shape[0])
 
 for i in range(epoch):
@@ -58,7 +63,12 @@ for i in range(epoch):
 
         net.backward(grad_softmax_cross_entropy(y_train[batch_idx], y_pred))
 
-    train_loss = softmax_cross_entropy(y_train, net(x_train))
-    test_loss = softmax_cross_entropy(y_test, net(x_test))
+    train_pred = net(x_train)
+    train_loss = softmax_cross_entropy(y_train, train_pred)
+    train_acc = accuracy(y_train, train_pred)
 
-    print(f"Epoch: {i}, Train Loss: {train_loss}, Test Loss: {test_loss}")
+    test_pred = net(x_test)
+    test_loss = softmax_cross_entropy(y_test, test_pred)
+    test_acc = accuracy(y_test, test_pred)
+
+    print(f"Epoch: {i}, Train (Loss: {train_loss}, Acc: {train_acc}) Test (Loss: {test_loss}, Acc: {test_acc})")
