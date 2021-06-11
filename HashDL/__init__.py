@@ -3,4 +3,5 @@ from .hashdl import (SGD, Adam,
                      ConstantFrequency, ExponentialDecay,
                      Linear, ReLU, Sigmoid,
                      ConstantInitializer, GaussInitializer,
+                     SoftmaxCrossEntropy,
                      Network)
