@@ -24,25 +24,7 @@ x_train, x_test, y_train, y_test = train_test_split(x, y_hot, test_size=0.1)
 net = HashDL.Network(input_size, (32, nclass))
 rng = np.random.default_rng()
 
-def softmax_cross_entropy(y_true, y_pred):
-    y_norm = y_pred - y_pred.max(axis=1, keepdims=True)
-    y_exp = np.exp(y_norm)
-    assert np.isfinite(y_exp).all(), f"{y_pred[np.isfinite(y_exp)]}"
-
-    y_log_soft = y_norm - np.log(y_exp.sum(axis=1, keepdims=True))
-
-    assert y_true.shape == y_log_soft.shape
-    return -(y_true * y_log_soft).sum(axis=1).mean()
-
-def grad_softmax_cross_entropy(y_true, y_pred):
-    y_norm = y_pred - y_pred.max(axis=1, keepdims=True)
-    y_exp = np.exp(y_norm)
-    assert np.isfinite(y_exp).all(), f"{y_pred[np.isfinite(y_exp)]}"
-
-    y_soft = y_exp / y_exp.sum(axis=1, keepdims=True)
-
-    assert y_soft.shape == y_true.shape
-    return y_soft - y_true
+loss = HashDL.SoftmaxCrossEntropy()
 
 
 def accuracy(y_true, y_pred):
@@ -61,14 +43,14 @@ for i in range(epoch):
         y_pred = net(x_train[batch_idx])
         assert np.isfinite(y_pred).all()
 
-        net.backward(grad_softmax_cross_entropy(y_train[batch_idx], y_pred))
+        net.backward(loss.gradient(y_train[batch_idx], y_pred))
 
     train_pred = net(x_train)
-    train_loss = softmax_cross_entropy(y_train, train_pred)
+    train_loss = loss(y_train, train_pred)
     train_acc = accuracy(y_train, train_pred)
 
     test_pred = net(x_test)
-    test_loss = softmax_cross_entropy(y_test, test_pred)
+    test_loss = loss(y_test, test_pred)
     test_acc = accuracy(y_test, test_pred)
 
     print(f"Epoch: {i}, Train (Loss: {train_loss}, Acc: {train_acc}) Test (Loss: {test_loss}, Acc: {test_acc})")

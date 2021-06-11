@@ -268,6 +268,61 @@ cdef class BatchWrapper:
         free(self.shape)
         free(self.strides)
 
+
+@cython.embedsignature(True)
+cdef class SoftmaxCrossEntropy:
+    def __init__(self):
+        pass
+
+    def __call__(self, y_true, y_pred):
+        """
+        Calculate softmax cross entropy
+
+        Parameters
+        ----------
+        y_true : array-like
+            One hot encoded true class label
+        y_pred : array-like
+            Neural network output. Softmax will be calculated inside this function
+
+        Returns
+        -------
+        loss : float
+            Loss of softmax cross entropy
+        """
+        y_norm = y_pred - y_pred.max(axis=1, keepdims=True)
+        y_exp = np.exp(y_norm)
+
+        y_log_soft = y_norm - np.log(y_exp.sum(axis=1, keepdims=True))
+
+        assert y_true.shape == y_log_soft.shape
+        return -(y_true * y_log_soft).sum(axis=1).mean()
+
+    def gradient(self, y_true, y_pred):
+        """
+        Gradient of softmax cross entropy
+
+        Parameters
+        ----------
+        y_true : array-like
+            One hot encoded true class label
+        y_pred : array-like
+            Neural network output. Softmax will be calculated inside this function
+
+        Returns
+        -------
+        grad : array-loke
+            Gradient for loss of softmax cross entropy
+        """
+        y_norm = y_pred - y_pred.max(axis=1, keepdims=True)
+        y_exp = np.exp(y_norm)
+
+        y_soft = y_exp / y_exp.sum(axis=1, keepdims=True)
+
+        assert y_soft.shape == y_true.shape
+        return y_soft - y_true
+
+
 @cython.embedsignature(True)
 cdef class Network:
     cdef slide.Network[float]* net
