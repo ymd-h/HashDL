@@ -57,5 +57,8 @@ cdef extern from "slide.hh" namespace "HashDL":
         Network(size_t, vector[size_t], size_t, shared_ptr[HashFunc[T]],
                 shared_ptr[Optimizer[T]], shared_ptr[Scheduler],
                 shared_ptr[Activation[T]], shared_ptr[Initializer[T]]) except +
+        Network(size_t, vector[size_t], size_t, shared_ptr[HashFunc[T]],
+                shared_ptr[Optimizer[T]], shared_ptr[Scheduler],
+                shared_ptr[Activation[T]], shared_ptr[Initializer[T]], T, T) except +
         BatchData[T] operator()(const BatchView[T]&) except +
         void backward(const BatchView[T]&) except +
