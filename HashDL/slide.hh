@@ -17,18 +17,20 @@ namespace HashDL {
     T value;
     std::atomic<T> grad;
     std::unique_ptr<OptimizerClient<T>> opt;
+    T L1;
+    T L2;
   public:
     Param() = delete;
     Param(const std::shared_ptr<Optimizer<T>>& o) : Param{o, T{}} {}
-    Param(const std::shared_ptr<Optimizer<T>>& o, T v)
-      : value{v}, grad{}, opt{o->client()} {}
+    Param(const std::shared_ptr<Optimizer<T>>& o, T v, T L1=0, T L2=0)
+      : value{v}, grad{}, opt{o->client()}, L1{L1}, L2{L2} {}
     Param(const Param&) = delete;
     Param(Param&&) = delete;
     Param& operator=(const Param&) = default;
     Param& operator=(Param&&) = default;
     ~Param() = default;
 
-    void add_grad(T g){ grad.fetch_add(g); }
+    void add_grad(T g){ grad.fetch_add(g + std::copysign(L1, value) + L2*value); }
     const auto& operator()() const noexcept { return value; }
     void update(){ value += opt->diff(grad.exchange(0)); }
   };
@@ -41,20 +43,20 @@ namespace HashDL {
     Param_t b;
   public:
     Weight() = delete;
-    Weight(std::size_t N, const std::shared_ptr<Optimizer<T>>& o)
-      : w{}, b{new Param<T>{o}}
+    Weight(std::size_t N, const std::shared_ptr<Optimizer<T>>& o, T L1=0, T L2=0)
+      : w{}, b{new Param<T>{o, T{0}, L1, L2}}
     {
       w.reserve(N);
       std::generate_n(std::back_inserter(w), N,
-		      [&](){ return Param_t{new Param<T>{o}}; });
+		      [&](){ return Param_t{new Param<T>{o, T{0}, L1, L2}}; });
     }
     Weight(std::size_t N, const std::shared_ptr<Optimizer<T>>& o,
-	   std::shared_ptr<Initializer<T>> f)
-          : w{}, b{new Param<T>{o}}
+	   std::shared_ptr<Initializer<T>> f, T L1=0, T L2=0)
+      : w{}, b{new Param<T>{o, T{}, L1, L2}}
     {
       w.reserve(N);
       std::generate_n(std::back_inserter(w), N,
-		      [&](){ return Param_t{new Param<T>{o, (*f)()}}; });
+		      [&](){ return Param_t{new Param<T>{o, (*f)(), L1, L2}}; });
     }
     Weight(const Weight&) = default;
     Weight(Weight&&) = default;
@@ -93,8 +95,8 @@ namespace HashDL {
     Neuron(): Neuron{16, new Adam<T>{}} {}
     Neuron(std::size_t prev_units,
 	   const std::shared_ptr<Optimizer<T>>& optimizer,
-	   std::shared_ptr<Initializer<T>> weight_initializer = std::shared_ptr<Initializer<T>>{new ConstantInitializer<T>{0}})
-      : weight{prev_units, optimizer, weight_initializer} {}
+	   std::shared_ptr<Initializer<T>> weight_initializer = std::shared_ptr<Initializer<T>>{new ConstantInitializer<T>{0}}, T L1=0, T L2=0)
+      : weight{prev_units, optimizer, weight_initializer, L1, L2} {}
     Neuron(const Neuron&) = default;
     Neuron(Neuron&&) = default;
     Neuron& operator=(const Neuron&) = default;
@@ -278,13 +280,14 @@ namespace HashDL {
 	       std::shared_ptr<Activation<T>> f,
 	       std::size_t L, std::shared_ptr<HashFunc<T>> hash_factory,
 	       const std::shared_ptr<Optimizer<T>>& optimizer,
-	       std::shared_ptr<Initializer<T>> weight_initializer = std::shared_ptr<Initializer<T>>{new ConstantInitializer<T>{0}})
+	       std::shared_ptr<Initializer<T>> weight_initializer = std::shared_ptr<Initializer<T>>{new ConstantInitializer<T>{0}},
+	       T L1=0, T L2=0)
       : units{units}, neuron{}, active_idx{},
 	hash{L, prev_units, hash_factory}, activation{f}
     {
       neuron.reserve(units);
       std::generate_n(std::back_inserter(neuron), units,
-		      [&](){ return Neuron<T>{prev_units, optimizer, weight_initializer}; });
+		      [&](){ return Neuron<T>{prev_units, optimizer, weight_initializer, L1, L2}; });
 
       hash.add(neuron);
     }
@@ -356,7 +359,8 @@ namespace HashDL {
 	    std::shared_ptr<HashFunc<T>> hash, std::shared_ptr<Optimizer<T>> opt,
 	    std::shared_ptr<Scheduler> update_freq,
 	    std::shared_ptr<Activation<T>> act = std::shared_ptr<Activation<T>>{},
-	    std::shared_ptr<Initializer<T>> init = std::shared_ptr<Initializer<T>>{})
+	    std::shared_ptr<Initializer<T>> init = std::shared_ptr<Initializer<T>>{},
+	    T L1=0, T L2=0)
       : output_dim{units.size() > 0 ? units.back(): input_size}, layer{},
 	opt{opt}, update_freq{update_freq}
     {
@@ -369,7 +373,8 @@ namespace HashDL {
       auto prev_units = input_size;
       for(auto& u : units){
 	layer.emplace_back(new DenseLayer<T>{prev_units, u, act, L, hash,
-					     this->opt, init});
+					     this->opt, init,
+					     L1, L2});
 	prev_units = u;
 	auto last = layer.size() -1;
 	layer[last]->set_prev(layer[last-1]);

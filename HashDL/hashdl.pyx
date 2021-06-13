@@ -331,7 +331,8 @@ cdef class Network:
 
     def __cinit__(self, input_size, units=(30, 30, 30), L_tables = 50,
                   hash = None, optimizer = None, scheduler = None,
-                  activation = None, initializer = None, *args, **kwargs):
+                  activation = None, initializer = None,
+                  L1 = 0, L2 = 0, *args, **kwargs):
 
         if input_size <= 0:
             raise ValueError(f"input_size must be positive: {input_size}")
@@ -359,16 +360,19 @@ cdef class Network:
         cdef float sigma = 1.0
         cdef Initializer init = initializer or GaussInitializer(mu, sigma)
 
+        cdef float l1 = max(L1, 0)
+        cdef float l2 = max(L2, 0)
+
         cdef vector[size_t] u = units
         self.net = new slide.Network[float](input_size, u, L_tables,
                                             h.ptr(), opt.ptr(), sch.ptr(),
-                                            act.ptr(), init.ptr())
+                                            act.ptr(), init.ptr(), l1, l2)
 
         self.y = BatchWrapper()
 
     def __init__(self, input_size, units=(30, 30, 30), L_tables = 50,
                  hash = None, optimizer = None, scheduler = None,
-                 activation = None, initializer = None, *args, **kwargs):
+                 activation = None, initializer = None, L1=0, L2=0, *args, **kwargs):
         """
         Initialize SLIDE network
 
@@ -392,6 +396,10 @@ cdef class Network:
         initializer : HashDL.initializer, optional
             Weight initializer for hidden layers.
             The default is `HashDL.GaussInitializer(0, 1.0)`
+        L1 : float, optional
+            L1 weight normalization.
+        L2 : float, optional
+            L2 weight normalization.
         """
         pass
 
