@@ -188,7 +188,7 @@ namespace HashDL {
 	if(neuron_id.size() >= th){ break; }
       }
 
-      return neuron_id;
+      return std::vector<std::size_t>{neuron_id.begin(), neuron_id.end()};
     }
   };
 
