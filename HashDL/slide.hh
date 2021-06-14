@@ -137,12 +137,13 @@ namespace HashDL {
     std::vector<std::unordered_multimap<hashcode_t, std::size_t>> backet;
     idx_t idx;
     std::size_t neuron_size;
+    std::size_t sparsity;
   public:
     LSH(): LSH(50, 1, std::shared_ptr<HashFunc<T>>(new DWTAFunc<T>{8, 8})) {}
     LSH(std::size_t L, std::size_t data_size,
 	std::shared_ptr<HashFunc<T>> hash_factory)
       : L{L}, data_size{data_size}, hash_factory{hash_factory}, hash{}, backet(L),
-	idx{index_vec(L)}, neuron_size{}
+	idx{index_vec(L)}, neuron_size{}, sparsity{sparsity}
     {
       hash.reserve(L);
       std::generate_n(std::back_inserter(hash), L,
@@ -174,15 +175,16 @@ namespace HashDL {
     }
 
     auto retrieve(const Data<T>& X) const {
-      auto neuron_id = index_vec(neuron_size);
+      const auto th = std::max<std::size_t>(neuron_size*sparsity,1);
+      auto hash_idx = index_vec(L);
+      std::shuffle(hash_idx.begin(), hash_idx.end());
 
-      for(std::size_t i=0; i<L; ++i){
-	auto [begin, end] = backet[i].equal_range(hash[i]->encode(X));
-	std::remove_if(neuron_id.begin(), neuron_id.end(),
-		       [=](auto n){
-			 auto f = [=](auto& v){ return v.second == n; };
-			 return std::find_if(begin, end, f) == end;
-		       });
+      std::unordered_set<std::size_t> neuron_id{};
+      for(auto hid : hash_idx){
+	auto [begin, end] = backet[hid].equal_range(hash[hid]->encode(X));
+	neuron_id.insert(begin, end);
+
+	if(neuron_id.size() >= th){ break; }
       }
 
       return neuron_id;
