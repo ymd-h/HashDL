@@ -284,9 +284,10 @@ namespace HashDL {
 	       std::size_t L, std::shared_ptr<HashFunc<T>> hash_factory,
 	       const std::shared_ptr<Optimizer<T>>& optimizer,
 	       std::shared_ptr<Initializer<T>> weight_initializer = std::shared_ptr<Initializer<T>>{new ConstantInitializer<T>{0}},
-	       T L1=0, T L2=0)
+	       T L1=0, T L2=0,
+	       T sparsity = 0.5)
       : units{units}, neuron{}, active_idx{},
-	hash{L, prev_units, hash_factory}, activation{f}
+	hash{L, prev_units, hash_factory, sparsity}, activation{f}
     {
       neuron.reserve(units);
       std::generate_n(std::back_inserter(neuron), units,
@@ -363,7 +364,7 @@ namespace HashDL {
 	    std::shared_ptr<Scheduler> update_freq,
 	    std::shared_ptr<Activation<T>> act = std::shared_ptr<Activation<T>>{},
 	    std::shared_ptr<Initializer<T>> init = std::shared_ptr<Initializer<T>>{},
-	    T L1=0, T L2=0)
+	    T L1=0, T L2=0, T sparsity = 0.5)
       : output_dim{units.size() > 0 ? units.back(): input_size}, layer{},
 	opt{opt}, update_freq{update_freq}
     {
@@ -377,7 +378,7 @@ namespace HashDL {
       for(auto& u : units){
 	layer.emplace_back(new DenseLayer<T>{prev_units, u, act, L, hash,
 					     this->opt, init,
-					     L1, L2});
+					     L1, L2, sparsity});
 	prev_units = u;
 	auto last = layer.size() -1;
 	layer[last]->set_prev(layer[last-1]);
