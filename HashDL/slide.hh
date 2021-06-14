@@ -137,11 +137,12 @@ namespace HashDL {
     std::vector<std::unordered_multimap<hashcode_t, std::size_t>> backet;
     idx_t idx;
     std::size_t neuron_size;
-    std::size_t sparsity;
+    T sparsity;
   public:
     LSH(): LSH(50, 1, std::shared_ptr<HashFunc<T>>(new DWTAFunc<T>{8, 8})) {}
     LSH(std::size_t L, std::size_t data_size,
-	std::shared_ptr<HashFunc<T>> hash_factory)
+	std::shared_ptr<HashFunc<T>> hash_factory,
+	T sparsity = 0.5)
       : L{L}, data_size{data_size}, hash_factory{hash_factory}, hash{}, backet(L),
 	idx{index_vec(L)}, neuron_size{}, sparsity{sparsity}
     {
