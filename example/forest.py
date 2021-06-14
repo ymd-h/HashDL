@@ -5,7 +5,7 @@ from sklearn.model_selection import train_test_split
 
 import HashDL
 
-epoch = 5000
+epoch = 100
 batch_size = 32
 
 
@@ -22,7 +22,8 @@ y_hot[np.arange(y.shape[0]), y] = 1
 x_train, x_test, y_train, y_test = train_test_split(x, y_hot, test_size=0.1)
 
 net = HashDL.Network(input_size, (100, 100, nclass),
-                     scheduler = HashDL.ConstantFrequency(50 * x_train.shape[0] // batch_size))
+                     scheduler = HashDL.ConstantFrequency(50 * x_train.shape[0] // batch_size),
+                     L2=0.1)
 
 rng = np.random.default_rng()
 
