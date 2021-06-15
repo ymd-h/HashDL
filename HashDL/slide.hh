@@ -1,7 +1,10 @@
 #ifndef SLIDE_HH
 #define SLIDE_HH
 
+#include <algorithm>
 #include <execution>
+#include <random>
+#include <unordered_set>
 #include <unordered_map>
 
 #include "data.hh"
@@ -137,12 +140,15 @@ namespace HashDL {
     std::vector<std::unordered_multimap<hashcode_t, std::size_t>> backet;
     idx_t idx;
     std::size_t neuron_size;
+    T sparsity;
+    std::mt19937 g;
   public:
     LSH(): LSH(50, 1, std::shared_ptr<HashFunc<T>>(new DWTAFunc<T>{8, 8})) {}
     LSH(std::size_t L, std::size_t data_size,
-	std::shared_ptr<HashFunc<T>> hash_factory)
+	std::shared_ptr<HashFunc<T>> hash_factory,
+	T sparsity = 0.5)
       : L{L}, data_size{data_size}, hash_factory{hash_factory}, hash{}, backet(L),
-	idx{index_vec(L)}, neuron_size{}
+	idx{index_vec(L)}, neuron_size{}, sparsity{sparsity}, g{std::random_device{}()}
     {
       hash.reserve(L);
       std::generate_n(std::back_inserter(hash), L,
@@ -173,19 +179,23 @@ namespace HashDL {
       neuron_size = N.size();
     }
 
-    auto retrieve(const Data<T>& X) const {
-      auto neuron_id = index_vec(neuron_size);
+    auto retrieve(const Data<T>& X) {
+      const auto th = std::max<std::size_t>(neuron_size*sparsity,1);
+      auto hash_idx = index_vec(L);
+      std::shuffle(hash_idx.begin(), hash_idx.end(), g);
 
-      for(std::size_t i=0; i<L; ++i){
-	auto [begin, end] = backet[i].equal_range(hash[i]->encode(X));
-	std::remove_if(neuron_id.begin(), neuron_id.end(),
-		       [=](auto n){
-			 auto f = [=](auto& v){ return v.second == n; };
-			 return std::find_if(begin, end, f) == end;
-		       });
+      std::unordered_set<std::size_t> neuron_id{};
+      for(auto hid : hash_idx){
+	auto [begin, end] = backet[hid].equal_range(hash[hid]->encode(X));
+
+	std::for_each(begin, end, [&](auto v){
+	  neuron_id.insert(v.second);
+	});
+
+	if(neuron_id.size() >= th){ break; }
       }
 
-      return neuron_id;
+      return std::vector<std::size_t>(neuron_id.begin(), neuron_id.end());
     }
   };
 
@@ -281,9 +291,10 @@ namespace HashDL {
 	       std::size_t L, std::shared_ptr<HashFunc<T>> hash_factory,
 	       const std::shared_ptr<Optimizer<T>>& optimizer,
 	       std::shared_ptr<Initializer<T>> weight_initializer = std::shared_ptr<Initializer<T>>{new ConstantInitializer<T>{0}},
-	       T L1=0, T L2=0)
+	       T L1=0, T L2=0,
+	       T sparsity = 0.5)
       : units{units}, neuron{}, active_idx{},
-	hash{L, prev_units, hash_factory}, activation{f}
+	hash{L, prev_units, hash_factory, sparsity}, activation{f}
     {
       neuron.reserve(units);
       std::generate_n(std::back_inserter(neuron), units,
@@ -360,7 +371,7 @@ namespace HashDL {
 	    std::shared_ptr<Scheduler> update_freq,
 	    std::shared_ptr<Activation<T>> act = std::shared_ptr<Activation<T>>{},
 	    std::shared_ptr<Initializer<T>> init = std::shared_ptr<Initializer<T>>{},
-	    T L1=0, T L2=0)
+	    T L1=0, T L2=0, T sparsity = 0.5)
       : output_dim{units.size() > 0 ? units.back(): input_size}, layer{},
 	opt{opt}, update_freq{update_freq}
     {
@@ -374,7 +385,7 @@ namespace HashDL {
       for(auto& u : units){
 	layer.emplace_back(new DenseLayer<T>{prev_units, u, act, L, hash,
 					     this->opt, init,
-					     L1, L2});
+					     L1, L2, sparsity});
 	prev_units = u;
 	auto last = layer.size() -1;
 	layer[last]->set_prev(layer[last-1]);

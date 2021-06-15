@@ -332,7 +332,7 @@ cdef class Network:
     def __cinit__(self, input_size, units=(30, 30, 30), L_tables = 50,
                   hash = None, optimizer = None, scheduler = None,
                   activation = None, initializer = None,
-                  L1 = 0, L2 = 0, *args, **kwargs):
+                  L1 = 0, L2 = 0, sparsity = 0.5, *args, **kwargs):
 
         if input_size <= 0:
             raise ValueError(f"input_size must be positive: {input_size}")
@@ -342,6 +342,9 @@ cdef class Network:
 
         if L_tables <= 0:
             raise ValueError(f"L must be positive: {L_tables}")
+
+        if sparsity <= 0:
+            raise ValueError(f"sparsity must be positive: {sparsity}")
 
         cdef size_t K_hashes = 8
         cdef size_t sample_size = 8
@@ -363,16 +366,19 @@ cdef class Network:
         cdef float l1 = max(L1, 0)
         cdef float l2 = max(L2, 0)
 
+        cdef float sp = sparsity
+
         cdef vector[size_t] u = units
         self.net = new slide.Network[float](input_size, u, L_tables,
                                             h.ptr(), opt.ptr(), sch.ptr(),
-                                            act.ptr(), init.ptr(), l1, l2)
+                                            act.ptr(), init.ptr(), l1, l2, sp)
 
         self.y = BatchWrapper()
 
     def __init__(self, input_size, units=(30, 30, 30), L_tables = 50,
                  hash = None, optimizer = None, scheduler = None,
-                 activation = None, initializer = None, L1=0, L2=0, *args, **kwargs):
+                 activation = None, initializer = None,
+                 L1=0, L2=0, sparsity = 0.5, *args, **kwargs):
         """
         Initialize SLIDE network
 
@@ -400,6 +406,8 @@ cdef class Network:
             L1 weight normalization.
         L2 : float, optional
             L2 weight normalization.
+        sparsity : float, optional
+            Active neuron minimum ratio at dense layer.
         """
         pass
 

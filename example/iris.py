@@ -21,7 +21,7 @@ y_hot[np.arange(y.shape[0]), y] = 1
 x_train, x_test, y_train, y_test = train_test_split(x, y_hot, test_size=0.1)
 
 
-net = HashDL.Network(input_size, (32, nclass))
+net = HashDL.Network(input_size, (32, nclass), sparsity=0.8)
 rng = np.random.default_rng()
 
 loss = HashDL.SoftmaxCrossEntropy()
