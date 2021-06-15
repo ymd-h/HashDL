@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <execution>
 #include <random>
+#include <unordered_set>
 #include <unordered_map>
 
 #include "data.hh"
