@@ -179,7 +179,7 @@ namespace HashDL {
       neuron_size = N.size();
     }
 
-    auto retrieve(const Data<T>& X) const {
+    auto retrieve(const Data<T>& X) {
       const auto th = std::max<std::size_t>(neuron_size*sparsity,1);
       auto hash_idx = index_vec(L);
       std::shuffle(hash_idx.begin(), hash_idx.end(), g);
