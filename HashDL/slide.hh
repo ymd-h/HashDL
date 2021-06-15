@@ -187,7 +187,10 @@ namespace HashDL {
       std::unordered_set<std::size_t> neuron_id{};
       for(auto hid : hash_idx){
 	auto [begin, end] = backet[hid].equal_range(hash[hid]->encode(X));
-	neuron_id.insert(begin, end);
+
+	std::for_each(begin, end, [&](auto v){
+	  neuron_id.insert(v.second);
+	});
 
 	if(neuron_id.size() >= th){ break; }
       }
