@@ -1,6 +1,7 @@
 #ifndef SLIDE_HH
 #define SLIDE_HH
 
+#include <algotihm>
 #include <execution>
 #include <unordered_map>
 
